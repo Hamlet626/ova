@@ -25,12 +25,12 @@ export const authOptions : NextAuthOptions = {
                             console.log(r);
                             return {
                                 id:r.uid,
-                                email:r.email,
-                                image:r.photoURL,
-                                name:r.displayName,
-                                phone:r.photoURL,
-                                fbPath:r.customClaims?.path,
-                                role:r.customClaims?.role
+                                email:r.email??null,
+                                image:r.photoURL??null,
+                                name:r.displayName??null,
+                                phone:r.phoneNumber??null,
+                                fbPath:r.customClaims?.path??null,
+                                role:r.customClaims?.role??null
                             };
                         }
                         return null;
