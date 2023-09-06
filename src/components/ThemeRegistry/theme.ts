@@ -59,3 +59,14 @@ export const font1={
     letterSpacing: '0em',
     textAlign: 'left',
 };
+
+///"sugnup" in signup page
+export const font2={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '45px',
+    fontWeight: 500,
+    lineHeight: '52px',
+    letterSpacing: '0em',
+     textAlign: 'center',
+
+};
