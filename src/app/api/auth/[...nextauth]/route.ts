@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, {User} from "next-auth"
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from "next-auth/providers/credentials";
 import {signInWithEmailAndPassword} from 'firebase/auth';
@@ -17,25 +17,38 @@ export const authOptions : NextAuthOptions = {
         CredentialsProvider({
             name: 'Credentials',
             credentials: {},
-            async authorize(credentials,req):Promise<any>{
+            async authorize(credentials,req):Promise<User>{
                 return await signInWithEmailAndPassword(cliAuth, credentials.email || '', credentials.password || '')
                     .then(async userCredential => {
                         if (userCredential.user) {
                             const r = await auth().getUser(userCredential.user.uid);
                             console.log(r);
-                            return {...r,role:0};
+                            return {
+                                id:r.uid,
+                                email:r.email,
+                                image:r.photoURL,
+                                name:r.displayName,
+                                phone:r.photoURL,
+                                fbPath:r.customClaims?.path,
+                                role:r.customClaims?.role
+                            };
                         }
                         return null;
-                    })
-                    .catch(error => (console.log(error)))
+                    });
             }
         })
     ],
     callbacks:{
         async jwt({token,user}){
-            return {...token,...user};
+            console.log("in jwt callback");
+            console.log(token);
+            console.log(user);
+            return {...token,...(user??{})};
         },
         async session({session, token, user}){
+            console.log("in session callback");
+            console.log(token);
+            console.log(session.user);
             if(session.user)session.user=token;
             return session;
         }
