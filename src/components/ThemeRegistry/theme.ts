@@ -68,5 +68,5 @@ export const font2={
     lineHeight: '52px',
     letterSpacing: '0em',
      textAlign: 'center',
-
+     marginBottom: '40px',
 };
