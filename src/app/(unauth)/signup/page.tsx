@@ -62,6 +62,7 @@ export function SignUp1(){
         />
 
         <Box width={50} />
+    {/* why is this 50?*/}
         <Input
           name="lastname"
           fullWidth
@@ -125,8 +126,10 @@ export function SignUp1(){
                  fullWidth variant="contained" size="large" startIcon={<ArrowCircleRightOutlinedIcon/>}>Next</Button>
              </Link>
  <Box height={20}/>
+            {/*why is the box's height 20?*/}
              <Typography variant="h6" sx={signUpTextStyle}>Log In</Typography>
             <Box height={16}/>
+            {/*and 16 for this?*/}
             <Button fullWidth variant="outlined" size="large" startIcon={<Google/>}>Google Log in</Button>
 
 
