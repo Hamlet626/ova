@@ -8,14 +8,14 @@ export default async function UnAuthLayout({children,}) {
     const session = await getServerSession(authOptions);
 
     if(!!session){
-        return redirect("/dashboard/agc");
+        // return redirect("/dashboard/agc");
         ///todo: remove the line above to execute below, after dashboard/xx is done
         if(session.user.role==AgcRoleNum)
-            redirect("/dashboard/agc");
+            redirect("agc/dashboard");
         if(session.user.role==EDRoleNum)
-            redirect("/dashboard/ed");
+            redirect("ed/dashboard");
         if(session.user.role==RcpRoleNum)
-            redirect("/dashboard/rcp");
+            redirect("rcp/dashboard");
         else throw {message:"couldn't find user's role.", logout:true};
         return;
     }
