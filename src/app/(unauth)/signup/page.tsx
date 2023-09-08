@@ -46,7 +46,7 @@ export function SignUp1(){
     };
     return (
           //  <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-
+           // {/*16 px as one unit, the space between two input email&password */}
         <Box maxWidth="400px">
              <Typography variant="h4" sx={font2 } >Sign Up</Typography>
 <Box sx={flexContainerStyle}>
@@ -60,8 +60,8 @@ export function SignUp1(){
           type="text"
 
         />
-
-        <Box width={50} />
+    {/*  {/* 2.5 unit */}
+        <Box width={48} />
         <Input
           name="lastname"
           fullWidth
@@ -72,7 +72,8 @@ export function SignUp1(){
           type="text"
         />
       </Box>
-      <Box height={30} />
+     {/* 2.5 unit, same as the space betwwen signup and name */}
+      <Box height={40} />
        <Input  id="email"
                name="email"
                type="email"
@@ -117,16 +118,17 @@ export function SignUp1(){
                      {showPw ? <VisibilityOff /> : <Visibility />}
                      </InputAdornment>}
                      placeholder="Password Again" type={showPw?"text":"password"}/>
-
+     {/*2.5 unit */}
   <Box height={40}/>
             <Link href="/signup1">
             <Button disabled={(!email || !password || !passwordAgain) || (password !== passwordAgain)}
                      onClick={() => signup()}
                  fullWidth variant="contained" size="large" startIcon={<ArrowCircleRightOutlinedIcon/>}>Next</Button>
              </Link>
- <Box height={20}/>
+      {/*4 unit from next to login, and Login text take 1 unit, so 1.5 unit for each*/}
+ <Box height={24}/>
              <Typography variant="h6" sx={signUpTextStyle}>Log In</Typography>
-            <Box height={16}/>
+            <Box height={24}/>
             <Button fullWidth variant="outlined" size="large" startIcon={<Google/>}>Google Log in</Button>
 
 
