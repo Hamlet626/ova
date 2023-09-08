@@ -11,7 +11,8 @@ serverInitFirebase();
 
 export const authOptions : NextAuthOptions = {
     pages: {
-        signIn: '/signin'
+        signIn: '/signin',
+        newUser: '/onboard'
     },
     providers: [
         CredentialsProvider({

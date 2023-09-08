@@ -4,15 +4,21 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {LogoutButton} from "@/components/logout_button";
 import {AgcRoleNum, EDRoleNum, RcpRoleNum} from "@/utils/roles";
 
-export default async function InAppLayout({children,}) {
+export default async function UnAuthLayout({children,}) {
     const session = await getServerSession(authOptions);
 
-    console.log(JSON.stringify(session))
-    if(!session)return redirect("/");
-    if(session.user.role!=AgcRoleNum&&
-        session.user.role!=EDRoleNum&&
-        session.user.role!=RcpRoleNum)
-        throw {message:"couldn't find user's role.", logout:true};
+    if(!!session){
+        return redirect("/dashboard/agc");
+        ///todo: remove the line above to execute below, after dashboard/xx is done
+        if(session.user.role==AgcRoleNum)
+            redirect("/dashboard/agc");
+        if(session.user.role==EDRoleNum)
+            redirect("/dashboard/ed");
+        if(session.user.role==RcpRoleNum)
+            redirect("/dashboard/rcp");
+        else throw {message:"couldn't find user's role.", logout:true};
+        return;
+    }
 
     return (
         <section>
