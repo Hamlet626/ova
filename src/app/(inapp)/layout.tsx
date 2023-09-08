@@ -7,7 +7,6 @@ import {AgcRoleNum, EDRoleNum, RcpRoleNum} from "@/utils/roles";
 export default async function InAppLayout({children,}) {
     const session = await getServerSession(authOptions);
 
-    console.log(JSON.stringify(session))
     if(!session)return redirect("/");
     if(session.user.role!=AgcRoleNum&&
         session.user.role!=EDRoleNum&&

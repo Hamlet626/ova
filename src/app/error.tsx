@@ -1,6 +1,7 @@
 'use client' // Error components must be Client Components
 
 import { useEffect } from 'react'
+import {LogoutButton} from "@/components/logout_button";
 
 export default function Error({
                                   error,
@@ -25,6 +26,7 @@ export default function Error({
             >
                 Try again
             </button>
+            <LogoutButton/>
         </div>
     )
 }
