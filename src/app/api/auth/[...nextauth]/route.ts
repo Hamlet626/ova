@@ -11,14 +11,15 @@ serverInitFirebase();
 
 export const authOptions : NextAuthOptions = {
     pages: {
-        signIn: '/signin'
+        signIn: '/signin',
+        newUser: '/onboard'
     },
     providers: [
         CredentialsProvider({
             name: 'Credentials',
             credentials: {},
-            async authorize(credentials,req):Promise<User>{
-                return await signInWithEmailAndPassword(cliAuth, credentials.email || '', credentials.password || '')
+            async authorize(credentials,req):Promise<User|null>{
+                return await signInWithEmailAndPassword(cliAuth, (credentials as any).email || '', (credentials as any).password || '')
                     .then(async userCredential => {
                         if (userCredential.user) {
                             const r = await auth().getUser(userCredential.user.uid);
