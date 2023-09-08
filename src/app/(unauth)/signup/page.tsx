@@ -62,6 +62,7 @@ export function SignUp1(){
         />
     {/*  {/* 2.5 unit */}
         <Box width={48} />
+
         <Input
           name="lastname"
           fullWidth
@@ -129,6 +130,7 @@ export function SignUp1(){
  <Box height={24}/>
              <Typography variant="h6" sx={signUpTextStyle}>Log In</Typography>
             <Box height={24}/>
+
             <Button fullWidth variant="outlined" size="large" startIcon={<Google/>}>Google Log in</Button>
 
 
