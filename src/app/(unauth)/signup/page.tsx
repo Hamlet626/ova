@@ -5,6 +5,8 @@ import { Bg2 } from "@/components/background/bg2";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from "react";
 
+// import { auth } from "@/utils/firebase/firebase";
+
 import { useRouter } from "next/navigation";
 import { cliAuth  } from "@/utils/firebase/firebase_client";
 import {//Button, Input,

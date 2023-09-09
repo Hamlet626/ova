@@ -10,17 +10,8 @@ import Link from "next/link";
 export default async function LandingPage() {
   const session = await getServerSession(authOptions);
 
-  console.log("in page")
-  console.log(session);
-
-  const hd=headers()
-  hd.forEach((v,k)=>{
-    console.log(v,k);
-  });
-
   if(session)redirect("/dashboard");
 
-  console.log("render landing");
   return (
       // <main className="flex min-h-screen flex-col items-center justify-between p-24">
       //   <Signin/>
