@@ -21,9 +21,6 @@ export default async function UnAuthLayout({children,}) {
 
     return (
         <section>
-            {/* Include shared UI here e.g. a header or sidebar */}
-            {/*<nav></nav>*/}
-            <LogoutButton/>
             {children}
         </section>
     )

@@ -23,7 +23,6 @@ export const authOptions : NextAuthOptions = {
                     .then(async userCredential => {
                         if (userCredential.user) {
                             const r = await auth().getUser(userCredential.user.uid);
-                            console.log(r);
                             return {
                                 id:r.uid,
                                 email:r.email??null,
@@ -41,15 +40,9 @@ export const authOptions : NextAuthOptions = {
     ],
     callbacks:{
         async jwt({token,user}){
-            console.log("in jwt callback");
-            console.log(token);
-            console.log(user);
             return {...token,...(user??{})};
         },
         async session({session, token, user}){
-            console.log("in session callback");
-            console.log(token);
-            console.log(session.user);
             if(session.user)session.user=token;
             return session;
         }

@@ -923,7 +923,6 @@ const personal_and_medical = {
 }
 
 let modified_content = assign_IDs(personal_and_medical.content);
-console.log(modified_content)
 
 
 const other_clinic_questions={

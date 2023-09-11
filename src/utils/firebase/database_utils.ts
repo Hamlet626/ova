@@ -13,16 +13,6 @@ export const UsersAgcDataRef=(role:RoleNum,id:string,agcId:string)=>
 UserRef(RoleNum.Agc,id).collection("agc data").doc(agcId);
 
 
-// export const EDRef=(id:string)=>{
-//     const roleKey=roles[EDRoleNum].id;
-//     return firestore().doc(`user groups/${roleKey}/users/${id}`);
-// }
-
-// export const RcpRef=(id:string)=>{
-//     const roleKey=roles[RcpRoleNum].id;
-//     return firestore().doc(`user groups/${roleKey}/users/${id}`);
-// }
-
 export const withTime=(data:any)=>{
     data.createTime??=Date.now();
     data.editTime=Date.now();

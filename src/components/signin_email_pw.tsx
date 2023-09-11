@@ -33,15 +33,13 @@ export default function SigninEmailPwBlock() {
             const session=await getSession();
             const rolePath=session?.user?.role===RoleNum.ED?"ed":
             session?.user?.role===RoleNum.Rcp?"rcp":"agc";
-            router.push(`/dashboard`);
+            router.push(`/${rolePath}/dashboard`);
             return;
         }
-        console.log(r);
         setSigningIn(false);
     });
 
     return(
-        // <Stack direction="column" justifyContent="center" alignItems="flex-start" maxWidth="400px">
         <>
             <form>
                 <Input name="email" fullWidth startAdornment={
