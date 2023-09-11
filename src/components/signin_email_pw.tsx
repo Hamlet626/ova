@@ -72,7 +72,7 @@ export default function SigninEmailPwBlock() {
                 Log in
             </LoadingButton>
             <Box height={96}/>
-            <Button disabled={signingIn}
+            <Button disabled={signingIn} color="secondary"
                 fullWidth variant="outlined" size="large" startIcon={<Google/>}>
                 Google Log in
             </Button>
