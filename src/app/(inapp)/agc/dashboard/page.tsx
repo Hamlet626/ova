@@ -1,16 +1,20 @@
-// 'use client'
+//'use client'
 import {signOut, useSession} from "next-auth/react";
 import {getServerSession} from "next-auth/next";
-import Grid2 from "@mui/material/Unstable_Grid2";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import logo from "@/assets/ova_logo.svg";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import ToolBar from "@mui/material/Toolbar";
-import AdbIcon from "@mui/icons-material/Adb";
-import Typography from "@mui/material/Typography";
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import Image from "next/image";
+import {Box, Button} from "@mui/material";
 
+const pages = ['Home','Egg Donor','Recipients','Cases','Events']
 export default async function Home() {
     // const session = useSession({
     //   required: true,
@@ -36,6 +40,49 @@ export default async function Home() {
                         // top: '27px',
                         // left: '80px',
                     }}/>
+                    <Box
+                        sx={{
+                            width: '108px',
+                            height: '27.71px',
+                            position: 'static'
+                    }}
+                    >
+                    </Box>
+                    <Box sx={{ flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
+                        {pages.map((page) => (
+                            <Button
+                                key={page}
+                                sx={{my: 2, mr: 3, color: 'white', display: 'block'}}
+                            >
+                                {page}
+                            </Button>
+                        ))}
+                    </Box>
+                    <IconButton sx={{
+                        height: '48px',
+                        width: '48px',
+                        position: 'static'
+                    }}>
+                        <Badge badgeContent={4} color="error">
+                            <CalendarTodayIcon />
+                        </Badge>
+                    </IconButton>
+                    <IconButton sx={{
+                        height: '48px',
+                        width: '48px',
+                        position: 'static'
+                    }}>
+                        <Badge badgeContent={17} color="error">
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton>
+                    <IconButton sx={{
+                        height: '48px',
+                        width: '48px',
+                        position: 'static'
+                    }}>
+                        <AccountCircle />
+                    </IconButton>
                 </ToolBar>
             </Container>
         </AppBar>
