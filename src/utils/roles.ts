@@ -1,8 +1,11 @@
 
 
-export const EDRoleNum=0;
-export const RcpRoleNum=1;
-export const AgcRoleNum=2;
+
+export enum RoleNum {
+    ED = 0,
+    Rcp = 1,
+    Agc = 2,
+  }
 
 /// the infomation for each roles corresponding to role number in user's info
 // id: collection id used in firebase + algolia

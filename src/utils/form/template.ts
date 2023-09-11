@@ -3,10 +3,30 @@ import {
     eyeColors,
     hairColors,
     languages,
-    maritalStatuses, relationships,
+    maritalStatuses,
+    relationships,
     sexualOrientations,
-    skinColors, usStatuses, race,
-    languageFluency, drugs
+    skinColors,
+    usStatuses,
+    race,
+    languageFluency,
+    drugs,
+    nationalities,
+    ethnicities,
+    bloodTypes,
+    dominantHands,
+    eyeVisions,
+    eyeVisionsLenses,
+    hairTypes,
+    hairTextures,
+    hairFullness,
+    familyTrait,
+    fBaldness,
+    familySide,
+    physicalTraits,
+    bodyBuilds,
+    activity,
+    personalities, skills, skillTypes
 } from "@/utils/form/consts";
 
 
@@ -54,8 +74,8 @@ const basic_info={
                 {
                     id: "s13",
                     label: "Nationality",
-                    type: "text",
-                    length: "short",
+                    type: "multi-select",
+                    options: nationalities,
                     required: true,
                     sub: [
                         {
@@ -92,17 +112,18 @@ const basic_info={
                 {
                     id: "s15",
                     label: "Ethnicity",
-                    type: "multi-select",
-                    options: ["Native American"],
+                    type: "checkbox",
+                    options: ethnicities,
                     required: true,
                     sub:[
                         {
                             id: "s16",
-                            condition:["Native American"],
-                            label: "Native American",
-                            type: "yes/no",
+                            condition:["Native American","Alaska Native"],
+                            label: "Please go into more detail about your ethnicity. Are you a member of a tribe?",
+                            // type: "yes/no",
+                            type: "text",
                             length: "short",
-                            required: false
+                            required: true
                         }
                     ]
                 },
@@ -145,34 +166,7 @@ const physical_personal_trait={
         {
             title: "physical characteristics",
             fields: [
-                {
-                    id: "s0",
-                    label: "Blood Type",
-                    type: "text",
-                    length: "short",
-                    required: true
-                },
-                {
-                    id: "s4",
-                    label: "Eye Color",
-                    type: "text",
-                    length: "short",
-                    required: true
-                },
-                {
-                    id: "s5",
-                    label: "Hair Color",
-                    type: "multi-select",
-                    options: hairColors,
-                    required: true
-                },
-                {
-                    id: "s6",
-                    label: "Skin Color",
-                    type: "multi-select",
-                    options: skinColors,
-                    required: true
-                },
+
                 {//todo
                     id: "s7",
                     label: "Height (in Inches)",
@@ -187,19 +181,112 @@ const physical_personal_trait={
                     required: true
                 },
                 {
-                    id: "s9",
-                    label: "Eyes Condition",
+                    id: "s6",
+                    label: "Body Builds",
+                    type: "multi-select",
+                    options: bodyBuilds,
+                    required: true
+                },
+                {
+                    id: "s0",
+                    label: "Blood Type",
+                    type: "multi-select",
+                    options: bloodTypes,
+                    required: true
+                },
+                {
+                    id: "s4",
+                    label: "Eye Color",
                     type: "multi-select",
                     options: eyeColors,
-                    required: false
+                    required: true
+                },
+                {
+                    id: "s5",
+                    label: "Hair Color",
+                    type: "multi-select",
+                    options: hairColors,
+                    required: true
+                },
+                {
+                    id: "s5",
+                    label: "What is your natural hair type?",
+                    type: "multi-select",
+                    options: hairTypes,
+                    required: true
+                },
+                {
+                    id: "s5",
+                    label: "What is your natural hair texture?",
+                    type: "multi-select",
+                    options: hairTextures,
+                    required: true
+                },
+                {
+                    id: "s5",
+                    label: "What is your natural hair fullness? ",
+                    type: "multi-select",
+                    options: hairFullness,
+                    required: true
+                },
+                {
+                    id: "s6",
+                    label: "Skin Color",
+                    type: "multi-select",
+                    options: skinColors,
+                    required: true
+                },
+                {
+                    id: "s9",
+                    label: "How's your Vision?",
+                    type: "multi-select",
+                    options: eyeVisions,
+                    required: true,
+                    sub:[
+                        {
+                            id: "s16",
+                            condition:["Fair(need corrective lenses)", "Poor(need corrective lenses)"],
+                            label: "Does any of the following apply?",
+                            type: "checkbox",
+                            options: eyeVisionsLenses,
+                            required: false
+                        }
+                    ]
                 },
                 {
                     id: "s10",
-                    label: "Double Eyelid",
-                    type: "yes/no",
-                    length: "short",
-                    required: false
-                }
+                    label: "Does any of the following apply to you?",
+                    type: "checkbox",
+                    options: physicalTraits,
+                    required: false,
+                    sub: [
+                        {
+                            id: "s",
+                            condition: ["Baldness"],
+                            label: "Please Explain, e.g. how serious, since what age?",
+                            required: false,
+                            type: "text",
+                        }
+                    ]
+                },
+                {
+                    id: "s11",
+                    label: "Which is your dominant hand?",
+                    type: "multi-select",
+                    options: dominantHands,
+                    required: true
+                },
+                {
+                    id: "s",
+                    label: "Please select the following options if any of which applied to you.",
+                    required: false,
+                    type: "checkbox",
+                    options: [
+                        "Tattoo",
+                        "Piercing",
+                        "Adopted"
+                    ]
+                },
             ]
         },
         {
@@ -212,7 +299,29 @@ const physical_personal_trait={
                     options: sexualOrientations,
                     required: true
                 },
-
+                {
+                    id: "s11",
+                    label: "What best describes you?",
+                    type: "multi-select",
+                    options: activity,
+                    required: true
+                },
+                {
+                    id: "s11",
+                    label: "What best describes your personality?",
+                    type: "multi-select",
+                    options: personalities,
+                    required: true
+                },
+                ...favoritesX(["Food","Color","Sport","Type of Music","Animal","Hobby"]),
+                optQuestions([
+                    "What do you like most about yourself and why?",
+                    "What do you like least about yourself and why?",
+                    "Who is your role model and why?",
+                    "What attributes do you most value in a friend?",
+                    "What is your ambition in life?",
+                    "Is there anything special that you would like us to know about you?"
+                ]),
             ]
         },
     ]
@@ -233,7 +342,7 @@ const education_occupation={
                     sub:[//todo:
                         {
                             id: "s0",
-                            condition: race,
+                            exCondition: ["No Formal Education"],
                             label: "School Name",
                             type: "text",
                             length: "medium",
@@ -241,14 +350,14 @@ const education_occupation={
                         },
                         {
                             id: "s1",
-                            condition: race,
+                            exCondition: ["No Formal Education"],
                             label: "GPA",
                             type: "number",
                             required: true
                         },
                         {
                             id: "s2",
-                            condition: race,
+                            condition: ["Associate Degree", "Bachelor's Degree", "Master's Degree", "Doctorate Degree", "Postdoctoral"],
                             label: "Major",
                             type: "test",
                             length: "medium",
@@ -256,13 +365,86 @@ const education_occupation={
                         },
                         {
                             id: "s3",
-                            condition: race,
+                            condition: ["Bachelor's Degree", "Master's Degree", "Doctorate Degree", "Postdoctoral"],
                             label: "Are you currently in this school",
                             type: "yes/no",
-                            required: true
+                            required: true,
+                            sub:[
+                                {
+                                    label:"Expected time of graduation",
+                                    type: "date",
+                                    required: false,
+                                }
+                            ]
                         },
                     ]
+                },
+                optQuestion("Do you belong to any academic or professional societies?"),
+
+            ]
+        },
+        {
+            title: "Skill Talent",
+            fields: [
+                {
+                    id: "s0",
+                    label: "Do you consider yourself technically or mechanically skilled?",
+                    type: "checkbox",
+                    options: skillTypes,
+                    required: false
+                },
+                {
+                    id:"s1",
+                    label: "Please select the following fields which you are skillful on",
+                    type: "checkbox",
+                    options: skills,
+                    required: false,
+                    sub:skills.map((v)=>({
+                        label:`Please rate your ${v} skill(talent)`,
+                        type:"multi-select",
+                        options:["Excellent","Good","Above than Average"],
+                        required:true,
+                    }))
                 }
+            ]
+        },
+        {
+            title:"Occupation",
+            Fields:[
+                {
+                    id: "s0",
+                    label: "Job History",
+                    type: "populate",
+                    group: [
+                        {
+                            id: "s0",
+                            label: "Position",
+                            type: "text",
+                            length: "short",
+                            required: true
+                        },
+                        {
+                            id: "s1",
+                            label: "Company/Organization Name",
+                            type: "text",
+                            length: "short",
+                            required: false
+                        },
+                        {
+                            id: "s1",
+                            label: "Start Date",
+                            type: "date",
+                            required: false
+                        },
+                        {
+                            id: "s1",
+                            label: "End Date",
+                            type: "date",
+                            required: false
+                        },
+                    ],
+                    required: true
+                },
             ]
         }
     ]
@@ -311,6 +493,116 @@ const family_partner={
                     addRelation:true
                 })
             ]
+        },
+        {
+            id: "s",
+            label: "Please select the following that applied to your partner, family member, or close contact",
+            type: "checkbox",
+            options: familyTrait,
+            sub: [
+                {
+                    id: "s",
+                    condition: [fBaldness],
+                    label: "Which side of the Family?",
+                    required: true,
+                    type: "checkbox",
+                    options: familySide
+                }
+            ]
+        },
+        {
+            id: "s",
+            label: "PLease list your family history of inheritable diseases if any",
+            type: "text",
+            length: "long",
+            required: false
+        },
+        {
+            id: "s",
+            label: "Do you have a family history of mental illness",
+            required: true,
+            type: "yes/no",
+            length: "short"
+        },
+        {
+            id: "s",
+            label: "Please select the following that applied to your partner, family member, or close contact",
+            required: true,
+            type: "checkbox",
+            options: [
+                "Been to Africa",
+                "Been to Europe more than 3 months",
+                "Been to Europe between 1980-1996",
+                "Have sexually transmitted disease(s)",
+                "Drug abuse or injected drugs",
+                "Jail/Prison ore than 3 days"
+            ]
+        },
+        {
+            id: "s",
+            label: "Please provide detailed medical information about your immediate family",
+            required: true,
+            type: "text",
+            length: "long"
+        },
+        {
+            id: "s",
+            label: "How many siblings do you have?",
+            required: true,
+            type: "text",
+            length: "short"
+        },
+        {
+            id: "s",
+            label: "Please select your family history of multiple birth",
+            required: true,
+            type: "checkbox",
+            options: [
+                "Twins",
+                "Triplets",
+                "Other"
+            ],
+            sub: [
+                {
+                    id: "s",
+                    required: true,
+                    label: "Please enter they number of children in multiple birth",
+                    condition: "Other",
+                    type: "text",
+                    length: "medium"
+                }
+            ]
+        },
+        {
+            id: "s",
+            label: "Does your partner support your decision to become an egg donor and understand the need for temporary abstinence??",
+            required: true,
+            type: "text",
+            length: "long"
+        },
+        {
+            id: "s",
+            label: "Do your family and/or those important to you support your decision to become an egg donor?",
+            required: true,
+            type: "yes/no",
+            length: "short",
+            sub: [
+                {
+                    id: "s",
+                    condition: "no",
+                    type: "text",
+                    label: "Please explain",
+                    length: "long",
+                    required: true
+                }
+            ]
+        },
+        {
+            id: "s",
+            label: "Do you understand that the ultimate goal of your donation is the birth of a healthy child with whom you will not have a parental relationship?",
+            required: true,
+            type: "yes/no",
+            length: "short"
         }
     ]
 };
@@ -631,7 +923,6 @@ const personal_and_medical = {
 }
 
 let modified_content = assign_IDs(personal_and_medical.content);
-console.log(modified_content)
 
 
 const other_clinic_questions={
@@ -681,4 +972,29 @@ const personData=(name,{addRelation,addDobAddr,addProp})=>{
     ];
 
     return addProp?r.map((v)=>({...v,...addProp})):r;
+}
+
+
+function favoritesX(cate: string[]) {
+    return cate.map((v,i,l)=>({
+        id: "s6",
+        label: `What's your favourite ${v}`,
+        type: "text",
+        length: "short",
+        required: false
+    }));
+}
+
+function optQuestions(qs: string[]) {
+    return qs.map((v,i,l)=>optQuestion(v));
+}
+
+function optQuestion(question: string) {
+    return {
+        id: "s6",
+        label: question,
+        type: "text",
+        length: "long",
+        required: false
+    };
 }

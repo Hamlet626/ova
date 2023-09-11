@@ -10,7 +10,9 @@ const roboto = Roboto({
 const theme = createTheme({
     palette: {
         mode: 'light',
-        // primary: {main: "#0206f6"}
+        primary: {main: '#FFA07A'},
+        secondary: {main: '#ad897b'},
+        tertiary: {main: '#9c915d'}
     },
     typography: {
         fontFamily: roboto.style.fontFamily,
@@ -49,6 +51,7 @@ const theme = createTheme({
 });
 
 export default theme;
+<<<<<<< HEAD
 
 ///"Log In" in login page
 export const font1={
@@ -70,3 +73,5 @@ export const font2={
      textAlign: 'center',
      marginBottom: '40px',
 };
+=======
+>>>>>>> 4a5ea523c9bcbb6c20c760d1a2ab7732b98afd92
