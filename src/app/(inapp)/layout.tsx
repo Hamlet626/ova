@@ -2,16 +2,13 @@ import {redirect} from "next/navigation";
 import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {LogoutButton} from "@/components/logout_button";
-import {AgcRoleNum, EDRoleNum, RcpRoleNum} from "@/utils/roles";
+import { RoleNum } from "@/utils/roles";
 
 export default async function InAppLayout({children,}) {
     const session = await getServerSession(authOptions);
 
-    console.log(JSON.stringify(session))
     if(!session)return redirect("/");
-    if(session.user.role!=AgcRoleNum&&
-        session.user.role!=EDRoleNum&&
-        session.user.role!=RcpRoleNum)
+    if(![RoleNum.ED,RoleNum.Rcp,RoleNum.Agc].includes(session.user.role))
         throw {message:"couldn't find user's role.", logout:true};
 
     return (

@@ -1,9 +1,10 @@
 import {Box, Container} from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
-import SigninBlock from "@/components/SigninBlock";
+import SigninBlock from "@/app/(unauth)/signin/signin_block";
 import Image from "next/image";
 import bg from "@/assets/login_bg.png"
 import logo from "@/assets/ova_logo.svg"
+import { ImageBg } from "./image_bg";
 
 export default function Signin() {
     return (
@@ -19,38 +20,3 @@ export default function Signin() {
     )
 }
 
-
-const ImageBg = () => {
-    const containerStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: 'max(100vh,560px)',
-        position: 'relative',
-    };
-
-    const gradientStyle = {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '61%',
-        height: '100%',
-        background: 'linear-gradient(to left, transparent, white)',
-    };
-
-
-    return (
-        <Container style={containerStyle}>
-            <Image src={bg} alt="Your Image" fill
-                objectFit="cover" objectPosition="center"/>
-            <div style={gradientStyle}></div>
-            <Image src={logo} alt="Logo" style={{
-                width: '64px',
-                height: '64px',
-                position: 'absolute',
-                top: '16px',
-                right: '16px',
-            }}/>
-        </Container>
-    );
-};
