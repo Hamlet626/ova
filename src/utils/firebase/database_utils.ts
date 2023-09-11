@@ -1,11 +1,17 @@
 
 import { auth, firestore} from "firebase-admin";
-import { AgcRoleNum, EDRoleNum, RcpRoleNum, roles } from "../roles";
+import {RoleNum, roles } from "../roles";
 
-export const AgencyRef=(id:string)=>{
-    const roleKey=roles[AgcRoleNum].id;
+export const UserRef=(role:RoleNum,id:string)=>{
+    const roleKey=roles[role].id;
     return firestore().doc(`user groups/${roleKey}/users/${id}`);
 }
+
+export const AgencyRef=(id:string)=>UserRef(RoleNum.Agc,id);
+
+export const UsersAgcDataRef=(role:RoleNum,id:string,agcId:string)=>
+UserRef(RoleNum.Agc,id).collection("agc data").doc(agcId);
+
 
 // export const EDRef=(id:string)=>{
 //     const roleKey=roles[EDRoleNum].id;

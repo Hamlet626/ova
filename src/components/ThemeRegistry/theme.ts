@@ -49,13 +49,3 @@ const theme = createTheme({
 });
 
 export default theme;
-
-///"Log In" in login page
-export const font1={
-    fontFamily: roboto.style.fontFamily,
-    fontSize: '45px',
-    fontWeight: 500,
-    lineHeight: '52px',
-    letterSpacing: '0em',
-    textAlign: 'left',
-};

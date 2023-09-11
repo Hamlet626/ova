@@ -1,11 +1,12 @@
 
 import {getClinic} from "@/utils/clinic_check";
 import {algo_client} from "@/utils/algolia";
-import {AgcRoleNum, roles} from "@/utils/roles";
+import {RoleNum, roles} from "@/utils/roles";
 import { auth, firestore} from "firebase-admin";
 import { serverInitFirebase } from '@/utils/firebase/firebase_server';
 import { UserRecord } from "firebase-admin/auth";
-import { AgencyRef, withTime } from "@/utils/firebase/database_utils";
+import { AgencyRef, UserRef, UsersAgcDataRef, withTime } from "@/utils/firebase/database_utils";
+import { EDStatus } from "@/utils/status";
 
 serverInitFirebase();
 
@@ -15,10 +16,13 @@ export async function POST(request: Request) {
 
     ///try get clinic info from url hostName, if it's not a clinics url, set role to agency
     const clinicId=getClinic();
-    role=role??(clinicId==null?AgcRoleNum:null);
+    role=role??(clinicId==null?RoleNum.Agc:null);
 
     if(role==null)
         return Response.json({error:`no role provided with clinicID '${clinicId}'`},{status:501});
+
+    if((role==RoleNum.ED||role===RoleNum.Rcp)&&clinicId==null)
+        return Response.json({error:`no clinicID provided for role '${role}'`},{status:501});
 
     let uRec:UserRecord|null=null;
     try{
@@ -30,20 +34,50 @@ export async function POST(request: Request) {
 
         ///set up firestore + algolia
         await Promise.all([
-            firestore().doc(`user groups/${roleKey}/users/${uRec.uid}`)
-            .set({name,createTime:Date.now(),
-                ...(clinicId==null?{}:{agency:firestore.FieldValue.arrayUnion(AgencyRef(clinicId))})
+            UserRef(role,uRec.uid).set({
+                name,createTime:Date.now(),
+                // ...(clinicId==null?{}:{agency:firestore.FieldValue.arrayUnion(AgencyRef(clinicId))})
             }),
-            algo_client.initIndex(`${roleKey}`).saveObject({
-                objectID: uRec.uid, name, email,createTime:Date.now(),
-                ...(clinicId==null?{}:{agency:[AgencyRef(clinicId)]})
-            })
+            ...(
+                role===RoleNum.ED?[EDSetUp(uRec.uid,name,clinicId!)]:
+                role===RoleNum.Rcp?[RcpSetUp(uRec.uid,name,clinicId!)]:
+                [AgcSetUp(uRec.uid,name,)]),
         ]);
 
         return Response.json({success:true,data:{uid:uRec.uid}});
     }catch(e: any) {
-        if(uRec!=null)
-        await auth().deleteUser(uRec.uid);
+        if(uRec!==null)
+            await auth().deleteUser(uRec.uid);
         return Response.json(e,{status:502});
     }
+}
+
+
+const EDSetUp=(uid:string,name:string,clinicId:string)=>{
+    const roleKey=roles[RoleNum.ED].id;
+    return [
+    UsersAgcDataRef(RoleNum.ED,uid,clinicId).set({
+        status:EDStatus.filling_Form
+    }),
+    algo_client.initIndex(`${roleKey}`).saveObject({
+        objectID: uid, name, createTime:Date.now(),
+        agencies:{[clinicId]:{status:EDStatus.filling_Form}}
+    })];
+}
+
+const RcpSetUp=(uid:string,name:string,clinicId:string)=>{
+    const roleKey=roles[RoleNum.ED].id;
+    return [
+    algo_client.initIndex(`${roleKey}`).saveObject({
+        objectID: uid, name, createTime:Date.now(),
+        agencies:[clinicId]
+    })];
+}
+
+const AgcSetUp=(uid:string,name:string)=>{
+    const roleKey=roles[RoleNum.Agc].id;
+    return [
+        algo_client.initIndex(`${roleKey}`).saveObject({
+        objectID: uid, name, createTime:Date.now()
+    })];
 }
