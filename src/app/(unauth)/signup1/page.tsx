@@ -1,8 +1,9 @@
 import React from "react";
-import { Box, Container, Input, Button } from "@mui/material";
+import { Box, Container, Input, Button, Typography, LinearProgress } from "@mui/material";
 import { Bg2 } from "@/components/background/bg2";
 
-export default function Signup1() {
+
+export default function Signup_profile() {
   return (
     <Box
       sx={{
@@ -15,33 +16,38 @@ export default function Signup1() {
     >
       {/* Use Bg2 component as the background */}
       <Bg2 />
+          {/* Sign Up text and progress bar */}
+         <Box sx={{ position: "absolute", top: 0, left: 0, margin: "16px", display: "flex", alignItems: "center" }}>
+               <Typography variant="h4" sx={{ marginRight: 10 }}>
+                 Sign Up
+               </Typography>
+      <LinearProgress variant="determinate" value={66.67} sx={{ width: "800px", backgroundColor: "grey", "& .MuiLinearProgress-bar": { backgroundColor: "orange" } }} />
+             </Box>
+
 
       {/* Center the content */}
-      <Container
+      {/* Container
         maxWidth="sm"
         sx={{
           position: "absolute",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
+          alignItems: "flex-start", // Align content to the top left
+          justifyContent: "flex-start", // Align content to the top left
           width: "100%",
           height: "100%",
         }}
       >
-        <h1>Welcome to Signup Page 3</h1>
 
-        {/* Upload Image */}
+
         <input type="file" accept="image/*" />
 
-        {/* Name Input */}
         <Input
           fullWidth
           placeholder="Name"
           sx={{ marginTop: 2 }}
         />
 
-        {/* Submit Button */}
         <Button
           variant="contained"
           size="large"
@@ -49,8 +55,7 @@ export default function Signup1() {
         >
           Submit
         </Button>
-          {/*why do we have margin on the button?*/}
-      </Container>
+      </Container> */}
     </Box>
   );
 }

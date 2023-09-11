@@ -1,7 +1,10 @@
 import React from "react";
-import { Box, Container, Input, Button } from "@mui/material";
+import { Box, Container, Input, Button, Typography } from "@mui/material";
 import { Bg2 } from "@/components/background/bg2";
 
+export function Signup_profile1(){
+return()
+}
 export default function Signup_profile() {
   return (
     <Box
@@ -23,14 +26,18 @@ export default function Signup_profile() {
           position: "absolute",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
+          alignItems: "flex-start", // Align content to the top left
+          justifyContent: "flex-start", // Align content to the top left
           width: "100%",
           height: "100%",
         }}
       >
-        <h1>Welcome to Signup Page 3</h1>
-
+        <Typography variant="h4" sx={{ marginBottom: 2 }}>
+          Sign Up
+        </Typography>
+        <Typography variant="h4" sx={{ marginBottom: 2 }}>
+          Welcome to Signup Page 2
+        </Typography>
         {/* Upload Image */}
         <input type="file" accept="image/*" />
 
