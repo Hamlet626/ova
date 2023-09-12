@@ -1,21 +1,22 @@
 'use client';
 import React from "react";
-import { Bg1 } from "@/components/background/bg1";
-import { Bg2 } from "@/components/background/bg2";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useState } from "react";
-
-// import { auth } from "@/utils/firebase/firebase";
-
 import { useRouter } from "next/navigation";
 import { cliAuth  } from "@/utils/firebase/firebase_client";
 import {//Button, Input,
     Box, Breadcrumbs, Button, Container, Input, InputAdornment, Link, Stack, TextField, Typography
 } from "@mui/material";
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+import { Bg1 } from "@/components/background/bg1";
+import { Bg2 } from "@/components/background/bg2";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useState } from "react";
 import {Google, Lock, Login, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
 import NextLink from "next/link";
-import {font2} from "@/components/ThemeRegistry/theme";
+import {font2} from "@/components/ThemeRegistry/theme_consts";
+
+//import grid
+import Grid from '@mui/material/Grid';
+
 //"Sign Up" in signup page
 
 const signUpTextStyle = {
@@ -48,9 +49,10 @@ export function SignUp1(){
     };
     return (
           //  <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-           // {/*16 px as one unit, the space between two input email&password */}
-        <Box maxWidth="400px">
-             <Typography variant="h4" sx={font2 } >Sign Up</Typography>
+           // {/*16 px as one unit, the space between two input email&password  */}
+        <Box maxWidth="400px" >
+        <Typography variant="h4" sx={font2 } >Sign Up</Typography>
+             <Box height={50} />
 <Box sx={flexContainerStyle}>
         <Input
           name="firstname"
@@ -63,7 +65,7 @@ export function SignUp1(){
 
         />
     {/*  {/* 2.5 unit */}
-        <Box width={48} />
+        <Box width={23} />
 
         <Input
           name="lastname"
@@ -76,7 +78,7 @@ export function SignUp1(){
         />
       </Box>
      {/* 2.5 unit, same as the space betwwen signup and name */}
-      <Box height={40} />
+      <Box height={41} />
        <Input  id="email"
                name="email"
                type="email"
@@ -104,7 +106,7 @@ export function SignUp1(){
                                       {showPw ? <VisibilityOff /> : <Visibility />}
                                   </InputAdornment>}
                                      placeholder="Password" type={showPw?"text":"password"}/>
-            {/*password again*/}
+          {/*
             <Box height={16}/>
             <Input  input
                          id="passwordAgain"
@@ -121,59 +123,87 @@ export function SignUp1(){
                      {showPw ? <VisibilityOff /> : <Visibility />}
                      </InputAdornment>}
                      placeholder="Password Again" type={showPw?"text":"password"}/>
-     {/*2.5 unit */}
+
   <Box height={40}/>
-            <Link href="/signup1">
-            <Button disabled={(!email || !password || !passwordAgain) || (password !== passwordAgain)}
-                     onClick={() => signup()}
-                 fullWidth variant="contained" size="large" startIcon={<ArrowCircleRightOutlinedIcon/>}>Next</Button>
-             </Link>
+<Link href={(!email || !password || !passwordAgain) || (password !== passwordAgain) ? null : "/(inapp)/signup_profile"}>
+  <Button
+    disabled={(!email || !password || !passwordAgain) || (password !== passwordAgain)}
+    onClick={() => signup()}
+    fullWidth
+    variant="contained"
+    size="large"
+    startIcon={<ArrowCircleRightOutlinedIcon />}
+  >
+    Next
+  </Button>
+</Link> */}
+ {/* make password condition here*/}
+  <Box height={40}/>
+
+<Link href={(!email || !password || password.length < 6)  ? null : "/signup1"}>
+  <Button
+    disabled={(!email || !password || password.length < 6 ) }
+    onClick={() => signup()}
+    fullWidth
+    variant="contained"
+    size="large"
+    startIcon={<ArrowCircleRightOutlinedIcon />}
+  >
+    Next
+  </Button>
+</Link>
+
       {/*4 unit from next to login, and Login text take 1 unit, so 1.5 unit for each*/}
- <Box height={24}/>
+ <Box height={33}/>
              <Typography variant="h6" sx={signUpTextStyle}>Log In</Typography>
-            <Box height={24}/>
+            <Box height={37}/>
 
             <Button fullWidth variant="outlined" size="large" startIcon={<Google/>}>Google Log in</Button>
-
-
-
-
-
  </Box>
     )
 }
 export default function SignUp() {
-
   return (
-    <Box
-      sx={{
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-      }}
+    <Grid
+      container
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+      Height="120vh"
     >
       {/* Use Bg1 component as the background */}
       <Bg1 />
 
       {/* Center the SignUpBlock */}
-      <Box
+      <Grid
+        item
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        Height="100vh"
         sx={{
-          position: "absolute",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          height: "100%",
-          marginLeft: "100px", // Adjust this value as needed
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+//           marginLeft: '100px', // Adjust this value as needed
         }}
       >
-        <Container maxWidth="sm">
-          <SignUp1 /> {/* Your signup form component */}
-        </Container>
-      </Box>
-    </Box>
+         <Grid item>
+             {/* overflowY make sure always show contexts */}
+             <Grid style={{ maxHeight: '100vh', overflowY: 'auto' }}>
+               <Container maxWidth="sm">
+                 <SignUp1 />
+               </Container>
+             </Grid>
+           </Grid>
+      </Grid>
+    </Grid>
   );
 }
+
+
+
+
+
+

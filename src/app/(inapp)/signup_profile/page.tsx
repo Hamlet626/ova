@@ -2,9 +2,7 @@ import React from "react";
 import { Box, Container, Input, Button, Typography } from "@mui/material";
 import { Bg2 } from "@/components/background/bg2";
 
-export function Signup_profile1(){
-return()
-}
+
 export default function Signup_profile() {
   return (
     <Box
