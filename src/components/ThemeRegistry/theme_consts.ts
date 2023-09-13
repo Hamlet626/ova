@@ -15,3 +15,4 @@ export const font1={
     letterSpacing: '0em',
     textAlign: 'left',
 };
+
