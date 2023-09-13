@@ -192,7 +192,7 @@ export default function SignUp() {
          <Grid item>
              {/* overflowY make sure always show contexts */}
              <Grid style={{ maxHeight: '100vh', overflowY: 'auto' }}>
-               <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ overflowY: 'hidden' }}>
                  <SignUp1 />
                </Container>
              </Grid>

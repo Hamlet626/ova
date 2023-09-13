@@ -21,19 +21,17 @@ export default function Signup_profile() {
                <Typography variant="h4" sx={{ marginRight: 10 }}>
                  Sign Up
                </Typography>
-      <LinearProgress variant="determinate" value={66.67} sx={{ width: "800px", backgroundColor: "grey", "& .MuiLinearProgress-bar": { backgroundColor: "orange" } }} />
+      <LinearProgress variant="determinate" value={66.67} sx={{ width: "", backgroundColor: "grey", "& .MuiLinearProgress-bar": { backgroundColor: "orange" } }} />
              </Box>
-
-
-      {/* Center the content */}
-      {/* Container
+<Box height={33}/>
+       <Box
         maxWidth="sm"
         sx={{
           position: "absolute",
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start", // Align content to the top left
-          justifyContent: "flex-start", // Align content to the top left
+          alignItems: "center", // Align content to the top left
+          justifyContent: "center", // Align content to the top left
           width: "100%",
           height: "100%",
         }}
@@ -55,7 +53,7 @@ export default function Signup_profile() {
         >
           Submit
         </Button>
-      </Container> */}
+      </Box>
     </Box>
   );
 }
