@@ -15,3 +15,20 @@ export const font1={
     letterSpacing: '0em',
     textAlign: 'left',
 };
+
+export const font2={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '28px',
+    fontWeight: 500,
+    lineHeight: '36px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+};
+export const font3={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '14px',
+    fontWeight: 400,
+    lineHeight: '20px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+};
