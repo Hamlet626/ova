@@ -38,7 +38,6 @@ export function SignUp1(){
       const router = useRouter();
 
       const navigateToSignupProfile = () => {
-        // 使用 router.push 来进行导航，包括 "(inapp)" 在路径中
         router.push('/app/(inapp)/signupprofile');
       };
 
@@ -146,7 +145,7 @@ export function SignUp1(){
  {/* make password condition here*/}
   <Box height={40}/>
 
-<Link href={(!email || !password || password.length < 6)  ? null : "/signup1"}>
+<Link href={(!email || !password || password.length < 6)  ? null : "/profile"}>
   <Button
     disabled={(!email || !password || password.length < 6 ) }
     onClick={() => signup()}
