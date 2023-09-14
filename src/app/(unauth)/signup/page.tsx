@@ -35,6 +35,12 @@ export function SignUp1(){
     const [password, setPassword] = useState('');
     const [passwordAgain, setPasswordAgain] = useState('');
     const [showPw, setShowPw] = useState(false);
+      const router = useRouter();
+
+      const navigateToSignupProfile = () => {
+        // 使用 router.push 来进行导航，包括 "(inapp)" 在路径中
+        router.push('/app/(inapp)/signupprofile');
+      };
 
     // Function to toggle password visibility
     const clickPwIcon = () => {
@@ -159,20 +165,24 @@ export function SignUp1(){
             <Box height={37}/>
 
             <Button fullWidth variant="outlined" size="large" startIcon={<Google/>}>Google Log in</Button>
+    <Box height={30}/>
  </Box>
+
     )
 }
 export default function SignUp() {
   return (
-    <Grid
+  //md is medium size with 12 cols
+
+    <Grid  md={12}
       container
       direction="column"
       justifyContent="center"
       alignItems="center"
-      Height="120vh"
+      Height="100vh"
     >
       {/* Use Bg1 component as the background */}
-      <Bg1 />
+         <Bg1/>
 
       {/* Center the SignUpBlock */}
       <Grid
@@ -189,18 +199,26 @@ export default function SignUp() {
 //           marginLeft: '100px', // Adjust this value as needed
         }}
       >
-         <Grid item>
-             {/* overflowY make sure always show contexts */}
-             <Grid style={{ maxHeight: '100vh', overflowY: 'auto' }}>
-    <Container maxWidth="sm" style={{ overflowY: 'hidden' }}>
-                 <SignUp1 />
-               </Container>
+      <Grid item>
+                      <Grid  container
+                          style={{
+                                   maxHeight: '100vh',
+                              }}
+                            >
+                     <Container maxWidth="sm" style={{ overflowY: 'hidden' }}>
+                        <SignUp1 />
+                         </Container>
+
+                    </Grid>
+                  </Grid>
              </Grid>
            </Grid>
-      </Grid>
-    </Grid>
-  );
+         );
+
 }
+
+
+
 
 
 
