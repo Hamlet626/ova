@@ -15,3 +15,7 @@ export const font1={
     letterSpacing: '0em',
     textAlign: 'left',
 };
+
+
+export const outline_variant='#D8C2BB';
+export const neutral96='#FEF1ED';
