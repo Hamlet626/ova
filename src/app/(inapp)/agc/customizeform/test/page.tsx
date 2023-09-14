@@ -29,7 +29,6 @@ export default function customize_Form() {
                 height:'941px',
                 backgroundColor: 'white',
                 mt:'-25px',
-                boxShadow:'8px,22px,75px,2px,rgba(92, 104, 126, 0.12)',
             }}>
                 <Typography variant="h4" sx={{fontFamily: 'roboto.style.fontFamily',
                     fontSize: '16px',
@@ -47,27 +46,24 @@ export default function customize_Form() {
                     fontSize: '24px',
                     fontWeight: 500,
                     lineHeight: '32px',
-                    mt:'38px',
+                    mt:'62px',
                     ml:'80px',
-                    width:'169px',
-                    height:'32px',
+                    width:'133px',
+                    height:'32px'
                 }}>
                     Create Form
                 </Typography>
                 <List sx={{
                     mt:"16px",
                     ml:"80px",
-                    width:'197px',
-                    height:'auto',
-                    gap:'12px',
+                    width:'193px',
                 }}>
                     {['Basic Information', 'Family & Others', 'Personal Medical', 'Other A', 'Other B'].map((text, index) => (
                         <div key={text}>
-                            <ListItem key={text} disablePadding >
+                            <ListItem key={text} disablePadding>
                                 <ListItemButton sx={{
-                                    borderRadius: '100px',
-                                    backgroundColor: index === 0 ? primary90: "white",
-                                    width:'93px',
+                                    borderRadius: '24px',
+                                    backgroundColor: index === 0 ? "primary.main": "white"
                                 }}>
                                     <ListItemIcon>
                                         {index === 0 ? < CheckCircleOutline sx={{color:'primary.main'}}/> : <Circle sx={{color:primary90}}/>}
@@ -95,6 +91,7 @@ export default function customize_Form() {
                 }}>
                     Customize Form
                 </Typography>
+
             </Box>
         </Box>
     );
