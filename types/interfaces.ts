@@ -4,6 +4,7 @@
 
 export interface AddiUser {
     role: number,
+    agencies?: string[]|null,
     phone?: string|null,
     fbPath?: string|null
 }

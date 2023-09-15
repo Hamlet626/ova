@@ -39,13 +39,14 @@ export async function POST(request: Request) {
                 // ...(clinicId==null?{}:{agency:firestore.FieldValue.arrayUnion(AgencyRef(clinicId))})
             }),
             ...(
-                role===RoleNum.ED?[EDSetUp(uRec.uid,name,clinicId!)]:
-                role===RoleNum.Rcp?[RcpSetUp(uRec.uid,name,clinicId!)]:
-                [AgcSetUp(uRec.uid,name,)]),
+                role===RoleNum.ED?EDSetUp(uRec.uid,name,clinicId!):
+                role===RoleNum.Rcp?RcpSetUp(uRec.uid,name,clinicId!):
+                AgcSetUp(uRec.uid,name,)),
         ]);
 
         return Response.json({success:true,data:{uid:uRec.uid}});
     }catch(e: any) {
+        console.log(e);
         if(uRec!==null)
             await auth().deleteUser(uRec.uid);
         return Response.json(e,{status:502});
@@ -66,7 +67,7 @@ const EDSetUp=(uid:string,name:string,clinicId:string)=>{
 }
 
 const RcpSetUp=(uid:string,name:string,clinicId:string)=>{
-    const roleKey=roles[RoleNum.ED].id;
+    const roleKey=roles[RoleNum.Rcp].id;
     return [
     algo_client.initIndex(`${roleKey}`).saveObject({
         objectID: uid, name, createTime:Date.now(),
