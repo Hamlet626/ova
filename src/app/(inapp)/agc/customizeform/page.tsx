@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/system/Stack';
-import {createTheme, ThemeProvider, Typography} from "@mui/material";
+import {alpha, createTheme, ThemeProvider, Typography} from "@mui/material";
 import LinearProgress from '@mui/material/LinearProgress';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -20,6 +20,13 @@ import {Toolbar} from "@mui/material";
 import {CheckCircle, CheckCircleOutline, Circle, CircleOutlined} from "@mui/icons-material";
 import theme from "@/components/ThemeRegistry/theme";
 import {primary90,neutural96} from "@/components/ThemeRegistry/theme_consts";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import IconButton from '@mui/material/IconButton';
+import InputBase from '@mui/material/InputBase';
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
+import {styled} from "@mui/system";
+
 
 export default function customize_Form() {
     return (
@@ -69,10 +76,16 @@ export default function customize_Form() {
                                     backgroundColor: index === 0 ? primary90: "white",
                                     width:'93px',
                                 }}>
-                                    <ListItemIcon>
+                                    <ListItemIcon sx={{
+                                        width:'20px',
+                                        height:'20px',
+                                    }}>
                                         {index === 0 ? < CheckCircleOutline sx={{color:'primary.main'}}/> : <Circle sx={{color:primary90}}/>}
                                     </ListItemIcon>
-                                    <ListItemText primary={text} />
+                                    <ListItemText primary={text}   sx={{
+                                        ml:'-20px',
+                                        color:'black',
+                                    }}/>
                                 </ListItemButton>
                             </ListItem>
                             <Divider/>
@@ -80,21 +93,48 @@ export default function customize_Form() {
                     ))}
                 </List>
             </Box>
-            <Box sx={{ width: '100%' }}>
-                <LinearProgress sx={{
-                    width:'869px',
-                    height:'4px',
-                    mt:'81px',
-                    ml:'85px'
-                }}/>
-                <Typography variant="h5" sx={{color:'#926F63',
-                    mt:'20px',
-                    ml:'85px',
-                    width:'206px',
-                    height:'36px'
+            <Box sx={{ width: '100%', border: '2px solid #000',}}>
+                <List sx={{
+                    mt:"81px",
+                    ml:"85px",
+                    width:'auto',
+                    height:'auto',
+                    gap:'12px',
                 }}>
-                    Customize Form
-                </Typography>
+                    <ListItem disablePadding>
+                        <LinearProgress sx={{
+                            width:'869px',
+                            height:'4px',
+                        }}/>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <Typography variant="h5" sx={{color:'#926F63',
+                            width:'206px',
+                            height:'36px'
+                        }}>
+                            Customize Form
+                        </Typography>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <Typography variant="h6" sx={{
+
+                        }}>
+                            Create the question you want to ask
+                        </Typography>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <Stack direction="row">
+                            <IconButton >
+                                <SearchIcon />
+                            </IconButton>
+                            <input type="text" variant="outlined"/>
+                            <Typography sx={{backgroundColor:'gray',color:"blue"}}>searchbox</Typography>
+                            <button type="submit" > </button>
+
+                        </Stack>
+                    </ListItem>
+                </List>
+
             </Box>
         </Box>
     );
