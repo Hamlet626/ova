@@ -1,9 +1,17 @@
-import {headers} from "next/headers";
+import { getServerSession } from "next-auth";
+import { useSearchParams } from "next/navigation";
 
-export const getClinic=():string|null=>{
-    const host=headers().get("host")??'';
+export const getClinic=(host?:string|null):string|null=>{
+    host??='';
     if(host==='')console.error("host key not working, check getClinic()");
     
     if(host.endsWith("3000"))return "test";
     return null;
+}
+
+export const cliCurClinic=async(agencies?:string[]):Promise<string>=>{
+    if(getClinic()!=null)return getClinic()!;
+    const agcParam=useSearchParams().get('agc');
+    if(agcParam!=null)return agcParam;
+    return (agencies??(await getServerSession())?.user?.agencies)![0]!;
 }

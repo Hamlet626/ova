@@ -7,6 +7,7 @@ import { serverInitFirebase } from '@/utils/firebase/firebase_server';
 import { UserRecord } from "firebase-admin/auth";
 import { AgencyRef, UserRef, UsersAgcDataRef, withTime } from "@/utils/firebase/database_utils";
 import { EDStatus } from "@/utils/status";
+import { headers } from "next/headers";
 
 serverInitFirebase();
 
@@ -15,7 +16,7 @@ export async function POST(request: Request) {
     let {email,password,name,role,fbPath,phone}=await request.json();
 
     ///try get clinic info from url hostName, if it's not a clinics url, set role to agency
-    const clinicId=getClinic();
+    const clinicId=getClinic(headers().get("host"));
     role=role??(clinicId==null?RoleNum.Agc:null);
 
     if(role==null)

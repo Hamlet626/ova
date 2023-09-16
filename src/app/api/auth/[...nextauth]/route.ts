@@ -9,6 +9,7 @@ import { RoleNum, roles } from "@/utils/roles";
 import { EDRec, RcpRec, algo_client } from "@/utils/algolia";
 import { getClinic } from "@/utils/clinic_check";
 import { EDStatus } from "@/utils/status";
+import { headers } from "next/headers";
 
 
 serverInitFirebase();
@@ -62,7 +63,7 @@ const getUserSessionInfo=async (id:string):Promise<User>=>{
         return basicInfo;
     }
     
-    const clinicID=getClinic();
+    const clinicID=getClinic(headers().get("host"));
     if(basicInfo.role===RoleNum.ED){
         const algoRecord=await algo_client.initIndex(`${roleKey}`).getObject<EDRec>(id);
         let agencies=Object.keys((algoRecord).agencies);

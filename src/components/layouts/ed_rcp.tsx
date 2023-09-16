@@ -1,6 +1,6 @@
 'use client'
 import { Searcher } from "@/components/searcher";
-import { CalendarMonthOutlined, Checklist, Favorite, FavoriteBorderOutlined, FavoriteOutlined, FileOpenOutlined, FilePresentOutlined, FolderOutlined, HandshakeOutlined, Home, HomeOutlined, HouseOutlined, ListOutlined, Menu, Notifications, PeopleOutline, PowerOffOutlined, PowerOutlined, PowerSettingsNewOutlined, QuestionAnswerOutlined, SettingsOutlined, StickyNote2Outlined, ThumbUp, ThumbUpOutlined, TrendingUp, TrendingUpOutlined } from "@mui/icons-material";
+import { CalendarMonthOutlined, Checklist, DocumentScannerOutlined, Favorite, FavoriteBorderOutlined, FavoriteOutlined, FileOpenOutlined, FilePresentOutlined, FolderOutlined, HandshakeOutlined, Home, HomeOutlined, HouseOutlined, ListOutlined, Menu, Notifications, PeopleOutline, PowerOffOutlined, PowerOutlined, PowerSettingsNewOutlined, QuestionAnswerOutlined, SettingsOutlined, StickyNote2Outlined, ThumbUp, ThumbUpOutlined, TrendingUp, TrendingUpOutlined } from "@mui/icons-material";
 import {AppBar, AppBarProps, Avatar, Box, Button, CSSObject, Divider, Drawer, Fab, IconButton, List, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, SwipeableDrawer, Theme, Toolbar, alpha, darken, emphasize, makeStyles, styled, useMediaQuery, useTheme} from "@mui/material";
 import { useState } from "react";
 import { BannerAvatar } from "./avatar";
@@ -9,7 +9,7 @@ import { outline_variant } from "../ThemeRegistry/theme_consts";
 import { AppMenu, drawerWidth } from "./app_menu";
 
 
-export const EDRcpAppBarMenu=({role,children}: { role:RoleNum, children: React.ReactNode })=> {
+export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:string, children: React.ReactNode })=> {
   const theme=useTheme();
   const drawerExpand=useMediaQuery(theme.breakpoints.up('xl'));
   const [open,setOpen]=useState(drawerExpand);
@@ -37,14 +37,14 @@ export const EDRcpAppBarMenu=({role,children}: { role:RoleNum, children: React.R
           </IconButton>
           <Box width={12}/>
           <IconButton color="inherit" onClick={()=>setOpen(!open)}>
-                <Notifications />
+                <Notifications /><DocumentScannerOutlined/>
           </IconButton>
           <Box width={12}/>
           <BannerAvatar/>
                 </Toolbar>
             </AppBar>
-            (<AppMenu role={role} open={open} fixed/>)
-            (<AppMenu role={role} open={open}/>)
+            (<AppMenu role={role} open={open} agcid={agcid} fixed/>)
+            (<AppMenu role={role} open={open} agcid={agcid} />)
             <Box component="main" sx={{ flexGrow: 1, p: 3}}>
         <Toolbar />
         {children}
