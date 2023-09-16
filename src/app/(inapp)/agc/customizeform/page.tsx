@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/system/Stack';
-import {alpha, createTheme, ThemeProvider, Typography} from "@mui/material";
+import {alpha, createTheme, Tabs, Tab,ThemeProvider, Typography} from "@mui/material";
 import LinearProgress from '@mui/material/LinearProgress';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -26,9 +26,51 @@ import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import {styled} from "@mui/system";
+import * as form_const from "@/utils/form/consts";
+import * as form_template from "@/utils/form/template";
+
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{ p: 3 }}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
+}
+
+function a11yProps(index: number) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
+
 
 
 export default function customize_Form() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
     return (
         <Box sx={{ display: 'flex' }}>
             <Box sx={{
@@ -69,7 +111,7 @@ export default function customize_Form() {
                     gap:'12px',
                 }}>
                     {['Basic Information', 'Family & Others', 'Personal Medical', 'Other A', 'Other B'].map((text, index) => (
-                        <div key={text}>
+                        < >
                             <ListItem key={text} disablePadding >
                                 <ListItemButton sx={{
                                     borderRadius: '100px',
@@ -89,7 +131,7 @@ export default function customize_Form() {
                                 </ListItemButton>
                             </ListItem>
                             <Divider/>
-                        </div>
+                        </>
                     ))}
                 </List>
             </Box>
@@ -123,16 +165,28 @@ export default function customize_Form() {
                         </Typography>
                     </ListItem>
                     <ListItem disablePadding>
-                        <Stack direction="row">
-                            <IconButton >
-                                <SearchIcon />
-                            </IconButton>
-                            <input type="text" variant="outlined"/>
-                            <Typography sx={{backgroundColor:'gray',color:"blue"}}>searchbox</Typography>
-                            <button type="submit" > </button>
-
-                        </Stack>
+                        <Box sx={{ width: '100%' }}>
+                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                                    <Tab label="Item One" {...a11yProps(0)} />
+                                    <Tab label="Item Two" {...a11yProps(1)} />
+                                    <Tab label="Item Three" {...a11yProps(2)} />
+                                </Tabs>
+                            </Box>
+                            <CustomTabPanel value={value} index={0}>
+                                Item One
+                               {JSON.stringify(form_template.basic_info)}
+                            </CustomTabPanel>
+                            <CustomTabPanel value={value} index={1}>
+                                Item Two
+                            </CustomTabPanel>
+                            <CustomTabPanel value={value} index={2}>
+                                Item Three
+                            </CustomTabPanel>
+                        </Box>
                     </ListItem>
+
+
                 </List>
 
             </Box>

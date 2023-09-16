@@ -31,7 +31,7 @@ import {
 
 
 
-const basic_info={
+export const basic_info={
     name:"basic info",
     content:[
         {
@@ -160,7 +160,7 @@ const basic_info={
     ]
 };
 
-const physical_personal_trait={
+export const physical_personal_trait={
     name:"physical & personal trait",
     content:[
         {
@@ -327,7 +327,7 @@ const physical_personal_trait={
     ]
 };
 
-const education_occupation={
+export const education_occupation={
     name:"education & occupation",
     content:[
         {
@@ -450,7 +450,7 @@ const education_occupation={
     ]
 };
 
-const background_history={
+export const background_history={
     name:"background history",
     content: [
         {
@@ -463,14 +463,14 @@ const background_history={
                     length: "long",
                     required: false
                 },
-                personal_and_medical
+               //personal_and_medical
             ],
 
         }
     ]
 };
 
-const family_partner={
+export const family_partner={
     name:"family & partner",
     content:[
         {
@@ -479,20 +479,20 @@ const family_partner={
             type: "multi-select",
             options: maritalStatuses,
             required: true,
-            sub: personData("partner",
+            /*sub: personData("partner",
                 {
                     addDobAddr:true,
-                    addProp:{condition:["Married", "Separated"]}})
+                    addProp:{condition:["Married", "Separated"]}})*/
         },
         {
             id: "s1",
             label: "Emergency Contacts",
             type: "populate",
-            group:[
+            /*group:[
                 ...personData("Emergency Contacts",{
                     addRelation:true
                 })
-            ]
+            ]*/
         },
         {
             id: "s",
@@ -607,7 +607,7 @@ const family_partner={
     ]
 };
 
-function assign_IDs(content) {
+export function assign_IDs(content) {
     let count = 0;
     const copyContent = JSON.parse(JSON.stringify(content));
     const assign = (fields) => {
@@ -625,7 +625,7 @@ function assign_IDs(content) {
 
 
 
-const personal_and_medical = {
+export const personal_and_medical = {
     name: "personal & medical",
     content: [
         {
@@ -791,14 +791,14 @@ const personal_and_medical = {
                     require: false,
                     type: "multi-select",
                     options: drugs,
-                    return: options_selected,
+                    /*return: options_selected,
                     sub: [
                         {
                             id: "s",
                             condition: options_selected,
                             label: `When did you last use ${options_selected}?`
                         }
-                    ]
+                    ]*/
                 },
                 {
                     id: "s",
@@ -925,12 +925,12 @@ const personal_and_medical = {
 let modified_content = assign_IDs(personal_and_medical.content);
 
 
-const other_clinic_questions={
+export const other_clinic_questions={
     name:"other clinic questions"
 };
 
 
-const personData=(name,{addRelation,addDobAddr,addProp})=>{
+export const personData=(name,{addRelation,addDobAddr,addProp})=>{
     const r = [
         {id:"s0",label:`${name}'s First Name`,type:"text",length:"short",required:true},
         {id:"s1",label:`${name}'s Middle Name`,type:"text",length:"short",required:false},
