@@ -25,3 +25,7 @@ export const font2={
      textAlign: 'center',
      marginTop: '16px',
 };
+
+
+export const outline_variant='#D8C2BB';
+export const neutral96='#FEF1ED';

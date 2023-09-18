@@ -10,7 +10,7 @@ export const UserRef=(role:RoleNum,id:string)=>{
 export const AgencyRef=(id:string)=>UserRef(RoleNum.Agc,id);
 
 export const UsersAgcDataRef=(role:RoleNum,id:string,agcId:string)=>
-UserRef(RoleNum.Agc,id).collection("agc data").doc(agcId);
+UserRef(role,id).collection("agc data").doc(agcId);
 
 
 export const withTime=(data:any)=>{
