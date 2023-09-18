@@ -1,6 +1,6 @@
 'use client';
 import React from "react";
-import {Paper, Box, Container, Input, Button, Typography, LinearProgress,
+import {Card, Paper, Box, Container, Input, Button, Typography, LinearProgress,
      Breadcrumbs,  InputAdornment, Link, Stack, TextField
 } from "@mui/material";
 import { Bg2 } from "@/components/background/bg2";
@@ -66,7 +66,7 @@ export function Signup_profile1() {
                  Sign Up
                </Typography>
           <Box width={191}/>
-      <LinearProgress variant="determinate" value={66.67} sx={{ width: '700px',maxWidth: 'calc(100% - 100px)',  backgroundColor: "grey", "& .MuiLinearProgress-bar": { backgroundColor: "orange" } }} />
+      <LinearProgress variant="determinate" value={66.67} sx={{ width: '700px', backgroundColor: "grey", "& .MuiLinearProgress-bar": { backgroundColor: "orange" } }} />
             <Box width={38}/>
               <Typography className="progress-text">
                        <span style={{ color: "orange" }}>50</span>/100%
@@ -81,7 +81,7 @@ export function Signup_profile1() {
            transform: "translate(-50%, -50%)",
          }}
        >
-      <Paper elevation={3} sx={{ padding: 3, maxWidth: '400px' }}>
+      <Card variant="outlined" sx={{ padding: 3, maxWidth: '400px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
 
                     {filePreview && (
@@ -146,9 +146,33 @@ export function Signup_profile1() {
 </div>
 </div>
 
-                </Paper>
+                </Card>
+
               </Box>
             </Box>
+
+            <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '0',
+                      right: '0',
+                      margin: '30px',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                  <Typography  variant="h6" style={{ whiteSpace: 'nowrap' }}>Do it later</Typography >
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      size="large"
+                      startIcon={<ArrowCircleRightOutlinedIcon />}
+                      style={{ marginLeft: '24px' }}
+
+                    >
+                      Next
+                    </Button>
+                  </div>
                 </>
 
           );
@@ -165,10 +189,8 @@ export default function SignUp() {
         minHeight: '100vh',
       }}
     >
-      {/* Use Bg2 component as the background */}
       <Bg2 />
 
-      {/* Center the SignUpProfile1 component */}
       <Signup_profile1 />
     </Grid>
   );
