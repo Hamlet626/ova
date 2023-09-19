@@ -19,7 +19,7 @@ import List from '@mui/material/List';
 import {Toolbar} from "@mui/material";
 import {CheckCircle, CheckCircleOutline, Circle, CircleOutlined} from "@mui/icons-material";
 import theme from "@/components/ThemeRegistry/theme";
-import {primary90,neutural96} from "@/components/ThemeRegistry/theme_consts";
+import {primary90,neutral96} from "@/components/ThemeRegistry/theme_consts";
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
@@ -130,14 +130,15 @@ export default function customize_Form() {
                                       onClick={(ev:React.SyntheticEvent)=>{handleTemplateChange(ev,index);;}}>
                                 <ListItemButton sx={{
                                     borderRadius: '100px',
-                                    backgroundColor: index === 0 ? primary90: "white",
+                                    backgroundColor: index === templateId ? primary90: "white",
                                     width:'93px',
                                 }}>
                                     <ListItemIcon sx={{
                                         width:'20px',
                                         height:'20px',
                                     }}>
-                                        {index === 0 ? < CheckCircleOutline sx={{color:'primary.main'}}/> : <Circle sx={{color:primary90}}/>}
+                                        {/* {index === templateId ? < CheckCircleOutline sx={{color:'primary.main'}}/> : <Circle sx={{color:primary90}}/>} */}
+                                        <Circle sx={{color:primary90}}/>
                                     </ListItemIcon>
                                     <ListItemText primary={text}   sx={{
                                         ml:'-20px',

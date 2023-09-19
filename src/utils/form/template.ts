@@ -410,7 +410,7 @@ export const education_occupation={
         },
         {
             title:"Occupation",
-            Fields:[
+            fields:[
                 {
                     id: "s0",
                     label: "Job History",
