@@ -37,15 +37,15 @@ export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:stri
           </IconButton>
           <Box width={12}/>
           <IconButton color="inherit" onClick={()=>setOpen(!open)}>
-                <Notifications /><DocumentScannerOutlined/>
+                <Notifications />
           </IconButton>
           <Box width={12}/>
           <BannerAvatar/>
                 </Toolbar>
             </AppBar>
-            (<AppMenu role={role} open={open} agcid={agcid} fixed/>)
-            (<AppMenu role={role} open={open} agcid={agcid} />)
-            <Box component="main" sx={{ flexGrow: 1, p: 3}}>
+            <AppMenu role={role} open={open} agcid={agcid} fixed/>
+            <AppMenu role={role} open={open} agcid={agcid} />
+            <Box component="main" sx={{ flexGrow: 1}}>
         <Toolbar />
         {children}
         </Box>

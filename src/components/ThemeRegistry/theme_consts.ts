@@ -17,5 +17,14 @@ export const font1={
 };
 
 
+export const font3={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '28px',
+    fontWeight: 500,
+    lineHeight: '36px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+};
+
 export const outline_variant='#D8C2BB';
 export const neutral96='#FEF1ED';
