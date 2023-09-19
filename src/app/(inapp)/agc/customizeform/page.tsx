@@ -48,7 +48,7 @@ function CustomTabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -64,13 +64,27 @@ function a11yProps(index: number) {
 
 
 
+const templateList=[form_template.basic_info,
+    form_template.physical_personal_trait,
+    form_template.education_occupation,
+    form_template.background_history,
+    form_template.family_partner,
+    form_template.personal_and_medical,
+    form_template.other_clinic_questions,]
+
 export default function customize_Form() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [value, setValue] = React.useState(0);
-
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
+    const [templateId, setTemplateId] = React.useState(0);
+    const handleTemplateChange = (event: React.SyntheticEvent, newValue: number) => {
+        setTemplateId(newValue);
+        handleChange(event, 0);
+    };
+
     return (
         <Box sx={{ display: 'flex' }}>
             <Box sx={{
@@ -112,7 +126,8 @@ export default function customize_Form() {
                 }}>
                     {['Basic Information', 'Family & Others', 'Personal Medical', 'Other A', 'Other B'].map((text, index) => (
                         < >
-                            <ListItem key={text} disablePadding >
+                            <ListItem key={text}  templateId={templateId} disablePadding
+                                      onClick={(ev:React.SyntheticEvent)=>{handleTemplateChange(ev,index);;}}>
                                 <ListItemButton sx={{
                                     borderRadius: '100px',
                                     backgroundColor: index === 0 ? primary90: "white",
@@ -135,7 +150,7 @@ export default function customize_Form() {
                     ))}
                 </List>
             </Box>
-            <Box sx={{ width: '100%', border: '2px solid #000',}}>
+            <Box sx={{ width: '100%',}}>
                 <List sx={{
                     mt:"81px",
                     ml:"85px",
@@ -167,29 +182,38 @@ export default function customize_Form() {
                     <ListItem disablePadding>
                         <Box sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                                {/* <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                                     <Tab label="Item One" {...a11yProps(0)} />
                                     <Tab label="Item Two" {...a11yProps(1)} />
                                     <Tab label="Item Three" {...a11yProps(2)} />
+                                </Tabs> */}
+                                <Tabs value={value} onChange={handleChange} >
+                                    {(templateList[templateId]as any).content.map((template, index) => (
+                                        <Tab label={template.title} {...a11yProps(index)} />
+                                    ))}
                                 </Tabs>
                             </Box>
-                            <CustomTabPanel value={value} index={0}>
-                                Item One
-                               {JSON.stringify(form_template.basic_info)}
-                            </CustomTabPanel>
-                            <CustomTabPanel value={value} index={1}>
-                                Item Two
-                            </CustomTabPanel>
-                            <CustomTabPanel value={value} index={2}>
-                                Item Three
-                            </CustomTabPanel>
+
+                            {templateList[templateId].content.map((section_list, index) => (
+                                <CustomTabPanel value={value} index={index}>
+
+                                    tab id {value}
+                                    <br/>
+                                    {(section_list.fields as any).map((item, index) => (
+                                        <>
+                                            {JSON.stringify(item.id)}
+                                            {JSON.stringify(item.label)}
+                                            <br/>
+                                        </>
+                                    ))}
+                                    <br/>
+                                </CustomTabPanel>
+                            ))}
                         </Box>
                     </ListItem>
-
-
                 </List>
-
             </Box>
         </Box>
     );
+
 }

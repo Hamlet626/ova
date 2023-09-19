@@ -16,7 +16,9 @@ export const font1={
     textAlign: 'left',
 };
 
+
 export const primary90="#FFDBCE";
-export const neutural96="#FEF1ED";
 // if you want to def M3_Primary70="#F98F64" please use primary.main
 
+export const outline_variant='#D8C2BB';
+export const neutral96='#FEF1ED';

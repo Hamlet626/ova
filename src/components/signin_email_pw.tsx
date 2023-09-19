@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import {useForm} from "react-hook-form";
 import NextLink from "next/link";
 import { RoleNum, roles } from "@/utils/roles";
+import { getClinic } from "@/utils/clinic_check";
+import { useUrl } from 'nextjs-current-url';
 
 
 export default function SigninEmailPwBlock() {
@@ -21,6 +23,7 @@ export default function SigninEmailPwBlock() {
     const {register, handleSubmit, formState: { errors }}=useForm();
     const router = useRouter();
     const clickPwIcon = () => setShowPw((show) => !show);
+    const hostName=useUrl()?.host;
 
     const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -30,10 +33,9 @@ export default function SigninEmailPwBlock() {
         setSigningIn(true);
         const r=await signIn('credentials', {email:data.email, password:data.password, redirect: false, callbackUrl: '/'});
         if(r?.ok){
-            const session=await getSession();
-            const rolePath=session?.user?.role===RoleNum.ED?"ed":
-            session?.user?.role===RoleNum.Rcp?"rcp":"agc";
-            router.push(`/${rolePath}/dashboard`);
+            const user=(await getSession())?.user!;
+
+            router.push(`/${roles[user.role!].path}${user?.role===RoleNum.ED?`/${getClinic(hostName)??user.agencies![0]}`:''}/dashboard`);
             return;
         }
         setSigningIn(false);
