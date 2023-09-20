@@ -13,6 +13,7 @@ import {font2} from "@/components/ThemeRegistry/theme_consts";
 import { getClinic } from "@/utils/clinic_check";
 import { useUrl } from 'nextjs-current-url';
 import { useSearchParams } from 'next/navigation'
+import { useFormControl, TextField, FormHelperText} from '@mui/material';
 
 
 
@@ -36,6 +37,7 @@ return (
       />
       );
       }
+
 function NameInputs_NotClinic() {
   return (
     <Box sx={flexContainerStyle}>
@@ -65,22 +67,63 @@ export function SignUp1(){
     const clinic = getClinic(hostName);
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
+const emailFormControl = useFormControl();
+  const passwordFormControl = useFormControl();
 
+ const [formData, setFormData] = useState({
+     email: '',
+     password: '',
+   });
 
+   const [errors, setErrors] = useState({
+     email: '',
+     password: '',
+   });
 
-     let title='';
+   const validateEmail = (email) => {
+     // Implement your email validation logic here
+     if (!email || !email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) {
+       return 'Invalid email address';
+     }
+     return '';
+   };
 
-    if (clinic === 'test') {
-      // Handle the case when clinic is null
-      title='Clinics Sign Up'
-    } else {
-      if (role==='ed'){
-      title='Egg Donor Sign Up'
-      } else if (role==='rep'){
-      title='Recipient Sign Up'
-      }else {
-      }
-}
+   const validatePassword = (password) => {
+     // Implement your password validation logic here
+     if (!password || password.length < 6) {
+       return 'Password must be at least 6 characters';
+     }
+       if (!/(?=.*[a-z])(?=.*[A-Z])/.test(password)) {
+             return 'Password must have 1 lowercase and 1 uppercase character';
+          }
+
+     return '';
+   };
+
+   const handleInputChange = (e) => {
+     const { name, value } = e.target;
+     setFormData({ ...formData, [name]: value });
+
+     // Perform validation on the field being updated
+     if (name === 'email') {
+       setErrors({ ...errors, email: validateEmail(value) });
+     } else if (name === 'password') {
+       setErrors({ ...errors, password: validatePassword(value) });
+     }
+   };
+
+   const handleSubmit = (e) => {
+     e.preventDefault();
+
+     // Check if there are any errors before submitting
+     if (validateEmail(formData.email) || validatePassword(formData.password)) {
+       // Handle validation errors here
+       return;
+     }
+
+     // Form submission logic
+     console.log('Form submitted with email:', formData.email, 'and password:', formData.password);
+   };
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -100,26 +143,73 @@ export function SignUp1(){
         <Box maxWidth="400px" >
 
         <Typography variant="h4" sx={font2}>
-          {title}
+        <span sx={font2}>
+          {clinic !== null ? 'Clinics Sign Up' : (role === 'ed' ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
+        </span>
         </Typography>
              <Box height={50} />
-          {clinic === 'test' ? <NameInputs_Clinic /> : <NameInputs_NotClinic />}
+          {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_NotClinic />}
 
         <Box height={41} />
-        <Input  id="email"
-               name="email"
-               type="email"
-               autoComplete="email"
-               onChange={(e) => setEmail(e.target.value)}
-               required
+         <form onSubmit={handleSubmit}>
+             <Input
                fullWidth
-               startAdornment={
-                <InputAdornment position="start">
-                   <Mail/>
-                </InputAdornment>
-                  }
-                placeholder="Email"
-                type="email"/>
+               placeholder="Email"
+               name="email"
+               value={formData.email}
+               onChange={handleInputChange}
+               error={!!errors.email}
+                startAdornment={
+                                     <InputAdornment position="start">
+                                        <Mail/>
+                                     </InputAdornment>
+                                       }
+             />
+             {errors.email && (
+               <FormHelperText error>{errors.email}</FormHelperText>
+             )}
+
+          <Box height={16}/>
+
+             <Input
+               fullWidth
+
+               name="password"
+              // type="password"
+               value={formData.password}
+               onChange={handleInputChange}
+               error={!!errors.password}
+                startAdornment={
+                     <InputAdornment position="start">
+                        <Lock/>
+                      </InputAdornment>}
+                     endAdornment={
+                     <InputAdornment onClick={clickPwIcon} >
+                      {showPw ? <VisibilityOff /> : <Visibility />}
+                     </InputAdornment>}
+                      placeholder="Password"
+                      type={showPw?"text":"password"}
+
+             />
+             {errors.password && (
+               <FormHelperText error>{errors.password}</FormHelperText>
+             )}
+
+
+     {/*  <Input  id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      fullWidth
+                      startAdornment={
+                       <InputAdornment position="start">
+                          <Mail/>
+                       </InputAdornment>
+                         }
+                       placeholder="Email"
+                       type="email"/>
 
           <Box height={16}/>
            <Input  id="password"
@@ -138,12 +228,12 @@ export function SignUp1(){
                     </InputAdornment>}
                      placeholder="Password"
                      type={showPw?"text":"password"}/>
-
+*/}
 
           <Box height={40}/>
         <Link href={(!email || !password || !/(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(password))  ? null : "/profile"}>
-          <Button
-            disabled={(!email || !password || !/(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(password)) }
+          <Button type="submit"
+            disabled={(!email || !password ) }
               onClick={async () => {
                 const r = await fetch('/api/onboard', {
                   method: 'POST',
@@ -181,12 +271,13 @@ export function SignUp1(){
             Next
           </Button>
         </Link>
-
+ </form>
          <Box height={33}/>
           <Typography variant="h6" sx={{textAlign: 'center'}}>Log In</Typography>
             <Box height={37}/>
             <Button fullWidth variant="outlined" size="large" startIcon={<Google/>}>Google Log in</Button>
           <Box height={30}/>
+
     </Box>
     )
 }
