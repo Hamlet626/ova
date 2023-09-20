@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/system/Stack';
-import {alpha, createTheme, Tabs, Tab,ThemeProvider, Typography} from "@mui/material";
+import {alpha, createTheme, Tabs, Tab,ThemeProvider, Typography, Button, TableContainer, TableRow,TableCell} from "@mui/material";
 import LinearProgress from '@mui/material/LinearProgress';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -17,7 +17,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import {Toolbar} from "@mui/material";
-import {CheckCircle, CheckCircleOutline, Circle, CircleOutlined} from "@mui/icons-material";
+import {Add, CheckCircle, CheckCircleOutline, Circle, CircleOutlined, Scale, TableRows} from "@mui/icons-material";
 import theme from "@/components/ThemeRegistry/theme";
 import {primary90,neutral96} from "@/components/ThemeRegistry/theme_consts";
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -28,6 +28,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import {styled} from "@mui/system";
 import * as form_const from "@/utils/form/consts";
 import * as form_template from "@/utils/form/template";
+import ReceiptLongSharpIcon from '@mui/icons-material/ReceiptLongSharp';
+import SendIcon from '@mui/icons-material/Send';
+import AddIcon from '@mui/icons-material/Add';import { reverse } from 'dns';
+;
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -69,8 +73,7 @@ const templateList=[form_template.basic_info,
     form_template.education_occupation,
     form_template.background_history,
     form_template.family_partner,
-    form_template.personal_and_medical,
-    form_template.other_clinic_questions,]
+    form_template.personal_and_medical,]
 
 export default function customize_Form() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -83,6 +86,13 @@ export default function customize_Form() {
     const handleTemplateChange = (event: React.SyntheticEvent, newValue: number) => {
         setTemplateId(newValue);
         handleChange(event, 0);
+    };
+
+    const [customizedFormList, setCustomizedFormList] = React.useState([form_template.basic_info]);
+    const handleCustomizedFormChange = (event: React.SyntheticEvent, newValue:[any]) => {
+        const initialSection = {"untitled01": "Section 1", "fields": []};
+        setCustomizedFormList(newValue);
+
     };
 
     return (
@@ -124,7 +134,7 @@ export default function customize_Form() {
                     height:'auto',
                     gap:'12px',
                 }}>
-                    {['Basic Information', 'Family & Others', 'Personal Medical', 'Other A', 'Other B'].map((text, index) => (
+                    {/* {['Basic Information', 'Family & Others', 'Personal Medical', 'Other A', 'Other B'].map((text, index) => (
                         < >
                             <ListItem key={text}  templateId={templateId} disablePadding
                                       onClick={(ev:React.SyntheticEvent)=>{handleTemplateChange(ev,index);;}}>
@@ -137,7 +147,7 @@ export default function customize_Form() {
                                         width:'20px',
                                         height:'20px',
                                     }}>
-                                        {/* {index === templateId ? < CheckCircleOutline sx={{color:'primary.main'}}/> : <Circle sx={{color:primary90}}/>} */}
+                                        
                                         <Circle sx={{color:primary90}}/>
                                     </ListItemIcon>
                                     <ListItemText primary={text}   sx={{
@@ -148,7 +158,34 @@ export default function customize_Form() {
                             </ListItem>
                             <Divider/>
                         </>
+                    ))} */}
+
+                    {templateList.map((template, index) => (
+                        < >
+                        <ListItem key={template.name}  templateId={templateId} disablePadding
+                                  onClick={(ev:React.SyntheticEvent)=>{handleTemplateChange(ev,index);;}}>
+                            <ListItemButton sx={{
+                                borderRadius: '100px',
+                                backgroundColor: index === templateId ? primary90: "white",
+                                width:'93px',
+                            }}>
+                                <ListItemIcon sx={{
+                                    width:'20px',
+                                    height:'20px',
+                                }}>
+                                    {/* {index === templateId ? < CheckCircleOutline sx={{color:'primary.main'}}/> : <Circle sx={{color:primary90}}/>} */}
+                                    <Circle sx={{color:primary90}}/>
+                                </ListItemIcon>
+                                <ListItemText primary={template.name}   sx={{
+                                    ml:'-20px',
+                                    color:'black',
+                                }}/>
+                            </ListItemButton>
+                        </ListItem>
+                        <Divider/>
+                    </>
                     ))}
+
                 </List>
             </Box>
             <Box sx={{ width: '100%',}}>
@@ -174,40 +211,62 @@ export default function customize_Form() {
                         </Typography>
                     </ListItem>
                     <ListItem disablePadding>
-                        <Typography variant="h6" sx={{
-
-                        }}>
+                        <Typography variant="h6">
                             Create the question you want to ask
-                        </Typography>
+                        </Typography>                       
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <Box sx={{display:'flex',
+                            width:'896px',
+                            alignItems:'center',
+                            justifyContent:'space-between',
+                            borderRadius:'28px',
+                            backgroundColor:neutral96,
+                            }}>
+                            <Box sx={{display:'flex',
+                            alignItems:'center',
+                            justifyContent:'left',                        
+                            }}>
+                                <ReceiptLongSharpIcon sx={{color:primary90,justifySelf:'left',gap:'10px',margin:'10px'}}/>
+                                <Typography sx={{justifySelf:'left'}}>
+                                    {templateList[templateId].name}
+                                </Typography>
+                            </Box>
+                            <Button startIcon ={<Add sx={{width:'18px',height:'18px'}}/>} sx={{justifySelf:'right',border:'solid 1px',gap:'8px',margin:'10px', borderRadius:'100px',color:'#926F63',}}>
+                                Add a new section
+                            </Button>
+                        </Box>
                     </ListItem>
                     <ListItem disablePadding>
                         <Box sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                {/* <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                                    <Tab label="Item One" {...a11yProps(0)} />
-                                    <Tab label="Item Two" {...a11yProps(1)} />
-                                    <Tab label="Item Three" {...a11yProps(2)} />
-                                </Tabs> */}
                                 <Tabs value={value} onChange={handleChange} >
                                     {(templateList[templateId]as any).content.map((template, index) => (
                                         <Tab label={template.title} {...a11yProps(index)} />
                                     ))}
                                 </Tabs>
                             </Box>
-
                             {templateList[templateId].content.map((section_list, index) => (
                                 <CustomTabPanel value={value} index={index}>
+                                    
+                                    {section_list.title}
+                                    <br/>
+                                    <TableContainer>
+                                    {(section_list.fields as any).map((field, sectionIindex) => (                                        
+                                        <TableRow>
+                                            <TableCell>{JSON.stringify(field.id)}</TableCell>
+                                            <TableCell>{JSON.stringify(field.label)}</TableCell>
+                                            <TableCell>{JSON.stringify(field.type)}</TableCell>
+                                            <TableCell>{JSON.stringify(field.required)}</TableCell>
+                                            <TableCell>{JSON.stringify(field.length)}</TableCell>
+                                            <TableCell>{JSON.stringify(field.options)}</TableCell>
+                                            <TableCell>{JSON.stringify(field.sub)}</TableCell>                                  
 
-                                    tab id {value}
-                                    <br/>
-                                    {(section_list.fields as any).map((item, index) => (
-                                        <>
-                                            {JSON.stringify(item.id)}
-                                            {JSON.stringify(item.label)}
-                                            <br/>
-                                        </>
+                                        </TableRow>
                                     ))}
+                                    </TableContainer>
                                     <br/>
+
                                 </CustomTabPanel>
                             ))}
                         </Box>

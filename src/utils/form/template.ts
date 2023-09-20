@@ -474,135 +474,155 @@ export const family_partner={
     name:"family & partner",
     content:[
         {
-            id: "s0",
-            label: "Marital Status",
-            type: "multi-select",
-            options: maritalStatuses,
-            required: true,
-            /*sub: personData("partner",
+            title:"title1",
+            fields:[
                 {
-                    addDobAddr:true,
-                    addProp:{condition:["Married", "Separated"]}})*/
-        },
-        {
-            id: "s1",
-            label: "Emergency Contacts",
-            type: "populate",
-            /*group:[
-                ...personData("Emergency Contacts",{
-                    addRelation:true
-                })
-            ]*/
-        },
-        {
-            id: "s",
-            label: "Please select the following that applied to your partner, family member, or close contact",
-            type: "checkbox",
-            options: familyTrait,
-            sub: [
+                    id: "s0",
+                    label: "Marital Status",
+                    type: "multi-select",
+                    options: maritalStatuses,
+                    required: true,
+                    /*sub: personData("partner",
+                        {
+                            addDobAddr:true,
+                            addProp:{condition:["Married", "Separated"]}})*/
+                },
+                {
+                    id: "s1",
+                    label: "Emergency Contacts",
+                    type: "populate",
+                    /*group:[
+                        ...personData("Emergency Contacts",{
+                            addRelation:true
+                        })
+                    ]*/
+                },
                 {
                     id: "s",
-                    condition: [fBaldness],
-                    label: "Which side of the Family?",
+                    label: "Please select the following that applied to your partner, family member, or close contact",
+                    type: "checkbox",
+                    options: familyTrait,
+                    sub: [
+                        {
+                            id: "s",
+                            condition: [fBaldness],
+                            label: "Which side of the Family?",
+                            required: true,
+                            type: "checkbox",
+                            options: familySide
+                        }
+                    ]
+                },
+            ]
+        },
+        {
+            title:"title2",
+            fields:[
+                {
+                    id: "s",
+                    label: "PLease list your family history of inheritable diseases if any",
+                    type: "text",
+                    length: "long",
+                    required: false
+                },
+                {
+                    id: "s",
+                    label: "Do you have a family history of mental illness",
+                    required: true,
+                    type: "yes/no",
+                    length: "short"
+                },
+                {
+                    id: "s",
+                    label: "Please select the following that applied to your partner, family member, or close contact",
                     required: true,
                     type: "checkbox",
-                    options: familySide
-                }
-            ]
-        },
-        {
-            id: "s",
-            label: "PLease list your family history of inheritable diseases if any",
-            type: "text",
-            length: "long",
-            required: false
-        },
-        {
-            id: "s",
-            label: "Do you have a family history of mental illness",
-            required: true,
-            type: "yes/no",
-            length: "short"
-        },
-        {
-            id: "s",
-            label: "Please select the following that applied to your partner, family member, or close contact",
-            required: true,
-            type: "checkbox",
-            options: [
-                "Been to Africa",
-                "Been to Europe more than 3 months",
-                "Been to Europe between 1980-1996",
-                "Have sexually transmitted disease(s)",
-                "Drug abuse or injected drugs",
-                "Jail/Prison ore than 3 days"
-            ]
-        },
-        {
-            id: "s",
-            label: "Please provide detailed medical information about your immediate family",
-            required: true,
-            type: "text",
-            length: "long"
-        },
-        {
-            id: "s",
-            label: "How many siblings do you have?",
-            required: true,
-            type: "text",
-            length: "short"
-        },
-        {
-            id: "s",
-            label: "Please select your family history of multiple birth",
-            required: true,
-            type: "checkbox",
-            options: [
-                "Twins",
-                "Triplets",
-                "Other"
-            ],
-            sub: [
+                    options: [
+                        "Been to Africa",
+                        "Been to Europe more than 3 months",
+                        "Been to Europe between 1980-1996",
+                        "Have sexually transmitted disease(s)",
+                        "Drug abuse or injected drugs",
+                        "Jail/Prison ore than 3 days"
+                    ]
+                },
                 {
                     id: "s",
+                    label: "Please provide detailed medical information about your immediate family",
                     required: true,
-                    label: "Please enter they number of children in multiple birth",
-                    condition: "Other",
                     type: "text",
-                    length: "medium"
-                }
+                    length: "long"
+                },
             ]
         },
         {
-            id: "s",
-            label: "Does your partner support your decision to become an egg donor and understand the need for temporary abstinence??",
-            required: true,
-            type: "text",
-            length: "long"
-        },
-        {
-            id: "s",
-            label: "Do your family and/or those important to you support your decision to become an egg donor?",
-            required: true,
-            type: "yes/no",
-            length: "short",
-            sub: [
+            title:"title3",
+            fields:[
                 {
                     id: "s",
-                    condition: "no",
+                    label: "How many siblings do you have?",
+                    required: true,
                     type: "text",
-                    label: "Please explain",
-                    length: "long",
-                    required: true
-                }
+                    length: "short"
+                },
+                {
+                    id: "s",
+                    label: "Please select your family history of multiple birth",
+                    required: true,
+                    type: "checkbox",
+                    options: [
+                        "Twins",
+                        "Triplets",
+                        "Other"
+                    ],
+                    sub: [
+                        {
+                            id: "s",
+                            required: true,
+                            label: "Please enter they number of children in multiple birth",
+                            condition: "Other",
+                            type: "text",
+                            length: "medium"
+                        }
+                    ]
+                },
             ]
         },
         {
-            id: "s",
-            label: "Do you understand that the ultimate goal of your donation is the birth of a healthy child with whom you will not have a parental relationship?",
-            required: true,
-            type: "yes/no",
-            length: "short"
+            title:"title4",
+            fields:[
+                {
+                    id: "s",
+                    label: "Does your partner support your decision to become an egg donor and understand the need for temporary abstinence??",
+                    required: true,
+                    type: "text",
+                    length: "long"
+                },
+                {
+                    id: "s",
+                    label: "Do your family and/or those important to you support your decision to become an egg donor?",
+                    required: true,
+                    type: "yes/no",
+                    length: "short",
+                    sub: [
+                        {
+                            id: "s",
+                            condition: "no",
+                            type: "text",
+                            label: "Please explain",
+                            length: "long",
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    id: "s",
+                    label: "Do you understand that the ultimate goal of your donation is the birth of a healthy child with whom you will not have a parental relationship?",
+                    required: true,
+                    type: "yes/no",
+                    length: "short"
+                }
+            ]
         }
     ]
 };
