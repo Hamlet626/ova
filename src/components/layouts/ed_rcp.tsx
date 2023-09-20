@@ -45,7 +45,7 @@ export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:stri
             </AppBar>
             <AppMenu role={role} open={open} agcid={agcid} fixed/>
             <AppMenu role={role} open={open} agcid={agcid} />
-            <Box component="main" sx={{ flexGrow: 1}}>
+            <Box component="main" sx={{ flexGrow: 1, width:'100%'}}>
         <Toolbar />
         {children}
         </Box>
