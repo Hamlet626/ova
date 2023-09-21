@@ -38,7 +38,7 @@ return (
       );
       }
 
-function NameInputs_NotClinic() {
+function NameInputs_NotClinic({ formData, handleInputChange, errors }) {
   return (
     <Box sx={flexContainerStyle}>
       <Input
@@ -47,7 +47,13 @@ function NameInputs_NotClinic() {
         startAdornment={<InputAdornment position="start"></InputAdornment>}
         placeholder="First Name"
         type="text"
+        value={formData.firstname}
+        onChange={handleInputChange}
+       error={!!errors.firstname}
       />
+      {errors.firstname && (
+            <FormHelperText error>{errors.firstname}</FormHelperText>
+                   )}
 
       <Box width={23} />
       <Input
@@ -56,7 +62,13 @@ function NameInputs_NotClinic() {
         startAdornment={<InputAdornment position="start"></InputAdornment>}
         placeholder="Last Name"
         type="text"
-      />
+      value={formData.lastname}
+             onChange={handleInputChange}
+            error={!!errors.lastname}
+           />
+           {errors.lastname && (
+         <FormHelperText error>{errors.lastname}</FormHelperText>
+          )}
     </Box>
   );
 }
@@ -73,12 +85,23 @@ const emailFormControl = useFormControl();
  const [formData, setFormData] = useState({
      email: '',
      password: '',
+     firstname:'',
+     lastname:'',
    });
 
    const [errors, setErrors] = useState({
      email: '',
      password: '',
+      firstname:'',
+      lastname:'',
    });
+
+    const validateName= (name) =>{
+     if (!name||name.length < 6){
+     return 'Invalid name';
+     }
+     return '';
+    }
 
    const validateEmail = (email) => {
      // Implement your email validation logic here
@@ -109,6 +132,8 @@ const emailFormControl = useFormControl();
        setErrors({ ...errors, email: validateEmail(value) });
      } else if (name === 'password') {
        setErrors({ ...errors, password: validatePassword(value) });
+     } else if (name === 'firstname' || name==='lastname'){
+     setErrors({...errors, [name]:validateName(value)});
      }
    };
 
@@ -116,7 +141,7 @@ const emailFormControl = useFormControl();
      e.preventDefault();
 
      // Check if there are any errors before submitting
-     if (validateEmail(formData.email) || validatePassword(formData.password)) {
+     if (validateEmail(formData.email) || validatePassword(formData.password) ||errors.firstname || errors.lastname) {
        // Handle validation errors here
        return;
      }
@@ -147,11 +172,15 @@ const emailFormControl = useFormControl();
           {clinic !== null ? 'Clinics Sign Up' : (role === 'ed' ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
         </span>
         </Typography>
+        <form onSubmit={handleSubmit}>
              <Box height={50} />
-          {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_NotClinic />}
+          {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_NotClinic
+           formData={formData}
+                       handleInputChange={handleInputChange}
+                       errors={errors}/>}
 
         <Box height={41} />
-         <form onSubmit={handleSubmit}>
+
              <Input
                fullWidth
                placeholder="Email"
@@ -160,9 +189,9 @@ const emailFormControl = useFormControl();
                onChange={handleInputChange}
                error={!!errors.email}
                 startAdornment={
-                                     <InputAdornment position="start">
-                                        <Mail/>
-                                     </InputAdornment>
+                <InputAdornment position="start">
+                    <Mail/>
+                 </InputAdornment>
                                        }
              />
              {errors.email && (
@@ -229,12 +258,13 @@ const emailFormControl = useFormControl();
                      placeholder="Password"
                      type={showPw?"text":"password"}/>
 */}
- </form>
-
+</form>
           <Box height={40}/>
-        <Link href={ "/profile"}>
+<Link href={(!email || !password )  ? null : "/profile"}>
           <Button type="submit"
-            disabled={(!email || !password ) }
+                     disabled={!!errors.email || !!errors.password || !!errors.firstname || !!errors.lastname}
+
+
               onClick={async () => {
                 const r = await fetch('/api/onboard', {
                   method: 'POST',
@@ -302,6 +332,7 @@ export default function SignUp() {
             </Bg1>
 );
 }
+
 
 
 
