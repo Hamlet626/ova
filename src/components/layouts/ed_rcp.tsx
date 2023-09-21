@@ -6,16 +6,42 @@ import { useState } from "react";
 import { BannerAvatar } from "./avatar";
 import { RoleNum } from "@/utils/roles";
 import { outline_variant } from "../ThemeRegistry/theme_consts";
-import { AppMenu, drawerWidth } from "./app_menu";
+import { AppMenu, drawerMinWidth, drawerWidth } from "./app_menu";
 
 
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+    open?: boolean;
+  }>(({ theme, open }) => {
+    const shift=open?drawerWidth:drawerMinWidth;
+    return ({
+    flexGrow: 1,
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    width:'100%',
+    marginLeft: -shift,
+    paddingLeft: shift,
+    ///todo:remove animation or make it better
+    ...(open && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  });
+});
+
+  
 export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:string, children: React.ReactNode })=> {
   const theme=useTheme();
   const drawerExpand=useMediaQuery(theme.breakpoints.up('xl'));
+  const drawerFix=useMediaQuery(theme.breakpoints.up('lg'));
   const [open,setOpen]=useState(drawerExpand);
     
+          {/* <Image src={'/assets/agc_test_logo.svg'} alt="Agc Logo" style={{height:'100%',width:'auto'}}/> */}
     return(
-        <Box sx={{display:'flex'}}>
+        <Box sx={{display:'flex',width:'100%'}}>
             <AppBar position="fixed" elevation={0}
             sx={{backgroundColor:'white', zIndex: (theme) => theme.zIndex.drawer + 1, 
             borderBottom:`1px solid ${outline_variant}`}}>
@@ -24,7 +50,6 @@ export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:stri
             color="inherit"onClick={()=>setOpen(!open)}edge="start">
                 <Menu />
           </IconButton>
-          {/* <Image src={'/assets/agc_test_logo.svg'} alt="Agc Logo" style={{height:'100%',width:'auto'}}/> */}
           <Box flexGrow={1} display={'flex'} justifyItems={'center'}>
             <Searcher/>
           </Box> 
@@ -43,12 +68,12 @@ export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:stri
           <BannerAvatar/>
                 </Toolbar>
             </AppBar>
-            <AppMenu role={role} open={open} agcid={agcid} fixed/>
+            <AppMenu role={role} open={drawerFix&&open} agcid={agcid} fixed/>
             <AppMenu role={role} open={open} agcid={agcid} />
-            <Box component="main" sx={{ flexGrow: 1, width:'100%'}}>
+            <Main open={drawerFix&&open}>
         <Toolbar />
         {children}
-        </Box>
+        </Main>
         </Box>
     )
 }

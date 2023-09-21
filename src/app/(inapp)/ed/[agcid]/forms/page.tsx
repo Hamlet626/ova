@@ -23,8 +23,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     const status=getFinishStatus(formTemplate,formData);
     const remained=status.filter((v)=>v.subs.remained);
 
-    return <Box pt={'30px'} pl={4} mr='80px'>
-        <Box width={'100%'} height={30} bgcolor={'red'}/>
+    return <Box pt={'30px'} pl={4} pr='80px'>
         <Typography sx={font3}>My Form</Typography>
         <Box height={12}/>
         {remained.length>0 &&
