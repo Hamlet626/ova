@@ -144,10 +144,11 @@ export default function customize_Form() {
 
     const initialSection = {"title": "section_title1", "fields": []};
     const [customizedformlist, setCustomizedFormList] = React.useState(templateList);
-    const handleCustomizedFormChange = (event: React.SyntheticEvent, newValue:any) => {        
-        const updatedCustomizedFormList = [...customizedformlist]
-        updatedCustomizedFormList[templateid].content.push(newValue);
-        setCustomizedFormList(updatedCustomizedFormList);
+    const handleCustomizedFormChange = (event: React.SyntheticEvent, newValue:any) => {    
+        customizedformlist[templateid].content=[...customizedformlist[templateid].content,newValue];    
+        // const updatedCustomizedFormList = [...customizedformlist]
+        // updatedCustomizedFormList[templateid].content.push(newValue);
+        setCustomizedFormList(customizedformlist);
         // console.log(customizedformlist);
         // console.log(updatedCustomizedFormList);
     };
@@ -158,7 +159,7 @@ export default function customize_Form() {
         const updatedCustomizedFormList = [...customizedformlist]
         updatedCustomizedFormList[templateid].content[value].title = customizedSectionTitle;
         console.log('input changed')
-        console.log(event.target.value);
+        console.log(updatedCustomizedFormList);
     };
 
 
