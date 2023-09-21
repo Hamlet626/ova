@@ -32,3 +32,12 @@ export const font3={
     letterSpacing: '0em',
     textAlign: 'left',
 };
+
+export const font4={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '16px',
+    fontWeight: 400,
+    lineHeight: '24px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+};
