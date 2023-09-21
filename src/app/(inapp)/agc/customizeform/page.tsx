@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/system/Stack';
-import {alpha, createTheme, Tabs, Tab,ThemeProvider, Typography, Button, TableContainer, TableRow,TableCell} from "@mui/material";
+import {alpha, createTheme, Tabs, Tab,ThemeProvider, Typography, Button, TableContainer, TableRow,TableCell, Input} from "@mui/material";
 import LinearProgress from '@mui/material/LinearProgress';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -17,7 +17,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import {Toolbar} from "@mui/material";
-import {Add, CheckCircle, CheckCircleOutline, Circle, CircleOutlined, Scale, TableRows} from "@mui/icons-material";
+import {Add, Check, CheckCircle, CheckCircleOutline, Circle, CircleOutlined, Scale, TableRows} from "@mui/icons-material";
 import theme from "@/components/ThemeRegistry/theme";
 import {primary90,neutral96} from "@/components/ThemeRegistry/theme_consts";
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -31,13 +31,17 @@ import * as form_template from "@/utils/form/template";
 import ReceiptLongSharpIcon from '@mui/icons-material/ReceiptLongSharp';
 import SendIcon from '@mui/icons-material/Send';
 import AddIcon from '@mui/icons-material/Add';import { reverse } from 'dns';
-;
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import CheckIcon from '@mui/icons-material/Check';
+import Clear from '@mui/icons-material/Clear';
 
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
     value: number;
 }
+
 
 function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
@@ -67,13 +71,63 @@ function a11yProps(index: number) {
 }
 
 
-
 const templateList=[form_template.basic_info,
     form_template.physical_personal_trait,
     form_template.education_occupation,
     form_template.background_history,
     form_template.family_partner,
     form_template.personal_and_medical,]
+
+
+
+function updateObjectList(objectList:any, index:number, updatedObject:any) {
+    const updatedObjectList = [...objectList];
+    updatedObjectList[index] = updatedObject;
+    return updatedObjectList;
+}
+
+function deleteObjectList(objectList:any, index:number) {
+    const updatedObjectList = [...objectList];
+    updatedObjectList.splice(index, 1);
+    return updatedObjectList;
+}
+
+function insertObjectList(objectList:any, index:number, updatedObject:any) {
+    const updatedObjectList = [...objectList];
+    updatedObjectList.splice(index, 0, updatedObject);
+    return updatedObjectList;
+}
+
+function updateObjectKeyValue(object:any, key:string, value:any) {
+    const updatedObject = {...object};
+    updatedObject[key] = value;
+    return updatedObject;
+}
+
+function deleteObjectKeyValue(object:any, key:string) {
+    const updatedObject = {...object};
+    delete updatedObject[key];
+    return updatedObject;
+}
+
+function insertObjectKeyValue(object:any, key:string, value:any) {
+    const updatedObject = {...object};
+    updatedObject[key] = value;
+    return updatedObject;
+}
+
+let testlist=[1,2,3,4,5,{"name":"test name"}]
+
+// console.log(updateObjectList(testlist, 2, {name: "update object name"}));
+// console.log(deleteObjectList(testlist, 2));
+// console.log(insertObjectList(testlist, testlist.length, {name: "insert object"}));
+//console.log(testlist)
+// console.log(updateObjectKeyValue(testlist[5], "name", "update object key value"))
+// console.log(updateObjectList(testlist, 5, updateObjectKeyValue(testlist[5], "name", "update object key value")))
+
+// console.log(updateObjectKeyValue(testlist[5], "name2", "2update object key value"))
+// console.log(updateObjectList(testlist, 5, updateObjectKeyValue(testlist[5], "name2", "2update object key value")))
+
 
 export default function customize_Form() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -82,18 +136,32 @@ export default function customize_Form() {
         setValue(newValue);
     };
 
-    const [templateId, setTemplateId] = React.useState(0);
+    const [templateid, setTemplateId] = React.useState(0);
     const handleTemplateChange = (event: React.SyntheticEvent, newValue: number) => {
         setTemplateId(newValue);
         handleChange(event, 0);
     };
 
-    const [customizedFormList, setCustomizedFormList] = React.useState([form_template.basic_info]);
-    const handleCustomizedFormChange = (event: React.SyntheticEvent, newValue:[any]) => {
-        const initialSection = {"untitled01": "Section 1", "fields": []};
-        setCustomizedFormList(newValue);
-
+    const initialSection = {"title": "section_title1", "fields": []};
+    const [customizedformlist, setCustomizedFormList] = React.useState(templateList);
+    const handleCustomizedFormChange = (event: React.SyntheticEvent, newValue:any) => {        
+        const updatedCustomizedFormList = [...customizedformlist]
+        updatedCustomizedFormList[templateid].content.push(newValue);
+        setCustomizedFormList(updatedCustomizedFormList);
+        // console.log(customizedformlist);
+        // console.log(updatedCustomizedFormList);
     };
+
+    const [customizedSectionTitle, setCustomizedSectionTitle] = React.useState(templateList[templateid].content[value].title);
+    const handleCustomizedSectionTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCustomizedSectionTitle(event.defaultPrevented);
+        const updatedCustomizedFormList = [...customizedformlist]
+        updatedCustomizedFormList[templateid].content[value].title = customizedSectionTitle;
+        console.log('input changed')
+        console.log(event.target.value);
+    };
+
+
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -134,46 +202,19 @@ export default function customize_Form() {
                     height:'auto',
                     gap:'12px',
                 }}>
-                    {/* {['Basic Information', 'Family & Others', 'Personal Medical', 'Other A', 'Other B'].map((text, index) => (
-                        < >
-                            <ListItem key={text}  templateId={templateId} disablePadding
-                                      onClick={(ev:React.SyntheticEvent)=>{handleTemplateChange(ev,index);;}}>
-                                <ListItemButton sx={{
-                                    borderRadius: '100px',
-                                    backgroundColor: index === templateId ? primary90: "white",
-                                    width:'93px',
-                                }}>
-                                    <ListItemIcon sx={{
-                                        width:'20px',
-                                        height:'20px',
-                                    }}>
-                                        
-                                        <Circle sx={{color:primary90}}/>
-                                    </ListItemIcon>
-                                    <ListItemText primary={text}   sx={{
-                                        ml:'-20px',
-                                        color:'black',
-                                    }}/>
-                                </ListItemButton>
-                            </ListItem>
-                            <Divider/>
-                        </>
-                    ))} */}
-
-                    {templateList.map((template, index) => (
-                        < >
-                        <ListItem key={template.name}  templateId={templateId} disablePadding
+                    {customizedformlist.map((template, index) => (
+                    < div key={index} >
+                        <ListItem disablePadding
                                   onClick={(ev:React.SyntheticEvent)=>{handleTemplateChange(ev,index);;}}>
                             <ListItemButton sx={{
                                 borderRadius: '100px',
-                                backgroundColor: index === templateId ? primary90: "white",
+                                backgroundColor: index === templateid ? primary90: "white",
                                 width:'93px',
                             }}>
                                 <ListItemIcon sx={{
                                     width:'20px',
                                     height:'20px',
                                 }}>
-                                    {/* {index === templateId ? < CheckCircleOutline sx={{color:'primary.main'}}/> : <Circle sx={{color:primary90}}/>} */}
                                     <Circle sx={{color:primary90}}/>
                                 </ListItemIcon>
                                 <ListItemText primary={template.name}   sx={{
@@ -182,8 +223,8 @@ export default function customize_Form() {
                                 }}/>
                             </ListItemButton>
                         </ListItem>
-                        <Divider/>
-                    </>
+                        <Divider />
+                    </div>
                     ))}
 
                 </List>
@@ -229,10 +270,17 @@ export default function customize_Form() {
                             }}>
                                 <ReceiptLongSharpIcon sx={{color:primary90,justifySelf:'left',gap:'10px',margin:'10px'}}/>
                                 <Typography sx={{justifySelf:'left'}}>
-                                    {templateList[templateId].name}
+                                    {templateList[templateid].name}
                                 </Typography>
                             </Box>
-                            <Button startIcon ={<Add sx={{width:'18px',height:'18px'}}/>} sx={{justifySelf:'right',border:'solid 1px',gap:'8px',margin:'10px', borderRadius:'100px',color:'#926F63',}}>
+                            <Button startIcon ={<Add sx={{width:'18px',height:'18px'}}/>} 
+                                    onClick={(ev:React.SyntheticEvent)=>{handleCustomizedFormChange(ev,initialSection);}}
+                                    sx={{justifySelf:'right',
+                                    border:'solid 1px',
+                                    gap:'8px',
+                                    margin:'10px', 
+                                    borderRadius:'100px',
+                                    color:'#926F63',}} >
                                 Add a new section
                             </Button>
                         </Box>
@@ -241,32 +289,38 @@ export default function customize_Form() {
                         <Box sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <Tabs value={value} onChange={handleChange} >
-                                    {(templateList[templateId]as any).content.map((template, index) => (
-                                        <Tab label={template.title} {...a11yProps(index)} />
+                                    {(templateList[templateid]as any).content.map((template, index) => (
+                                        <Tab key={index} label={template.title} {...a11yProps(index)} />
                                     ))}
                                 </Tabs>
                             </Box>
-                            {templateList[templateId].content.map((section_list, index) => (
-                                <CustomTabPanel value={value} index={index}>
-                                    
-                                    {section_list.title}
+                            {templateList[templateid].content.map((section_list, index) => (
+                                <CustomTabPanel value={value} index={index} key={index} >
+                                    <Input placeholder={section_list.title} 
+                                        defaultValue={section_list.title} 
+                                        sx={{width:'200px'}} 
+                                        onChange={(ev:React.SyntheticEvent)=>{handleCustomizedSectionTitleChange(ev,"werw");console.log({value})}}/>
+                                    <Button variant="solid" startIcon={<Clear/>}> </Button>
+                                    <Button variant="solid" startIcon={<Check/>} onClick={(ev:React.SyntheticEvent)=>{handleCustomizedSectionTitleChange(ev,"new title")}} > </Button>
                                     <br/>
                                     <TableContainer>
-                                    {(section_list.fields as any).map((field, sectionIindex) => (                                        
-                                        <TableRow>
-                                            <TableCell>{JSON.stringify(field.id)}</TableCell>
-                                            <TableCell>{JSON.stringify(field.label)}</TableCell>
-                                            <TableCell>{JSON.stringify(field.type)}</TableCell>
-                                            <TableCell>{JSON.stringify(field.required)}</TableCell>
-                                            <TableCell>{JSON.stringify(field.length)}</TableCell>
-                                            <TableCell>{JSON.stringify(field.options)}</TableCell>
-                                            <TableCell>{JSON.stringify(field.sub)}</TableCell>                                  
-
-                                        </TableRow>
-                                    ))}
+                                        <Table>
+                                            <TableBody>
+                                                {(section_list.fields as any).map((field, index) => (                                        
+                                                    <TableRow key={index}>
+                                                        <TableCell>{JSON.stringify(field.id)}</TableCell>
+                                                        <TableCell>{JSON.stringify(field.label)}</TableCell>
+                                                        <TableCell>{JSON.stringify(field.type)}</TableCell>
+                                                        <TableCell>{JSON.stringify(field.required)}</TableCell>
+                                                        <TableCell>{JSON.stringify(field.length)}</TableCell>
+                                                        <TableCell>{JSON.stringify(field.options)}</TableCell>
+                                                        <TableCell>{JSON.stringify(field.sub)}</TableCell>    
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
                                     </TableContainer>
                                     <br/>
-
                                 </CustomTabPanel>
                             ))}
                         </Box>

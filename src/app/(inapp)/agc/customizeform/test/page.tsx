@@ -1,37 +1,34 @@
-"use client"
-import { useState } from 'react';
-import { NextPage } from 'next';
+"use client";
+import React, { useState } from 'react';
 
-const MyComponent: NextPage = () => {
-  // Define the list in state
-  const [myList, setMyList] = useState<number[]>([1, 2, 3, 4, 5]);
+const InputComponent: React.FC = () => {
+  // Create a state variable to hold the input value
+  const [inputValue, setInputValue] = useState<string>('');
 
-  // Function to change the value of an item by index
-  const changeValueAtIndex = (index: number, newValue: number) => {
-    if (index >= 0 && index < myList.length) {
-      const updatedList = [...myList]; // Create a copy of the original list
-      updatedList[index] = newValue; // Update the value at the specified index
-      setMyList(updatedList); // Update the state with the updated list
-    }
+  // Event handler to update the input value
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Access the input value using e.target.value
+    const newValue = e.target.value;
+    setInputValue(newValue);
+  };
+
+  // Function to handle submission (you can use it to access the input value)
+  const handleSubmit = () => {
+    // Access the input value from the 'inputValue' state variable
+    alert('Input value: ' + inputValue);
   };
 
   return (
     <div>
-      <h1>My Component</h1>
-      <ul>
-        {myList.map((item, index) => (
-          <li key={index}>
-            Item {index + 1}: {item}
-            <button
-              onClick={() => changeValueAtIndex(index, item * 2)} // Example: Double the value
-            >
-              Change Value
-            </button>
-          </li>
-        ))}
-      </ul>
+      <input
+        type="text"
+        placeholder="Enter something"
+        value={inputValue} // Set the value from the state variable
+        onChange={handleInputChange} // Update the state when input changes
+      />
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 };
 
-export default MyComponent;
+export default InputComponent;
