@@ -16,11 +16,21 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Image from "next/image";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {Box, Button, Menu, MenuItem, InputBase, Paper, Typography, Divider} from "@mui/material";
-import {font2, font3, font4, font5, font6, font7} from "@/components/ThemeRegistry/theme_consts";
+import {
+    font2,
+    font3,
+    font4,
+    font5,
+    font6,
+    font7,
+    neutral_white,
+    search_color
+} from "@/components/ThemeRegistry/theme_consts";
 import Grid2 from "@mui/material/Unstable_Grid2";
 
 const pages = ['Home','Egg Donor','Recipients','Cases','Events']
@@ -116,13 +126,13 @@ export default async function Home() {
                         display: 'flex',
                         alignItems: 'center',
                         borderRadius: '28px',
-                        backgroundColor: "#EEF0F4",
+                        backgroundColor: neutral_white,
                         height: '56px'
                     }}>
                         <Button
                             onClick={handleClick}
                             endIcon={<KeyboardArrowDownIcon />}
-                            sx={{textTransform: 'none', color: "#7F7572", width: '232px', marginLeft: '20px', justifyContent: 'flex-start'}}
+                            sx={{textTransform: 'none', color: search_color, width: '232px', marginLeft: '20px', justifyContent: 'flex-start'}}
                         >
                             Egg Donor
                         </Button>
@@ -151,14 +161,24 @@ export default async function Home() {
                         </Box>
                         <Box ml='18px'>
                             <Box height='16px'/>
-                            <Typography sx={font6} color={'primary'}>456</Typography>
+                            <Box display={'flex'}>
+                                <Typography sx={font6} color={'primary'}>456</Typography>
+                                <Box width='56px'/>
+                                <IconButton type="submit" sx={{ p: '10px' }}>
+                                    <ArrowForwardIcon sx={{color: search_color}}/>
+                                </IconButton>
+                            </Box>
                             <Typography sx={font7}>Egg Donors</Typography>
                             <Box height='16px'/>
-                            <Typography sx={font6} color={'primary'}>1,436</Typography>
-                            <Typography sx={font7}>Recipients</Typography>
+                            <Box>
+                                <Typography sx={font6} color={'primary'}>1,436</Typography>
+                                <Typography sx={font7}>Recipients</Typography>
+                            </Box>
                             <Box height='16px'/>
-                            <Typography sx={font6} color={'primary'}>203</Typography>
-                            <Typography sx={font7}>Cases</Typography>
+                            <Box>
+                                <Typography sx={font6} color={'primary'}>203</Typography>
+                                <Typography sx={font7}>Cases</Typography>
+                            </Box>
                         </Box>
                     </Box>
 
