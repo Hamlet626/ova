@@ -20,7 +20,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {Box, Button, Menu, MenuItem, InputBase, Paper, Typography, Divider} from "@mui/material";
-import {font2, font3, font4} from "@/components/ThemeRegistry/theme_consts";
+import {font2, font3, font4, font5, font6, font7} from "@/components/ThemeRegistry/theme_consts";
 import Grid2 from "@mui/material/Unstable_Grid2";
 
 const pages = ['Home','Egg Donor','Recipients','Cases','Events']
@@ -45,7 +45,8 @@ export default async function Home() {
         <Box>
             <AppBar sx={{
                 backgroundColor: 'white',
-                borderBottom: '1px solid #D8C2BB'}}
+                borderBottom: '1px solid #D8C2BB',
+            }}
                     // set to static because removing it will make the AppBar inherit its default behavior from the styling library
                     elevation={0} position="static">
                 <Container maxWidth="xl">
@@ -53,6 +54,7 @@ export default async function Home() {
                         <Image src={logo} alt="Logo" style={{
                             width: '85px',
                             height: '27.71px',
+                            marginLeft: '16px'
                             // position: 'static',
                         // top: '27px',
                         // left: '80px',
@@ -91,6 +93,7 @@ export default async function Home() {
                         }}>
                             <AccountCircle/>
                         </IconButton>
+                        <Box width={40}/>
                     </ToolBar>
                 </Container>
             </AppBar>
@@ -135,7 +138,41 @@ export default async function Home() {
                 </Grid2>
             </Grid2>
             <Grid2 container spacing={3}>
+                <Grid2 md={1.5} ml={5} display="flex">
+                    <Box sx={{
+                        width: '179px',
+                        height: '269px',
+                        borderRadius: '16px',
+                        border: '1px solid #D8C2BB',
+                    }}>
+                        <Box ml='18px'>
+                            <Box height='20px'/>
+                            <Typography sx={font5}>Total</Typography>
+                        </Box>
+                        <Box ml='18px'>
+                            <Box height='16px'/>
+                            <Typography sx={font6} color={'primary'}>456</Typography>
+                            <Typography sx={font7}>Egg Donors</Typography>
+                            <Box height='16px'/>
+                            <Typography sx={font6} color={'primary'}>1,436</Typography>
+                            <Typography sx={font7}>Recipients</Typography>
+                            <Box height='16px'/>
+                            <Typography sx={font6} color={'primary'}>203</Typography>
+                            <Typography sx={font7}>Cases</Typography>
+                        </Box>
+                    </Box>
 
+                </Grid2>
+                <Grid2>
+                    <Box sx={{
+                        width: '744px',
+                        height: '269px',
+                        borderRadius: '16px',
+                        border: '1px solid #D8C2BB',
+                    }}>
+
+                    </Box>
+                </Grid2>
             </Grid2>
         </Box>
         // <main className="flex min-h-screen flex-col items-center justify-between p-24">

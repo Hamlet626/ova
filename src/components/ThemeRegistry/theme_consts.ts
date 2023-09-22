@@ -41,3 +41,31 @@ export const font4={
     letterSpacing: '0em',
     textAlign: 'left',
 };
+
+export const font5={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '16px',
+    fontWeight: 500,
+    lineHeight: '24px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+};
+
+export const font6={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '28px',
+    fontWeight: 400,
+    lineHeight: '36px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+};
+
+export const font7={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '12px',
+    fontWeight: 500,
+    lineHeight: '16px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+};
+
