@@ -16,6 +16,10 @@ export const font1={
     textAlign: 'left',
 };
 
+
+export const outline_variant='#D8C2BB';
+export const neutral96='#FEF1ED';
+
 export const font2={
     fontFamily: roboto.style.fontFamily,
     fontSize: '28px',

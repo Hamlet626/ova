@@ -14,6 +14,7 @@ const theme = createTheme({
         secondary: {main: '#ad897b'},
         tertiary: {main: '#9c915d'}
     },
+    shape:{borderRadius:100},
     typography: {
         fontFamily: roboto.style.fontFamily,
         subtitle3: {
@@ -33,20 +34,20 @@ const theme = createTheme({
                 },
             },
         },
-        MuiButton: {
-            styleOverrides: {
-                root:{ borderRadius:"100px" }
-            }
-        },
-        MuiAlert: {
-            styleOverrides: {
-                root: ({ ownerState }) => ({
-                    ...(ownerState.severity === 'info' && {
-                        backgroundColor: '#60a5fa',
-                    }),
-                }),
-            },
-        },
+        // MuiButton: {
+        //     styleOverrides: {
+        //         root:{ borderRadius:"100px" }
+        //     }
+        // },
+        // MuiAlert: {
+        //     styleOverrides: {
+        //         root: ({ ownerState }) => ({
+        //             ...(ownerState.severity === 'info' && {
+        //                 backgroundColor: '#60a5fa',
+        //             }),
+        //         }),
+        //     },
+        // },
     },
 });
 
