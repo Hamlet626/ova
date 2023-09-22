@@ -1,5 +1,6 @@
 import { Roboto } from 'next/font/google';
 import { createTheme } from '@mui/material/styles';
+import { outline_variant } from './theme_consts';
 
 const roboto = Roboto({
     weight: ['300', '400', '500', '700'],
@@ -39,6 +40,11 @@ const theme = createTheme({
                 root:{ borderRadius:"100px" }
             }
         },
+        MuiDivider:{
+            styleOverrides: {
+                root:{ backgroundColor: outline_variant }
+            }
+        }
         // MuiAlert: {
         //     styleOverrides: {
         //         root: ({ ownerState }) => ({
