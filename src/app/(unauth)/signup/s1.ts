@@ -10,14 +10,11 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import {Google, Lock, Login, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
 import NextLink from "next/link";
 import {font2} from "@/components/ThemeRegistry/theme_consts";
-//import {flexContainerStyle, NameInputs_NotClinic,NameInputs_Clinic} from "@/components/signup/signup_page.ts";
-
 import { getClinic } from "@/utils/clinic_check";
 import { useUrl } from 'nextjs-current-url';
 import { useSearchParams } from 'next/navigation'
-import {   InputLabel,FormControl,useFormControl, TextField, FormHelperText} from '@mui/material';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import { useFormControl, TextField, FormHelperText} from '@mui/material';
+
 
 
 const flexContainerStyle = {
@@ -25,41 +22,23 @@ const flexContainerStyle = {
   flexDirection: "row",
   justifyContent: "space-between",
 };
-function NameInputs_Clinic({companyName,handleChange}){
-const options = ["Company1", "Company2", "Company3"]; // Replace with your list of company names
+function NameInputs_Clinic(){
+return (
+<Input
+        name="Company Name"
+        fullWidth
+        startAdornment={
+                <InputAdornment position="start">
+                   <BusinessOutlinedIcon/>
+                </InputAdornment>
+                  }
+        placeholder="Company Name"
+        type="text"
+      />
+      );
+      }
 
-  return (
-  <div>
-  <FormControl variant="standard" sx={{  minWidth: 400 }}>
-        <InputLabel >Aghe</InputLabel>
-
-          <Select
-
-            value={companyName}
-            onChange={handleChange}
-             placeholder="Company Name"
-          type="text"
-          startAdornment={
-             <InputAdornment position="start">
-               <BusinessOutlinedIcon />
-             </InputAdornment>
-           }
-          >
- <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-            <MenuItem value={10}>A</MenuItem>
-            <MenuItem value={20}>B</MenuItem>
-            <MenuItem value={30}>C</MenuItem>
-          </Select>
-        </FormControl>
-       </div>
-
-  );
-}
-
-
-function NameInputs_NotClinic({ formData, handleInputChange, errors }) {
+function NameInputs_NotClinic() {
   return (
     <Box sx={flexContainerStyle}>
       <Input
@@ -68,11 +47,7 @@ function NameInputs_NotClinic({ formData, handleInputChange, errors }) {
         startAdornment={<InputAdornment position="start"></InputAdornment>}
         placeholder="First Name"
         type="text"
-        value={formData.firstname}
-        onChange={handleInputChange}
-       error={!!errors.firstname}
       />
-            <FormHelperText error>{errors.firstname}</FormHelperText>
 
       <Box width={23} />
       <Input
@@ -81,48 +56,33 @@ function NameInputs_NotClinic({ formData, handleInputChange, errors }) {
         startAdornment={<InputAdornment position="start"></InputAdornment>}
         placeholder="Last Name"
         type="text"
-      value={formData.lastname}
-             onChange={handleInputChange}
-            error={!!errors.lastname}
-           />
-
-         <FormHelperText error>{errors.lastname}</FormHelperText>
+      />
     </Box>
   );
 }
+
+
 export function SignUp1(){
     const hostName=useUrl()?.host;
     const clinic = getClinic(hostName);
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
+const emailFormControl = useFormControl();
+  const passwordFormControl = useFormControl();
 
-    const[company, setCompany]=useState('');
-    const handleChange=(event:SelectChangeEvent)=>{
-    setCompany(event.target.value)
-    };
 
  const [formData, setFormData] = useState({
      email: '',
      password: '',
-     firstname:'',
-     lastname:'',
    });
 
    const [errors, setErrors] = useState({
      email: '',
      password: '',
-      firstname:'',
-      lastname:'',
    });
 
-    const validateName= (name) =>{
-     if (!name){
-     return 'Invalid name';
-     }
-     return '';
-    }
-
    const validateEmail = (email) => {
+     // Implement your email validation logic here
      if (!email || !email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) {
        return 'Invalid email address';
      }
@@ -130,6 +90,7 @@ export function SignUp1(){
    };
 
    const validatePassword = (password) => {
+     // Implement your password validation logic here
      if (!password || password.length < 6) {
        return 'Password must be at least 6 characters';
      }
@@ -144,18 +105,30 @@ export function SignUp1(){
      const { name, value } = e.target;
      setFormData({ ...formData, [name]: value });
 
+     // Perform validation on the field being updated
      if (name === 'email') {
        setErrors({ ...errors, email: validateEmail(value) });
      } else if (name === 'password') {
        setErrors({ ...errors, password: validatePassword(value) });
-     } else if (name === 'firstname' || name==='lastname'){
-     setErrors({...errors, [name]:validateName(value)});
      }
    };
 
-   const isButtonDisabled = !!errors.email || !!errors.password||    validatePassword(formData.password) !== ''||
-   validateEmail(formData.email) !== '';
+   const handleSubmit = (e) => {
+   //  e.preventDefault();
 
+     // Check if there are any errors before submitting
+     if (validateEmail(formData.email) || validatePassword(formData.password)) {
+       // Handle validation errors here
+       return;
+     }
+
+     // Form submission logic
+     console.log('Form submitted with email:', formData.email, 'and password:', formData.password);
+   };
+    const isButtonDisabled = !!errors.email || !!errors.password||    validatePassword(formData.password) !== '';
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [showPw, setShowPw] = useState(false);
 
     //const role = 'null';
@@ -176,15 +149,11 @@ export function SignUp1(){
           {clinic !== null ? 'Clinics Sign Up' : (role === 'ed' ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
         </span>
         </Typography>
-        <form >
              <Box height={50} />
-          {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_NotClinic
-           formData={formData}
-                       handleInputChange={handleInputChange}
-                       errors={errors}/>}
+          {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_NotClinic />}
 
         <Box height={41} />
-
+         <form onSubmit={handleSubmit}>
              <Input
                fullWidth
                placeholder="Email"
@@ -193,20 +162,20 @@ export function SignUp1(){
                onChange={handleInputChange}
                error={!!errors.email}
                 startAdornment={
-                <InputAdornment position="start">
-                    <Mail/>
-                 </InputAdornment>
+                                     <InputAdornment position="start">
+                                        <Mail/>
+                                     </InputAdornment>
                                        }
              />
-
+             {errors.email && (
                <FormHelperText error>{errors.email}</FormHelperText>
-
+             )}
 
           <Box height={16}/>
 
              <Input
                fullWidth
-
+                //id="password"
                name="password"
               // type="password"
                value={formData.password}
@@ -224,13 +193,52 @@ export function SignUp1(){
                       type={showPw?"text":"password"}
 
              />
+             {errors.password && (
                <FormHelperText error>{errors.password}</FormHelperText>
+             )}
+
+
+     {/*  <Input  id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      fullWidth
+                      startAdornment={
+                       <InputAdornment position="start">
+                          <Mail/>
+                       </InputAdornment>
+                         }
+                       placeholder="Email"
+                       type="email"/>
+
+          <Box height={16}/>
+           <Input  id="password"
+                   name="password"
+                   type="password"
+                   autoComplete="current-password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    required fullWidth
+                    startAdornment={
+                    <InputAdornment position="start">
+                       <Lock/>
+                     </InputAdornment>}
+                    endAdornment={
+                    <InputAdornment onClick={clickPwIcon} >
+                     {showPw ? <VisibilityOff /> : <Visibility />}
+                    </InputAdornment>}
+                     placeholder="Password"
+                     type={showPw?"text":"password"}/>
+*/}
+
 
           <Box height={40}/>
           <Button type="submit"
-                disabled={isButtonDisabled}
-               href={isButtonDisabled ? null: '/profile'}
+//<Link href={isButtonDisabled ? null: '/profile'}>
 
+    disabled={isButtonDisabled}
+    href={isButtonDisabled ? null: '/profile'}
               onClick={async () => {
                 const r = await fetch('/api/onboard', {
                   method: 'POST',
@@ -266,8 +274,10 @@ export function SignUp1(){
             startIcon={<ArrowCircleRightOutlinedIcon />}
           >
             Next
+
           </Button>
-</form>
+
+        </form>
          <Box height={33}/>
           <Typography variant="h6" sx={{textAlign: 'center'}}>Log In</Typography>
             <Box height={37}/>
@@ -298,7 +308,6 @@ export default function SignUp() {
             </Bg1>
 );
 }
-
 
 
 

@@ -6,5 +6,10 @@ const nextConfig = {
         },
     },
 }
-
+module.exports = {
+  // Other configuration settings
+  devServer: {
+    port: 3000, // Change this to 3000
+  },
+};
 module.exports = nextConfig
