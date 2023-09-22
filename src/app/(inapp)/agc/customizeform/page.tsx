@@ -39,22 +39,20 @@ import Clear from '@mui/icons-material/Clear';
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
-    value: number;
+    tabId: number;
 }
 
-
 function CustomTabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
+    const { children, tabId, index, ...other } = props;
     return (
         <div
             role="tabpanel"
-            hidden={value !== index}
+            hidden={tabId !== index}
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && (
+            {tabId === index && (
                 <Box sx={{ p: 3 }}>
                     {children}
                 </Box>
@@ -70,15 +68,12 @@ function a11yProps(index: number) {
     };
 }
 
-
 const templateList=[form_template.basic_info,
     form_template.physical_personal_trait,
     form_template.education_occupation,
     form_template.background_history,
     form_template.family_partner,
     form_template.personal_and_medical,]
-
-
 
 function updateObjectList(objectList:any, index:number, updatedObject:any) {
     const updatedObjectList = [...objectList];
@@ -124,18 +119,15 @@ let testlist=[1,2,3,4,5,{"name":"test name"}]
 //console.log(testlist)
 // console.log(updateObjectKeyValue(testlist[5], "name", "update object key value"))
 // console.log(updateObjectList(testlist, 5, updateObjectKeyValue(testlist[5], "name", "update object key value")))
-
 // console.log(updateObjectKeyValue(testlist[5], "name2", "2update object key value"))
 // console.log(updateObjectList(testlist, 5, updateObjectKeyValue(testlist[5], "name2", "2update object key value")))
 
 
 export default function customize_Form() {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [value, setValue] = React.useState(0);
+    const [tabId, setTabId] = React.useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
+        setTabId(newValue);
     };
-
     const [templateid, setTemplateId] = React.useState(0);
     const handleTemplateChange = (event: React.SyntheticEvent, newValue: number) => {
         setTemplateId(newValue);
@@ -149,22 +141,27 @@ export default function customize_Form() {
         // const updatedCustomizedFormList = [...customizedformlist]
         // updatedCustomizedFormList[templateid].content.push(newValue);
         setCustomizedFormList(customizedformlist);
-        // console.log(customizedformlist);
+        console.log(customizedformlist[templateid]);
         // console.log(updatedCustomizedFormList);
     };
 
-    const [customizedSectionTitle, setCustomizedSectionTitle] = React.useState(templateList[templateid].content[value].title);
+    const [customizedSectionTitle, setCustomizedSectionTitle] = React.useState(templateList[templateid].content[tabId].title);
     const handleCustomizedSectionTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCustomizedSectionTitle(event.defaultPrevented);
-        const updatedCustomizedFormList = [...customizedformlist]
-        updatedCustomizedFormList[templateid].content[value].title = customizedSectionTitle;
-        console.log('input changed')
-        console.log(updatedCustomizedFormList);
+        let updatedCustomizedFormList = [...customizedformlist]
+        updatedCustomizedFormList[templateid].content[tabId].title = event.target.value;
+        console.log('input changed');
+        console.log(updatedCustomizedFormList[templateid].content[tabId]);
+        setCustomizedFormList(updatedCustomizedFormList);
+    };
+    const saveSectionTitle = (event: React.SyntheticEvent) => {
+        let updatedCustomizedFormList = [...customizedformlist]
+        updatedCustomizedFormList[templateid].content[tabId].title = customizedSectionTitle;
+        console.log('section title changed');
+        console.log(updatedCustomizedFormList[templateid].content[tabId]);
+        setCustomizedFormList(updatedCustomizedFormList);
     };
 
-
-
-    return (
+    return (        
         <Box sx={{ display: 'flex' }}>
             <Box sx={{
                 width: '297px',
@@ -289,20 +286,21 @@ export default function customize_Form() {
                     <ListItem disablePadding>
                         <Box sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                <Tabs value={value} onChange={handleChange} >
+                                <Tabs value={tabId} 
+                                    onChange={(ev:React.SyntheticEvent,value)=>{console.log("change tab");console.log({tabId});console.log(value)}} >
                                     {(templateList[templateid]as any).content.map((template, index) => (
                                         <Tab key={index} label={template.title} {...a11yProps(index)} />
                                     ))}
                                 </Tabs>
                             </Box>
                             {templateList[templateid].content.map((section_list, index) => (
-                                <CustomTabPanel value={value} index={index} key={index} >
+                                <CustomTabPanel tabId={tabId} index={index} key={index} >
                                     <Input placeholder={section_list.title} 
                                         defaultValue={section_list.title} 
                                         sx={{width:'200px'}} 
-                                        onChange={(ev:React.SyntheticEvent)=>{handleCustomizedSectionTitleChange(ev,"werw");console.log({value})}}/>
+                                        onChange={(ev:React.ChangeEvent<HTMLInputElement>)=>{handleCustomizedSectionTitleChange(ev);console.log({tabId})}}/>
                                     <Button variant="solid" startIcon={<Clear/>}> </Button>
-                                    <Button variant="solid" startIcon={<Check/>} onClick={(ev:React.SyntheticEvent)=>{handleCustomizedSectionTitleChange(ev,"new title")}} > </Button>
+                                    <Button variant="solid" startIcon={<Check/>} onClick={(ev:React.SyntheticEvent)=>{saveSectionTitle;}} > </Button>
                                     <br/>
                                     <TableContainer>
                                         <Table>
