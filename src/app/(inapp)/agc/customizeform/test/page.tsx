@@ -1,34 +1,57 @@
 "use client";
 import React, { useState } from 'react';
+import { Tab, Tabs,  Button, Typography } from '@mui/material';
+import {TabList,TabPanel,TabContext} from '@mui/lab';
 
-const InputComponent: React.FC = () => {
-  // Create a state variable to hold the input value
-  const [inputValue, setInputValue] = useState<string>('');
 
-  // Event handler to update the input value
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Access the input value using e.target.value
-    const newValue = e.target.value;
-    setInputValue(newValue);
+function TabsWithAddButton() {
+  const [value, setValue] = useState(0);
+  const [tabLabels, setTabLabels] = useState(['Tab 1', 'Tab 2']);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
 
-  // Function to handle submission (you can use it to access the input value)
-  const handleSubmit = () => {
-    // Access the input value from the 'inputValue' state variable
-    alert('Input value: ' + inputValue);
+  const handleAddTab = () => {
+    // Clone the current tab labels array and add a new tab label
+    const newTabLabels = [...tabLabels, `Tab ${tabLabels.length + 1}`];
+    setTabLabels(newTabLabels);
+    // Switch to the newly added tab
+    setValue(newTabLabels.length - 1);
   };
 
   return (
+  
+      <TabContext value={value}>
+      <Tabs value={value} onChange={handleChange}>
+        <TabList>
+          {tabLabels.map((label, index) => (
+            <Tab key={index} label={label} />
+          ))}
+          <Button variant="outlined" color="primary" onClick={handleAddTab}>
+            Add
+          </Button>
+        </TabList>
+        {tabLabels.map((_, index) => (
+          <TabPanel key={index} value={value} index={index}>
+            <Typography variant="h6">Content for {tabLabels[index]}</Typography>
+          </TabPanel>
+        ))}
+      </Tabs>
+      </TabContext>
+  );
+}
+
+
+
+function MyApp() {
+  return (
     <div>
-      <input
-        type="text"
-        placeholder="Enter something"
-        value={inputValue} // Set the value from the state variable
-        onChange={handleInputChange} // Update the state when input changes
-      />
-      <button onClick={handleSubmit}>Submit</button>
+      <h1>My App</h1>
+      <TabsWithAddButton />
     </div>
   );
-};
+}
 
-export default InputComponent;
+export default MyApp;
+
