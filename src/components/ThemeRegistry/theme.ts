@@ -19,10 +19,17 @@ const theme = createTheme({
     typography: {
         fontFamily: roboto.style.fontFamily,
         subtitle3: {
-            fontSize: '4rem',
+            fontSize: '14px',
+            fontWeight: 500,
+            lineHeight: '20px',
+            letterSpacing: '0.1px',
+            textAlign: 'left'
         },
         body3: {
-            fontSize: '4rem',
+            fontSize: '12px',
+            fontWeight: 400,
+            lineHeight: '16px',
+            textAlign: 'left'
         },
     },
     components: {

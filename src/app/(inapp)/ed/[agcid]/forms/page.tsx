@@ -48,7 +48,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
         <Box height={32}/>
         <Stack spacing={16}>
             {formsStatus.map((v)=>(
-                <Card variant="outlined">
+                <Card  key={v.title} variant="outlined">
                     <CardActionArea>
                         <CardContent>
                         <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
@@ -86,7 +86,7 @@ const SubfieldsBlock=({section,finished,sx}:{section:any[],finished?:boolean,sx?
         <Typography sx={font6}>{finished?'Finished Question Group':'Remained Question Group'}</Typography>
         <Box height={8}/>
         <Stack spacing='8px' direction={'row'}>
-            {...section.map(v=>(<Chip label={v} color={finished?'secondary':'primary'}/>))}
+            {...section.map(v=>(<Chip key={v} label={v} color={finished?'secondary':'primary'}/>))}
         </Stack>
     </Box>);
 }
