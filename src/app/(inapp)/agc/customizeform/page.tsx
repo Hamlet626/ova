@@ -122,17 +122,17 @@ const templateList=[form_template.basic_info,
 
 
 export default function customize_Form() {
-    // tabId is the index of the current section in a specific table template
+    // tabId is the index of the current section in a specific table template (Click the tab to change the section)
     const [tabId, setTabId] = React.useState(0);
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabId(newValue);
     };
 
-    // templateid is the index of the current table template
+    // templateid is the index of the current table template (Click the left side bar to change the template)
     const [templateid, setTemplateId] = React.useState(0);
     const handleTemplateChange = (event: React.SyntheticEvent, newValue: number) => {
         setTemplateId(newValue);
-        handleChange(event, 0);
+        handleTabChange(event, 0);
     };
 
     // Default value of a new section
@@ -159,8 +159,6 @@ export default function customize_Form() {
     const closeEditField = () => {
         setEditFieldState(false);
     };
-
-
 
 
     const addTableSection = (event: React.SyntheticEvent, newValue:any) => { 
@@ -260,8 +258,8 @@ export default function customize_Form() {
                     {customizedformlist.map((template, index) => (
                     < div key={index} >
                         <ListItem disablePadding
-                                //   reset sectionno to 0 when change template
-                                  onClick={(ev:React.SyntheticEvent)=>{handleTemplateChange(ev,index);setSectionNo(0);}}>
+                                //   reset sectionno to 0 when change template, otherwise the sectionno will be the same as the previous template
+                                  onClick={(ev:React.SyntheticEvent)=>{handleTemplateChange(ev,index);handleTabChange(ev,0);setSectionNo(0);}}>
                             <ListItemButton sx={{
                                 borderRadius: '100px',
                                 backgroundColor: index === templateid ? primary90: "white",
@@ -316,7 +314,7 @@ export default function customize_Form() {
                         <Box sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex'}}>
                                 <Tabs value={tabId} 
-                                    onChange={(ev:React.SyntheticEvent,value)=>{console.log("change tab");handleChange(ev,value);console.log(value);setSectionNo(value)}} >
+                                    onChange={(ev:React.SyntheticEvent,value)=>{console.log("change tab");handleTabChange(ev,value);console.log(value);setSectionNo(value)}} >
                                      {/* ??{} is used to avoiding mapping a null object*/}
                                     {(customizedformlist[templateid]??{} as any).content.map((template, index) => (
                                         <Tab key={index} label={template.title} {...a11yProps(index)} />
