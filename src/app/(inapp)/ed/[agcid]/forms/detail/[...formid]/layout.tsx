@@ -10,9 +10,6 @@ export default async function FormIndex({children, params}: { children: React.Re
         <Paper sx={{width:'326px', alignSelf:'stretch',height:'9999px'}}>
             <EDFormTitles/>
         </Paper>
-        {/* <Box bgcolor={'red'} width={'100px'} height={'1000px'}/> */}
-        <Box>
-            {children}
-        </Box>
+        {children}
     </Box>
 }
