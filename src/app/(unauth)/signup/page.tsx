@@ -19,143 +19,24 @@ import {   InputLabel,FormControl,useFormControl, TextField, FormHelperText} fro
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+import {useForm, Controller, useFormState} from 'react-hook-form';
+
 
 const flexContainerStyle = {
   display: "flex",
   flexDirection: "row",
   justifyContent: "space-between",
 };
-function NameInputs_Clinic({companyName,handleChange}){
-const options = ["Company1", "Company2", "Company3"]; // Replace with your list of company names
 
-  return (
-  <div>
-  <FormControl variant="standard" sx={{  minWidth: 400 }}>
-        <InputLabel >Aghe</InputLabel>
-
-          <Select
-
-            value={companyName}
-            onChange={handleChange}
-             placeholder="Company Name"
-          type="text"
-          startAdornment={
-             <InputAdornment position="start">
-               <BusinessOutlinedIcon />
-             </InputAdornment>
-           }
-          >
- <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-            <MenuItem value={10}>A</MenuItem>
-            <MenuItem value={20}>B</MenuItem>
-            <MenuItem value={30}>C</MenuItem>
-          </Select>
-        </FormControl>
-       </div>
-
-  );
-}
-
-
-function NameInputs_NotClinic({ formData, handleInputChange, errors }) {
-  return (
-    <Box sx={flexContainerStyle}>
-      <Input
-        name="firstname"
-        fullWidth
-        startAdornment={<InputAdornment position="start"></InputAdornment>}
-        placeholder="First Name"
-        type="text"
-        value={formData.firstname}
-        onChange={handleInputChange}
-       error={!!errors.firstname}
-      />
-            <FormHelperText error>{errors.firstname}</FormHelperText>
-
-      <Box width={23} />
-      <Input
-        name="lastname"
-        fullWidth
-        startAdornment={<InputAdornment position="start"></InputAdornment>}
-        placeholder="Last Name"
-        type="text"
-      value={formData.lastname}
-             onChange={handleInputChange}
-            error={!!errors.lastname}
-           />
-
-         <FormHelperText error>{errors.lastname}</FormHelperText>
-    </Box>
-  );
-}
 export function SignUp1(){
     const hostName=useUrl()?.host;
     const clinic = getClinic(hostName);
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
 
-    const[company, setCompany]=useState('');
-    const handleChange=(event:SelectChangeEvent)=>{
-    setCompany(event.target.value)
+ const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
+        event.preventDefault();
     };
-
- const [formData, setFormData] = useState({
-     email: '',
-     password: '',
-     firstname:'',
-     lastname:'',
-   });
-
-   const [errors, setErrors] = useState({
-     email: '',
-     password: '',
-      firstname:'',
-      lastname:'',
-   });
-
-    const validateName= (name) =>{
-     if (!name){
-     return 'Invalid name';
-     }
-     return '';
-    }
-
-   const validateEmail = (email) => {
-     if (!email || !email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) {
-       return 'Invalid email address';
-     }
-     return '';
-   };
-
-   const validatePassword = (password) => {
-     if (!password || password.length < 6) {
-       return 'Password must be at least 6 characters';
-     }
-       if (!/(?=.*[a-z])(?=.*[A-Z])/.test(password)) {
-             return 'Password must have 1 lowercase and 1 uppercase character';
-          }
-
-     return '';
-   };
-
-   const handleInputChange = (e) => {
-     const { name, value } = e.target;
-     setFormData({ ...formData, [name]: value });
-
-     if (name === 'email') {
-       setErrors({ ...errors, email: validateEmail(value) });
-     } else if (name === 'password') {
-       setErrors({ ...errors, password: validatePassword(value) });
-     } else if (name === 'firstname' || name==='lastname'){
-     setErrors({...errors, [name]:validateName(value)});
-     }
-   };
-
-   const isButtonDisabled = !!errors.email || !!errors.password||    validatePassword(formData.password) !== ''||
-   validateEmail(formData.email) !== '';
-
     const [showPw, setShowPw] = useState(false);
 
     //const role = 'null';
@@ -167,6 +48,17 @@ export function SignUp1(){
         createUserWithEmailAndPassword(cliAuth , email, password);
     };
 
+const { register, handleSubmit, control, formState: { errors }, trigger } = useForm();
+      const [isEmailValid, setIsEmailValid] = useState(true); // State variable for email validation
+
+const isButtonDisabled =
+
+    (errors.email && errors.email.message) || // If you have a custom error message for email
+    (errors.password && errors.password.message);
+
+   const validatePassword = (password) => {
+     return /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(password);
+   };
 
     return (
         <Box maxWidth="400px" >
@@ -176,61 +68,99 @@ export function SignUp1(){
           {clinic !== null ? 'Clinics Sign Up' : (role === 'ed' ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
         </span>
         </Typography>
-        <form >
+
              <Box height={50} />
-          {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_NotClinic
-           formData={formData}
-                       handleInputChange={handleInputChange}
-                       errors={errors}/>}
-
-        <Box height={41} />
-
-             <Input
-               fullWidth
-               placeholder="Email"
-               name="email"
-               value={formData.email}
-               onChange={handleInputChange}
-               error={!!errors.email}
-                startAdornment={
-                <InputAdornment position="start">
-                    <Mail/>
-                 </InputAdornment>
-                                       }
-             />
-
-               <FormHelperText error>{errors.email}</FormHelperText>
-
-
-          <Box height={16}/>
-
-             <Input
-               fullWidth
-
-               name="password"
-              // type="password"
-               value={formData.password}
-               onChange={handleInputChange}
-               error={!!errors.password}
-                startAdornment={
+{/*           {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_NotClinic} */}
+         <Box height={41} />
+<form >
+    <Controller
+             name="email"
+             control={control}
+             defaultValue=""
+             rules={{
+               required: "Email is required",
+               pattern: {
+                value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+                 message: "Invalid email address",
+               },
+             }}
+             render={({ field }) => (
+               <div>
+                 <Input
+                   {...field}
+                   fullWidth
+                   startAdornment={
                      <InputAdornment position="start">
-                        <Lock/>
-                      </InputAdornment>}
-                     endAdornment={
-                     <InputAdornment onClick={clickPwIcon} >
-                      {showPw ? <VisibilityOff /> : <Visibility />}
-                     </InputAdornment>}
-                      placeholder="Password"
-                      type={showPw?"text":"password"}
+                       <Mail />
+                     </InputAdornment>
+                   }
+                   placeholder="Email"
+                   type="email"
+                   onBlur={() => {
+                     trigger('email');
+                   }}
+                 />
+ {errors.email && (
+                <FormHelperText error>{errors.email.message}</FormHelperText>
+              )}
 
-             />
-               <FormHelperText error>{errors.password}</FormHelperText>
+           </div>
+             )}
+           />
+
+             <Box height={16}/>
+
+      <Controller
+        name="password"
+        control={control}
+        defaultValue=""
+        rules={{
+          required: "Password is required",
+          minLength: {
+            value: 6,
+            message: "Password must be at least 6 characters",
+          },
+          validate: (value) =>
+            validatePassword(value) ||
+            "Password must contain one lowercase letter and one uppercase letter",
+        }}
+        render={({ field }) => (
+          <div>
+            <Input
+              {...field}
+              fullWidth
+              startAdornment={
+                <InputAdornment position="start">
+                  <Lock />
+                </InputAdornment>
+              }
+              endAdornment={
+                <InputAdornment position="end" onClick={clickPwIcon}>
+                  {showPw ? <VisibilityOff/> : <Visibility />}
+                </InputAdornment>
+              }
+              placeholder="Password"
+              type={showPw ? "text" : "password"}
+              onBlur={() => {
+                trigger('password');
+              }}
+
+            />
+            {errors.password && (
+              <FormHelperText error>{errors.password.message}</FormHelperText>
+            )}
+          </div>
+             )}
+           />
+
+</form>
+
+
+
 
           <Box height={40}/>
           <Button type="submit"
-                disabled={isButtonDisabled}
-               href={isButtonDisabled ? null: '/profile'}
-
+        disabled={isButtonDisabled}
               onClick={async () => {
                 const r = await fetch('/api/onboard', {
                   method: 'POST',
@@ -267,7 +197,6 @@ export function SignUp1(){
           >
             Next
           </Button>
-</form>
          <Box height={33}/>
           <Typography variant="h6" sx={{textAlign: 'center'}}>Log In</Typography>
             <Box height={37}/>
@@ -298,7 +227,6 @@ export default function SignUp() {
             </Bg1>
 );
 }
-
 
 
 

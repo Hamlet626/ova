@@ -150,7 +150,20 @@ export function Signup_profile1() {
 
               </Box>
             </Box>
-
+    <div
+            style={{
+              position: 'fixed',
+              bottom: '0',
+              left: '0',
+              margin: '30px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Button variant="outlined" >
+              Cancel
+            </Button>
+          </div>
             <div
                     style={{
                       position: 'absolute',
