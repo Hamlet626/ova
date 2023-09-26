@@ -15,9 +15,6 @@ export default async function InAppLayout({children}: { children: React.ReactNod
     return (
         <AuthSessionProvider>
         <section>
-            {/* Include shared UI here e.g. a header or sidebar */}
-            {/*<nav></nav>*/}
-            <LogoutButton/>
             {children}
         </section>
         </AuthSessionProvider>

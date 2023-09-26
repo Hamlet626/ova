@@ -3,6 +3,7 @@
 // Whereas this just makes the type hint prompting while coding
 
 export interface AddiUser {
+    id: string,
     role: number,
     agencies?: string[]|null,
     phone?: string|null,

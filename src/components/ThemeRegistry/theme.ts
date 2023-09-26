@@ -1,5 +1,6 @@
 import { Roboto } from 'next/font/google';
 import { createTheme } from '@mui/material/styles';
+import { outline_variant } from './theme_consts';
 
 const roboto = Roboto({
     weight: ['300', '400', '500', '700'],
@@ -14,14 +15,21 @@ const theme = createTheme({
         secondary: {main: '#ad897b'},
         tertiary: {main: '#9c915d'}
     },
-    shape:{borderRadius:100},
+    shape:{borderRadius:12},
     typography: {
         fontFamily: roboto.style.fontFamily,
         subtitle3: {
-            fontSize: '4rem',
+            fontSize: '14px',
+            fontWeight: 500,
+            lineHeight: '20px',
+            letterSpacing: '0.1px',
+            textAlign: 'left'
         },
         body3: {
-            fontSize: '4rem',
+            fontSize: '12px',
+            fontWeight: 400,
+            lineHeight: '16px',
+            textAlign: 'left'
         },
     },
     components: {
@@ -34,11 +42,16 @@ const theme = createTheme({
                 },
             },
         },
-        // MuiButton: {
-        //     styleOverrides: {
-        //         root:{ borderRadius:"100px" }
-        //     }
-        // },
+        MuiButton: {
+            styleOverrides: {
+                root:{ borderRadius:"100px" }
+            }
+        },
+        MuiDivider:{
+            styleOverrides: {
+                root:{ backgroundColor: outline_variant }
+            }
+        }
         // MuiAlert: {
         //     styleOverrides: {
         //         root: ({ ownerState }) => ({

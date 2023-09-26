@@ -9,6 +9,7 @@ import { signOut, useSession } from "next-auth/react";
 
 
 export const drawerWidth=360;
+export const drawerMinWidth=80;
 
 interface WithOpenListButProp extends AppBarProps{
     highlight?:boolean,
@@ -66,7 +67,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: 'hidden',
-    width: 80,
+    width: drawerMinWidth,
     // [theme.breakpoints.up('sm')]: {
     //   width: `calc(${theme.spacing(8)} + 1px)`,
     // },
@@ -77,7 +78,6 @@ const CDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
     ({ theme, open }) => {
       open=(!!theme.breakpoints.up('lg'))&&open;
       return {
-        width: drawerWidth,
         flexShrink: 0,
         whiteSpace: 'nowrap',
         boxSizing: 'border-box',
@@ -116,7 +116,7 @@ export const AppMenu=({role,open,agcid,fixed}:{role:RoleNum, open?:boolean, agci
     const path=usePathname();
     const router=useRouter();
     const theme=useTheme();
-    const drawerFix=useMediaQuery(theme.breakpoints.up('lg'));
+    // const drawerFix=useMediaQuery(theme.breakpoints.up('lg'));
   
     const content=
     <Box sx={{px:'12px',backgroundColor:neutral96, flexGrow:1, display:"flex",flexDirection: 'column'}}>
@@ -174,7 +174,7 @@ export const AppMenu=({role,open,agcid,fixed}:{role:RoleNum, open?:boolean, agci
   
   
   if(!!fixed){
-    return (<CDrawer variant="permanent" open={drawerFix&&open} sx={{display:{xs:'none',sm:'block'}}}>
+    return (<CDrawer variant="permanent" open={open} sx={{display:{xs:'none',sm:'flex'}}}>
                 <Toolbar />
                 {content}
               </CDrawer>
