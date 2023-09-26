@@ -33,6 +33,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -348,13 +350,14 @@ export default function customize_Form() {
                                                                 <TableCell key={key_index}>{JSON.stringify(field[key_name])}</TableCell>
                                                         ))
                                                         }                                                        
-                                                        <TableCell>                                                           
+                                                        <TableCell>  
+                                                            <Button variant="solid" startIcon={<CheckBoxIcon color='primary'/>} > </Button>                                                         
                                                             <Button variant="solid" startIcon={<EditIcon/>} 
                                                                 onClick={(ev:React.SyntheticEvent)=>{openEditField();
                                                                         console.log("The index of the editing field index is ",{index});
                                                                         setIndexNoField(index);}}> 
-                                                            </Button>
-                                                            <Button variant="solid" startIcon={<DeleteRoundedIcon/>} onClick={(ev:React.SyntheticEvent)=>{deleteTableField(ev,index);}}> </Button>
+                                                            </Button>                                                            
+                                                            <Button variant="solid" startIcon={<ClearOutlinedIcon/>} onClick={(ev:React.SyntheticEvent)=>{deleteTableField(ev,index);}}> </Button>
                                                         </TableCell>
                                                     </TableRow>                                                        
                                                 ))}
