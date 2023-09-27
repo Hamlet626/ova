@@ -2,64 +2,112 @@ function NameInputs_Clinic({companyName,handleChange}){
 const options = ["Company1", "Company2", "Company3"]; // Replace with your list of company names
 
   return (
-  <div>
-  <FormControl variant="standard" sx={{  minWidth: 400 }}>
-        <InputLabel >Aghe</InputLabel>
-
+  <form>
+    <FormControl variant="standard" sx={{ minWidth: 400 }}>
+      <InputLabel>Company Name</InputLabel>
+      <Controller
+        name="companyName"
+        control={control}
+        defaultValue=""
+        rules={{ required: 'Company name is required' }}
+        render={({ field }) => (
           <Select
-
-            value={companyName}
+            {...field}
+            displayEmpty
             onChange={handleChange}
-             placeholder="Company Name"
-          type="text"
-          startAdornment={
-             <InputAdornment position="start">
-               <BusinessOutlinedIcon />
-             </InputAdornment>
-           }
+            startAdornment={
+              <InputAdornment position="start">
+                <BusinessOutlinedIcon />
+              </InputAdornment>
+            }
           >
- <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
             <MenuItem value={10}>A</MenuItem>
             <MenuItem value={20}>B</MenuItem>
             <MenuItem value={30}>C</MenuItem>
           </Select>
-        </FormControl>
-       </div>
+        )}
+      />
+      {errors.companyName && <span className="error-message">{errors.companyName.message}</span>}
+    </FormControl>
+    <button type="submit">Submit</button>
+  </form>
 
   );
 }
 
 
-function NameInputs_NotClinic({ formData, handleInputChange, errors }) {
+export function NameInputs_Clinic({ control, errors, trigger }) {
   return (
-    <Box sx={flexContainerStyle}>
-      <Input
-        name="firstname"
-        fullWidth
-        startAdornment={<InputAdornment position="start"></InputAdornment>}
-        placeholder="First Name"
-        type="text"
-        value={formData.firstname}
-        onChange={handleInputChange}
-       error={!!errors.firstname}
+    <>
+      <Controller
+        name="firstName"
+        control={control}
+        defaultValue=""
+        rules={{
+          required: "First name is required",
+          minLength: {
+            value: 2,
+            message: "First name must be at least 2 characters",
+          },
+        }}
+        render={({ field }) => (
+          <div>
+            <Input
+              {...field}
+              fullWidth
+              startAdornment={
+                <InputAdornment position="start">
+                  {/* Add an icon for the first name */}
+                </InputAdornment>
+              }
+              placeholder="First Name"
+              type="text"
+              onBlur={() => {
+                trigger('firstName');
+              }}
+            />
+            {errors.firstName && <FormHelperText error>{errors.firstName.message}</FormHelperText>}
+          </div>
+        )}
       />
-            <FormHelperText error>{errors.firstname}</FormHelperText>
 
       <Box width={23} />
-      <Input
-        name="lastname"
-        fullWidth
-        startAdornment={<InputAdornment position="start"></InputAdornment>}
-        placeholder="Last Name"
-        type="text"
-      value={formData.lastname}
-             onChange={handleInputChange}
-            error={!!errors.lastname}
-           />
 
-         <FormHelperText error>{errors.lastname}</FormHelperText>
-    </Box>
+      {/* Last Name Input */}
+      <Controller
+        name="lastName"
+        control={control}
+        defaultValue=""
+        rules={{
+          required: "Last name is required",
+          minLength: {
+            value: 2,
+            message: "Last name must be at least 2 characters",
+          },
+        }}
+        render={({ field }) => (
+          <div>
+            <Input
+              {...field}
+              fullWidth
+              startAdornment={
+                <InputAdornment position="start">
+                  {/* Add an icon for the last name */}
+                </InputAdornment>
+              }
+              placeholder="Last Name"
+              type="text"
+              onBlur={() => {
+                trigger('lastName');
+              }}
+            />
+            {errors.lastName && <FormHelperText error>{errors.lastName.message}</FormHelperText>}
+          </div>
+        )}
+      />
+    </>
   );
 }

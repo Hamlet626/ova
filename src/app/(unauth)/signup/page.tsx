@@ -20,6 +20,9 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import {useForm, Controller, useFormState} from 'react-hook-form';
+import {signIn} from "next-auth/react";
+
+
 
 
 const flexContainerStyle = {
@@ -27,6 +30,122 @@ const flexContainerStyle = {
   flexDirection: "row",
   justifyContent: "space-between",
 };
+
+function Name_Clinic({control, errors, trigger}){
+const options = ["Company1", "Company2", "Company3"]; // Replace with your list of company names
+
+  return (
+  <form>
+    <FormControl variant="standard" sx={{ minWidth: 400 }}>
+      <InputLabel>Company Name</InputLabel>
+      <Controller
+        name="companyName"
+        control={control}
+        defaultValue=""
+        rules={{ required: 'Company name is required' }}
+        render={({ field }) => (
+          <Select
+            {...field}
+            displayEmpty
+            onChange={handleChange}
+            startAdornment={
+              <InputAdornment position="start">
+                <BusinessOutlinedIcon />
+              </InputAdornment>
+            }
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={10}>A</MenuItem>
+            <MenuItem value={20}>B</MenuItem>
+            <MenuItem value={30}>C</MenuItem>
+          </Select>
+        )}
+      />
+      {errors.companyName && <span className="error-message">{errors.companyName.message}</span>}
+    </FormControl>
+    <button type="submit">Submit</button>
+  </form>
+
+  );
+}
+
+export function NameInputs_Clinic({ control, errors, trigger }) {
+  return (
+        <Box sx={flexContainerStyle}>
+
+      {/* First Name Input */}
+      <Controller
+        name="firstName"
+        control={control}
+        defaultValue=""
+        rules={{
+          required: "First name is required",
+          minLength: {
+            value: 2,
+            message: "Invalid",
+          },
+        }}
+        render={({ field }) => (
+          <div>
+            <Input
+              {...field}
+              fullWidth
+              startAdornment={
+                <InputAdornment position="start">
+                  {/* Add an icon for the first name */}
+                </InputAdornment>
+              }
+              placeholder="First Name"
+              type="text"
+              onBlur={() => {
+                trigger('firstName');
+              }}
+            />
+            {errors.firstName && <FormHelperText error>{errors.firstName.message}</FormHelperText>}
+          </div>
+        )}
+      />
+
+      <Box width={23} />
+
+      {/* Last Name Input */}
+      <Controller
+        name="lastName"
+        control={control}
+        defaultValue=""
+        rules={{
+          required: "Last name is required",
+          minLength: {
+            value: 2,
+            message: "Invalid",
+          },
+        }}
+        render={({ field }) => (
+          <div>
+            <Input
+              {...field}
+              fullWidth
+              startAdornment={
+                <InputAdornment position="start">
+                  {/* Add an icon for the last name */}
+                </InputAdornment>
+              }
+              placeholder="Last Name"
+              type="text"
+              onBlur={() => {
+                trigger('lastName');
+              }}
+            />
+            {errors.lastName && <FormHelperText error>{errors.lastName.message}</FormHelperText>}
+          </div>
+        )}
+      />
+    </Box>
+  );
+}
+
 
 export function SignUp1(){
     const hostName=useUrl()?.host;
@@ -48,12 +167,13 @@ export function SignUp1(){
         createUserWithEmailAndPassword(cliAuth , email, password);
     };
 
-const { register, handleSubmit, control, formState: { errors }, trigger } = useForm();
-      const [isEmailValid, setIsEmailValid] = useState(true); // State variable for email validation
+const { register, handleSubmit, control, formState: { errors }, trigger,getValues  } = useForm();
+
 
 const isButtonDisabled =
-
-    (errors.email && errors.email.message) || // If you have a custom error message for email
+    !!errors.email ||
+    !!errors.password ||
+    (errors.email && errors.email.message) ||
     (errors.password && errors.password.message);
 
    const validatePassword = (password) => {
@@ -70,7 +190,9 @@ const isButtonDisabled =
         </Typography>
 
              <Box height={50} />
-{/*           {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_NotClinic} */}
+                   <Name_Clinic control={control} errors={errors} trigger={trigger} />
+
+{/*}      {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_Clinic />}*/}
          <Box height={41} />
 <form >
     <Controller
@@ -155,24 +277,26 @@ const isButtonDisabled =
 
 </form>
 
-
-
-
+ {!isButtonDisabled && (
+      <Link href="/profile">
           <Box height={40}/>
           <Button type="submit"
         disabled={isButtonDisabled}
               onClick={async () => {
-                const r = await fetch('/api/onboard', {
+                const emailValue = getValues('email');
+                 const passwordValue = getValues('password');
+
+                const r = await fetch('/api/signup', {
                   method: 'POST',
                   mode: 'cors',
                   headers: {
                     'Content-Type': 'application/json',
                   },
                   body: JSON.stringify({
-                    email: 'lwj11304@gmail.com',
+                    email: emailValue,
                     name: 'Test',
                     role: 0,
-                    password: '123456',
+                    password: passwordValue,
                   }),
                 });
 
@@ -182,11 +306,12 @@ const isButtonDisabled =
                   const rr = await signIn('credentials', {
                     redirect: false,
                     callbackUrl: '/',
-                    email: 'lwj11304@gmail.com',
-                    password: '123456',
+                    email: emailValue,
+                    password: passwordValue,
                   });
 
                   console.log(rr);
+
                 }
               }}
             fullWidth
@@ -197,6 +322,8 @@ const isButtonDisabled =
           >
             Next
           </Button>
+   </Link>
+       )}
          <Box height={33}/>
           <Typography variant="h6" sx={{textAlign: 'center'}}>Log In</Typography>
             <Box height={37}/>
