@@ -35,6 +35,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import {useForm} from "react-hook-form";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -149,6 +150,9 @@ export default function customize_Form() {
     // The index_no_field of field in the customized sectionlist
     const [index_no_field, setIndexNoField] = React.useState(0);
     const [section_no, setSectionNo] = React.useState(0);
+
+    // The initial value of the form data
+    const [formData, setFormData] = React.useState({});
     
 
     // define the form of edit a field
