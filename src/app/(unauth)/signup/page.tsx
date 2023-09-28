@@ -21,6 +21,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 import {useForm, Controller, useFormState} from 'react-hook-form';
 import {signIn} from "next-auth/react";
+// import SigninBlock from "@/app/(unauth)/signin/signin_block";
 
 
 
@@ -31,41 +32,56 @@ const flexContainerStyle = {
   justifyContent: "space-between",
 };
 
+
+
+
 function Name_Clinic({control, errors, trigger}){
-const options = ["Company1", "Company2", "Company3"]; // Replace with your list of company names
+const options = ["Company1", "Company2","Company3"]; // Replace with your list of company names
+  const [selectedCompany, setSelectedCompany] = useState('');
 
   return (
   <form>
     <FormControl variant="standard" sx={{ minWidth: 400 }}>
-      <InputLabel>Company Name</InputLabel>
-      <Controller
+     <InputLabel htmlFor="companyName" position="end"
+               shrink={Boolean(selectedCompany)}
+                sx={{marginLeft:'30px'}}>
+          Company Name
+        </InputLabel>
+     <Controller
         name="companyName"
         control={control}
         defaultValue=""
         rules={{ required: 'Company name is required' }}
         render={({ field }) => (
+
           <Select
             {...field}
             displayEmpty
-            onChange={handleChange}
+            value={selectedCompany}
+
+             onChange={(e) => setSelectedCompany(e.target.value)}
             startAdornment={
               <InputAdornment position="start">
                 <BusinessOutlinedIcon />
+
               </InputAdornment>
             }
           >
             <MenuItem value="">
-              <em>None</em>
+              <em></em>
             </MenuItem>
-            <MenuItem value={10}>A</MenuItem>
-            <MenuItem value={20}>B</MenuItem>
-            <MenuItem value={30}>C</MenuItem>
+          {options.map((option,index)=>(
+          <MenuItem key={index} value={option} style={containerStyle }
+
+ >
+          {option}
+          </MenuItem>
+          ))}
           </Select>
         )}
       />
       {errors.companyName && <span className="error-message">{errors.companyName.message}</span>}
     </FormControl>
-    <button type="submit">Submit</button>
   </form>
 
   );
@@ -92,11 +108,6 @@ export function NameInputs_Clinic({ control, errors, trigger }) {
             <Input
               {...field}
               fullWidth
-              startAdornment={
-                <InputAdornment position="start">
-                  {/* Add an icon for the first name */}
-                </InputAdornment>
-              }
               placeholder="First Name"
               type="text"
               onBlur={() => {
@@ -127,11 +138,6 @@ export function NameInputs_Clinic({ control, errors, trigger }) {
             <Input
               {...field}
               fullWidth
-              startAdornment={
-                <InputAdornment position="start">
-                  {/* Add an icon for the last name */}
-                </InputAdornment>
-              }
               placeholder="Last Name"
               type="text"
               onBlur={() => {
@@ -190,7 +196,7 @@ const isButtonDisabled =
         </Typography>
 
              <Box height={50} />
-                   <Name_Clinic control={control} errors={errors} trigger={trigger} />
+         <Name_Clinic control={control} errors={errors} trigger={trigger} />
 
 {/*}      {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_Clinic />}*/}
          <Box height={41} />
