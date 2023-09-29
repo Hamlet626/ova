@@ -40,7 +40,8 @@ const options = ["Company1", "Company2","Company3"]; // Replace with your list o
   const [selectedCompany, setSelectedCompany] = useState('');
 
   return (
-  <form>
+  <form style={{  maxWidth: "400px",
+                                     borderRadius: 0,}}>
     <FormControl variant="standard" sx={{ minWidth: 400 }}>
      <InputLabel htmlFor="companyName" position="end"
                shrink={Boolean(selectedCompany)}
@@ -71,9 +72,7 @@ const options = ["Company1", "Company2","Company3"]; // Replace with your list o
               <em></em>
             </MenuItem>
           {options.map((option,index)=>(
-          <MenuItem key={index} value={option} style={containerStyle }
-
- >
+          <MenuItem key={index} value={option}  >
           {option}
           </MenuItem>
           ))}
