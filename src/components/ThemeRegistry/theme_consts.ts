@@ -43,6 +43,14 @@ export const font6={
     letterSpacing: '0.15px',
 };
 
+export const font7={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '16px',
+    fontWeight: 500,
+    lineHeight: '24px',
+    letterSpacing: '0.15px',
+};
+
 export const outline_variant='#D8C2BB';
 export const neutral96='#FEF1ED';
 
