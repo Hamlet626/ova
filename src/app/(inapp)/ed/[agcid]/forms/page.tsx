@@ -32,7 +32,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
             <QuestionAnswerOutlined/>
             <Typography variant="subtitle2">Remained Question Groups</Typography>
             <Box flexGrow={1}></Box>
-            <Link href={`/ed/${params.agcid}/forms/xxx`} passHref>
+            <Link href={`/ed/${params.agcid}/forms/detail`} passHref>
             <Button variant="contained" startIcon={<ArrowForward/>} 
             // onClick={()=>redirect(`/ed/${params.agcid}/forms/xxx`)}
             >
