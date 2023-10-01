@@ -40,47 +40,40 @@ const options = ["Company1", "Company2","Company3"]; // Replace with your list o
   const [selectedCompany, setSelectedCompany] = useState('');
 
   return (
-  <form style={{  maxWidth: "400px",
-                                     borderRadius: 0,}}>
-    <FormControl variant="standard" sx={{ minWidth: 400 }}>
-     <InputLabel htmlFor="companyName" position="end"
-               shrink={Boolean(selectedCompany)}
-                sx={{marginLeft:'30px'}}>
-          Company Name
-        </InputLabel>
-     <Controller
-        name="companyName"
-        control={control}
-        defaultValue=""
-        rules={{ required: 'Company name is required' }}
-        render={({ field }) => (
+  <form style={{  maxWidth: "400px", borderRadius: 0,}}>
 
-          <Select
-            {...field}
-            displayEmpty
-            value={selectedCompany}
+      <Controller
+             name="companyName"
+             control={control}
+             defaultValue=""
+             rules={{
+               required: "companyName is required",
+               minLength: {
+                 value: 2,
+                 message: "Invalid",
+               },
+             }}
+             render={({ field }) => (
+               <div>
+                 <Input
+                   {...field}
+                   fullWidth
+                   startAdornment={
+                                        <InputAdornment position="start">
+                                          <BusinessOutlinedIcon />
+                                        </InputAdornment>
+                                      }
+                   placeholder="companyName"
+                   type="text"
+                   onBlur={() => {
+                     trigger('companyName');
+                   }}
+                 />
+     {errors.companyName && <FormHelperText error>{errors.companyName.message}</FormHelperText>}
 
-             onChange={(e) => setSelectedCompany(e.target.value)}
-            startAdornment={
-              <InputAdornment position="start">
-                <BusinessOutlinedIcon />
-
-              </InputAdornment>
-            }
-          >
-            <MenuItem value="">
-              <em></em>
-            </MenuItem>
-          {options.map((option,index)=>(
-          <MenuItem key={index} value={option}  >
-          {option}
-          </MenuItem>
-          ))}
-          </Select>
-        )}
-      />
-      {errors.companyName && <span className="error-message">{errors.companyName.message}</span>}
-    </FormControl>
+       </div>
+              )}
+            />
   </form>
 
   );
@@ -282,7 +275,6 @@ const isButtonDisabled =
 
 </form>
 
- {!isButtonDisabled && (
       <Link href="/profile">
           <Box height={40}/>
           <Button type="submit"
@@ -328,7 +320,7 @@ const isButtonDisabled =
             Next
           </Button>
    </Link>
-       )}
+
          <Box height={33}/>
           <Typography variant="h6" sx={{textAlign: 'center'}}>Log In</Typography>
             <Box height={37}/>
