@@ -11,14 +11,28 @@ import { RemainedSlider } from "./remained_slider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 
 export default async function Forms({params}:{params: { agcid: string }}) {
     // const {user}=useSession({required:true}).data!;
-    const {user}=(await getServerSession(authOptions))!;
+    const user=(await getServerSession(authOptions))!.user!;
     
-    const myRole=user?.role!;
-    const formTemplate=await getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`));
-    const formData=await getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user?.id}/form data`));
+    const myRole=user.role!;
+    
+    const formTemplate=await unstable_cache(
+        ()=>{
+            console.log('form template in Forms')
+            return getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`))},
+        [params.agcid],
+        {tags:['form_template'],revalidate:false}
+    );
+    const formData=await unstable_cache(
+        ()=>{
+            console.log('form data in Forms')
+            return getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`))},
+        [user.id],
+        {tags:['form_data'],revalidate:60}
+    );
 
     const formsStatus=getFinishStatus(formTemplate,formData);
     const remained=formsStatus.filter((v)=>v.subs.remained);
