@@ -14,8 +14,8 @@ export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick:(
     return(
             <List >
                 {titles.map(({title,selected,icon,check,dot}, index) => (
-                <>
-                    <ListItemButton key={'b'+index} sx={{
+                <div key={index}>
+                    <ListItemButton sx={{
                         borderRadius: '100px',
                         backgroundColor: selected ? primary90: undefined,
                     }} onClick={(ev)=>onClick({title,selected,icon,check,dot}, index)}>
@@ -26,8 +26,8 @@ export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick:(
                             ml:'-20px',
                         }}/>
                     </ListItemButton>
-                    {index<titles.length-1 && <Divider key={'d'+index} sx={{my:'8px'}}/>}
-                </>
+                    {index<titles.length-1 && <Divider  sx={{my:'8px'}}/>}
+                </div>
                 ))}
             </List>
     );

@@ -87,20 +87,71 @@ form_template.background_history,
 form_template.family_partner,
 form_template.personal_and_medical,]
 
+// function updateObjectList(objectList:any, index:number, updatedObject:any) {
+//     const updatedObjectList = [...objectList];
+//     updatedObjectList[index] = updatedObject;
+//     return updatedObjectList;
+// }
+
+// function deleteObjectList(objectList:any, index:number) {
+//     const updatedObjectList = [...objectList];
+//     updatedObjectList.splice(index, 1);
+//     return updatedObjectList;
+// }
+
+// function insertObjectList(objectList:any, index:number, updatedObject:any) {
+//     const updatedObjectList = [...objectList];
+//     updatedObjectList.splice(index, 0, updatedObject);
+//     return updatedObjectList;
+// }
+
+// function updateObjectKeyValue(object:any, key:string, value:any) {
+//     const updatedObject = {...object};
+//     updatedObject[key] = value;
+//     return updatedObject;
+// }
+
+// function deleteObjectKeyValue(object:any, key:string) {
+//     const updatedObject = {...object};
+//     delete updatedObject[key];
+//     return updatedObject;
+// }
+
+// function insertObjectKeyValue(object:any, key:string, value:any) {
+//     const updatedObject = {...object};
+//     updatedObject[key] = value;
+//     return updatedObject;
+// }
+
+// let testlist=[1,2,3,4,5,{"name":"test name"}]
+
+// console.log(updateObjectList(testlist, 2, {name: "update object name"}));
+// console.log(deleteObjectList(testlist, 2));
+// console.log(insertObjectList(testlist, testlist.length, {name: "insert object"}));
+//console.log(testlist)
+// console.log(updateObjectKeyValue(testlist[5], "name", "update object key value"))
+// console.log(updateObjectList(testlist, 5, updateObjectKeyValue(testlist[5], "name", "update object key value")))
+// console.log(updateObjectKeyValue(testlist[5], "name2", "2update object key value"))
+// console.log(updateObjectList(testlist, 5, updateObjectKeyValue(testlist[5], "name2", "2update object key value")))
+
 
 export default function customize_Form() {
     // tabId is the index of the current section in a specific table template (Click the tab to change the section)
     const [tabId, setTabId] = React.useState(0);
+
+    // used only for sefl-defined button list(can be deleted)
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabId(newValue);
     };
-
+    // used for importted button list commponent
     const changeTab = (index: number) => {
         setTabId(index);
     }
 
     // templateid is the index of the current table template (Click the left side bar to change the template)
     const [templateid, setTemplateId] = React.useState(0);
+
+    // used only for sefl-defined button list(can be deleted)
     const handleTemplateChange = (event: React.SyntheticEvent, newValue: number) => {
         setTemplateId(newValue);
         handleTabChange(event, 0);
@@ -115,7 +166,7 @@ export default function customize_Form() {
     const initialSection = { "title": "section_title1", "fields": [] };
 
     // Default value of a new field
-    const initialField = { "id": "field_id1", "label": "field_label1", "type": "text", "required": false, "length": 0, "options": [], "sub": [] };
+    const initialField = { "id": "field_id1", "label": "field_label1", "type": "text", "required": false, "length": 0, "options": [] };
 
     // Initial customized form list using deep copy
     const [customizedformlist, setCustomizedFormList] = React.useState(JSON.parse(JSON.stringify(templateList)));//React.useState([...templateList]);
@@ -125,6 +176,8 @@ export default function customize_Form() {
     const updateIndexNoFieldNewValue = (newValue: number) => {
         setIndexNoField(newValue);
     }
+
+    // used for self-defined button list(can be deleted)
     const [section_no, setSectionNo] = React.useState(0);
     const updateSectionNoNewValue = (newValue: number) => {
         setSectionNo(newValue);
@@ -160,9 +213,9 @@ export default function customize_Form() {
         // Delete a section from customized sectionlist
         customizedformlist[templateid].content.splice(index, 1);
         // If customized sectionlist is empty, add a new section to customized sectionlist
-        if (customizedformlist[templateid].content.length === 0) {
-            customizedformlist[templateid].content.push(initialSection);
-        }
+        // if (customizedformlist[templateid].content.length === 0) {
+        //     customizedformlist[templateid].content.push(initialSection);
+        // }
         // Set customized sectionlist and render the page
         setCustomizedFormList([...customizedformlist]);
         // console.log("display deleteTableSection afeter delete",customizedformlist[templateid]);
@@ -203,23 +256,115 @@ export default function customize_Form() {
 
     const { control, handleSubmit, reset } = useForm();
 
-    const sample = { id: "s0", label: "First Name", type: "text", length: "short", required: true }
-
-
     const onSubmit = (data) => {
         console.log(data);
         closeEditField();
     };
 
-    const [selectedInd, setSelectedInd] = React.useState(0);
-
-    // const titles = [{ title: 'test0', selected: true }, { title: 'test1', check: true }, { title: 'test2', icon: <HomeOutlined /> }];
-
-    const title_list = customizedformlist.map((section, index) => (
-        { title: section.name, selected: index === selectedInd, icon: <HomeOutlined /> }
+    const table_name_list = customizedformlist.map((section, index) => (
+        { title: section.name.toUpperCase(), selected: index === templateid, icon: <HomeOutlined /> }
     ));
 
-    console.log("display customizedformlist", customizedformlist);
+    // Testing collapse row
+    const [open, setOpen] = React.useState(false);
+
+    type table_definition = { id: string, label: string, type: string, length: number, required: boolean, options: string[], sub: [] }
+
+    function displayTable(dataset: table_definition[]) {
+        //const [openSubStatus, setOpenSubStatus] = React.useState(false);        
+        function displayRow(row: table_definition, index: number) {
+            //console.log("displayRow row", row);
+            if (row.sub) {
+                // console.log("displaySub from a row", row.sub)
+                // displayTable(row.sub);
+                return (
+                    <TableRow key={index}>
+                        <TableCell>
+                        <Table>
+                            <TableBody>
+                                <TableRow hover>
+                                    <TableCell >
+                                        {row.sub && <IconButton
+                                            aria-label="expand row"
+                                            size="small"
+                                            onClick={() => setOpen(!open)}
+                                        >
+                                            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                        </IconButton>}
+                                    </TableCell>
+                                    {
+                                        field_element_list.map((field_name, field_index) => (
+                                            <TableCell key={field_index} >
+                                                {JSON.stringify(row[field_name])}
+                                            </TableCell>
+                                        ))
+                                    }
+                                    <TableCell >
+                                        <Button variant="solid" startIcon={<CheckBoxIcon color='primary' />} > </Button>
+                                        <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                            onClick={(ev: React.SyntheticEvent) => {
+                                                openEditField();
+                                                console.log("The index of the editing field index is ", { index });
+                                                updateIndexNoFieldNewValue(index);
+                                            }}>
+                                        </Button>
+                                        <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>
+                                        <Collapse in={open} timeout="auto" unmountOnExit>
+                                            {displayTable(row.sub)}
+                                        </Collapse>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                        </TableCell>
+                    </TableRow>
+                )
+            }
+            else return (
+                <TableRow key={index} hover>
+                    {/* <TableCell>
+                        {row.label}
+                    </TableCell> */}
+                    {
+                        field_element_list.map((field_name, field_index) => (
+                            <TableCell key={field_index} >{JSON.stringify(row[field_name])}</TableCell>
+                        ))
+                    }
+                    <TableCell >
+                        <Button variant="solid" startIcon={<CheckBoxIcon color='primary' />} > </Button>
+                        <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                            onClick={(ev: React.SyntheticEvent) => {
+                                openEditField();
+                                console.log("The index of the editing field index is ", { index });
+                                updateIndexNoFieldNewValue(index);
+                            }}>
+                        </Button>
+                        <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                    </TableCell>
+                </TableRow>
+            )
+
+        }
+
+        return (
+            //<Table>
+            <TableBody>
+                {dataset.map((row, index) => (
+                    displayRow(row, index)
+                ))}
+            </TableBody>
+            //</Table>
+        )
+        //console.log("displayTable dataset", dataset);
+    }
+
+    //displayTable(customizedformlist[templateid].content[tabId].fields);
+
+
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -287,16 +432,24 @@ export default function customize_Form() {
                             <Divider />
                         </div>
                     ))}
+
                 </List> */}
-                <FormTitlesUI titles={title_list} onClick={
-                    (t, i) => {
-                        console.log("The index of the selected template index is ", { i });
-                        if (selectedInd === i) return;
-                        //await onClick(titles[index],index); 
-                        setSelectedInd(i);
-                        changeTemplate(i);
-                    }
-                } />
+
+                <Box sx={{
+                    mt: "16px",
+                    ml: "80px",
+                    width: '197px',
+                    height: 'auto',
+                    gap: '12px',
+                }}>
+                    <FormTitlesUI titles={table_name_list} onClick={
+                        (t, i) => {
+                            console.log("The index of the selected template index is ", { i });
+                            changeTemplate(i);
+                            changeTab(0);
+                        }
+                    } />
+                </Box>
             </Box>
             <Box sx={{ width: '100%', }}>
                 <List sx={{
@@ -312,7 +465,7 @@ export default function customize_Form() {
                             height: '4px',
                         }} />
                     </ListItem>
-                    <ListItem disablePadding>
+                    {/* <ListItem disablePadding>
                         <Typography variant="h5" sx={{
                             color: '#926F63',
                             width: '206px',
@@ -320,17 +473,12 @@ export default function customize_Form() {
                         }}>
                             Customize Form
                         </Typography>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <Typography variant="h6">
-                            Create the question you want to ask
-                        </Typography>
-                    </ListItem>
+                    </ListItem> */}
                     <ListItem disablePadding>
                         <Box sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex' }}>
                                 <Tabs value={tabId}
-                                    onChange={(ev: React.SyntheticEvent, value) => { console.log("change tab"); handleTabChange(ev, value); console.log(value); setSectionNo(value) }} >
+                                    onChange={(ev: React.SyntheticEvent, value) => { console.log("change tab"); changeTab(value); console.log(value); setTabId(value) }} >
                                     {/* ??{} is used to avoiding mapping a null object*/}
                                     {(customizedformlist[templateid] ?? {} as any).content.map((template, index) => (
                                         <Tab key={index} label={template.title} {...a11yProps(index)} />
@@ -346,7 +494,7 @@ export default function customize_Form() {
                                         defaultValue={section_list.title}
                                         sx={{ width: '200px' }}
                                         onChange={(ev: React.ChangeEvent<HTMLInputElement>) => { editTableSectionTitle(ev); console.log({ tabId }) }} />
-                                    <Button variant="solid" startIcon={<Clear />} onClick={(ev: React.SyntheticEvent) => { deleteTableSection(ev, 0); handleTemplateChange(ev, 0) }}> </Button>
+                                    <Button variant="solid" startIcon={<Clear />} onClick={(ev: React.SyntheticEvent) => { deleteTableSection(ev, 0); changeTab(0) }}> </Button>
                                     {/* <Button variant="solid" startIcon={<Check/>}  > </Button> */}
                                     <br />
                                     <br />
@@ -355,70 +503,71 @@ export default function customize_Form() {
                                     </Button>
                                     <TableContainer>
                                         <Table>
-                                            <TableHead>
+                                            {/* <TableHead>
                                                 <TableRow>
                                                     <TableCell>
                                                     </TableCell>
                                                     {field_element_list.map((field_name, index) => (
-                                                        <TableCell key={index} sx={{ width: "100px", textOverflow: "ellipsis", overflow: "auto" }}>{field_name}</TableCell>
+                                                        <TableCell key={index} >{field_name}</TableCell>
                                                     ))}
                                                 </TableRow>
-                                            </TableHead>
+                                            </TableHead> */}
                                             <TableBody>
-                                                {(section_list.fields as any).map((field, index) => (
-
+                                                {/* {(section_list.fields as any).map((field, index) => (
                                                     <TableRow key={index} hover >
-                                                        <TableCell>
-                                                            {field.sub && <IconButton
-                                                                aria-label="expand row"
-                                                                size="small"
-                                                            // onClick={() => setOpen(!open)}
-                                                            >
-                                                                {field.sub ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                                                            </IconButton>}
+                                                        <TableCell sx={{ border: 'none' }}>
+                                                            <Table>
+                                                                <TableBody>
+                                                                    <TableRow>
+                                                                        <TableCell >
+                                                                            {field.sub && <IconButton
+                                                                                aria-label="expand row"
+                                                                                size="small"
+                                                                                onClick={() => setOpen(!open)}
+                                                                            >
+                                                                                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                                                            </IconButton>}
+                                                                        </TableCell>
+                                                                        {
+                                                                           
+                                                                            field_element_list.map((field_name, field_index) => (
+                                                                                <TableCell key={field_index} >{JSON.stringify(field[field_name])}</TableCell>
+                                                                            ))
+                                                                        }
+                                                                        <TableCell >
+                                                                            <Button variant="solid" startIcon={<CheckBoxIcon color='primary' />} > </Button>
+                                                                            <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                                                                onClick={(ev: React.SyntheticEvent) => {
+                                                                                    openEditField();
+                                                                                    console.log("The index of the editing field index is ", { index });
+                                                                                    updateIndexNoFieldNewValue(index);
+                                                                                }}>
+                                                                            </Button>
+                                                                            <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                    <TableRow>
+                                                                        {field.sub && <>
+                                                                            <TableCell sx={{ border: 'none' }}>
+                                                                                <Collapse in={open} timeout="auto" unmountOnExit>
+                                                                                    <div>{JSON.stringify(field.sub)}</div>
+                                                                                </Collapse>
+                                                                            </TableCell>
+                                                                        </>
+                                                                        }
+                                                                    </TableRow>
+                                                                </TableBody>
+                                                            </Table>
                                                         </TableCell>
-                                                        {
-                                                            // ??{} is used to avoiding mapping a null object 
-                                                            // Object.keys(field ?? {}).map((key_name, key_index) => (
-                                                            //     <TableCell key={key_index}>{JSON.stringify(field[key_name])}</TableCell>
-                                                            // ))
-                                                            field_element_list.map((field_name, field_index) => (
-                                                                <TableCell key={field_index}>{JSON.stringify(field[field_name])}</TableCell>
-                                                            ))
-                                                        }
-                                                        <TableCell>
-                                                            <Button variant="solid" startIcon={<CheckBoxIcon color='primary' />} > </Button>
-                                                            <Button variant="solid" startIcon={<EditIcon color='primary' />}
-                                                                onClick={(ev: React.SyntheticEvent) => {
-                                                                    openEditField();
-                                                                    console.log("The index of the editing field index is ", { index });
-                                                                    // setIndexNoField(index);
-                                                                    updateIndexNoFieldNewValue(index);
-                                                                }}>
-                                                            </Button>
-                                                            <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
-                                                        </TableCell>
-
-                                                        {field.sub &&
-                                                            <TableCell >
-                                                                <Collapse in={true} timeout="auto" unmountOnExit>
-                                                                    <div>{JSON.stringify(field.sub)}</div>
-                                                                </Collapse>
-                                                            </TableCell>
-                                                        }
-
                                                     </TableRow>
-
-
-                                                ))}
-
+                                                ))} */}
                                                 <Dialog open={editFieldState} onClose={closeEditField} PaperProps={{ sx: { borderRadius: '1px' } }}>
                                                     <DialogTitle>Edit the field</DialogTitle>
                                                     <DialogContent>
                                                         <DialogContentText>
                                                             Edit the field
                                                             {templateid}
-                                                            {section_no}
+                                                            {tabId}
                                                             {index_no_field}
                                                         </DialogContentText>
                                                         {/* ??{} is used to avoiding mapping a null object */}
@@ -439,7 +588,7 @@ export default function customize_Form() {
                                                                 <Table>
                                                                     <TableBody>
                                                                         {
-                                                                            Object.entries(customizedformlist[templateid].content[section_no].fields[index_no_field] ?? {}).map((field_name, index) => {
+                                                                            Object.entries(customizedformlist[templateid].content[tabId].fields[index_no_field] ?? {}).map((field_name, index) => {
                                                                                 return (
                                                                                     <TableRow key={index} hover >
                                                                                         <Controller
@@ -542,6 +691,11 @@ export default function customize_Form() {
                                         </Table>
                                     </TableContainer>
                                     <br />
+                                    <TableContainer>
+                                        <Table>
+                                            {displayTable(customizedformlist[templateid].content[tabId].fields)}
+                                        </Table>
+                                    </TableContainer>
                                 </CustomTabPanel>
                             ))}
                         </Box>

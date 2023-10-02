@@ -86,7 +86,7 @@ export const basic_info={
                             required: true,
                             sub:[
                                 {
-                                    id: "s0",
+                                    id: "s1",
                                     condition:["yes"],
                                     label: "Status in the US",
                                     type: "multi-select",
@@ -94,7 +94,7 @@ export const basic_info={
                                     required: true
                                 },
                                 {
-                                    id: "s1",
+                                    id: "s2",
                                     condition:["yes"],
                                     label: "Last 4 digits of SSN",
                                     type: "number",
@@ -371,9 +371,24 @@ export const education_occupation={
                             required: true,
                             sub:[
                                 {
-                                    label:"Expected time of graduation",
+                                    id: "s4",
+                                    label:"Expected time of graduation1",
                                     type: "date",
                                     required: false,
+                                    sub:[
+                                        {   id: "s8",
+                                            label:"Expected time of graduation testing2",
+                                            type: "date",
+                                            sub:[
+                                            {
+                                                id: "s5",
+                                                label:"Expected time of graduation testing3",
+                                                type: "date",
+                                                required: false,
+                                            },
+                                            ]
+                                        }
+                                    ]
                                 }
                             ]
                         },
