@@ -101,7 +101,10 @@ const CDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
     {path:'/cases',text:'Cases','icon':<HandshakeOutlined/>},
     {path:'/calendar',text:'Events Calendar','icon':<CalendarMonthOutlined/>},
     {path:'/setting',text:'Setting','icon':<SettingsOutlined/>},
-    ].map((v)=>({...v,path:(`/${roles[role].path}${agcid==null?'':`/${agcid}`}${v.path}`)}));
+    ]
+    ///for EDs, add ..agcid to the path, e.g. /forms -> /ed/agcid/forms
+    .map((v)=>({...v,path:(`/${roles[role].path}${agcid==null?'':`/${agcid}`}${v.path}`)}));
+
     return [
     {path:'/liked',text:'Liked','icon':<FavoriteBorderOutlined/>},
     {path:'/trending',text:'Trending','icon':<TrendingUpOutlined/>},
@@ -135,30 +138,30 @@ export const AppMenu=({role,open,agcid,fixed}:{role:RoleNum, open?:boolean, agci
   {routes(role,agcid).map((v)=>{
     const selected=path.startsWith(v.path);
     
-    const tab = (<NavItem key={v.path+fixed?'1':'0'} 
+    const tab = (<NavItem key={v.path+(fixed?'1':'0')} 
     selected={selected} open={open}
       onClick={()=>router.push(`${v.path}`)}
-    // sx={{'&.Mui-selected':{backgroundColor:'primary.main'}}}
+    /// sx={{'&.Mui-selected':{backgroundColor:'primary.main'}}}
     >
       <ListItemIcon >{v.icon}</ListItemIcon>
       <ListItemText primary={v.text}/>
     </NavItem>);
   
     if(v.path.includes('/calendar')){
-      return(<>
+      return (<div key={v.path+(fixed?'1':'0')}>
       <Divider/>
       {tab}
-      {open && [<NavItem key={v.path+fixed?'1':'0'} selected={selected} open
+      {open && <NavItem selected={selected} open
       onClick={()=>router.push(`/appointments`)}
     sx={{pl:'32px'}}
     >
       <ListItemText primary='Appointment'/>
-    </NavItem>]}
+    </NavItem>}
       <Divider/>
-      </>)
+      </div>)
     }
     if(v.path.includes('/agencies')){
-      return <AgencyTab>{tab}</AgencyTab>
+      return <AgencyTab key={v.path+(fixed?'1':'0')}>{tab}</AgencyTab>
     }
   
     return tab;

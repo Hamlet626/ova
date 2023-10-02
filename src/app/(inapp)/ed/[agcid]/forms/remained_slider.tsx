@@ -48,9 +48,9 @@ export const RemainedSlider=({remainedData})=>{
             transition: 'scroll 0.3s ease-in-out'
             }} onScroll={onscroll}>
               <Stack direction={'row'} spacing={'16px'}>
-            {([...remainedData,...remainedData,...remainedData].map((v)=>(
+            {([...remainedData,...remainedData,...remainedData].map((v,i)=>(
               // <Paper sx={{display: 'inline-block',flexShrink: 0}}>
-                <Card elevation={0} sx={{display: 'inline-block',flexShrink: 0, bgcolor:OVA_very_soft_grey}}> 
+                <Card key={i} elevation={0} sx={{display: 'inline-block',flexShrink: 0, bgcolor:OVA_very_soft_grey}}> 
                 <CardActionArea>
                     <CardContent>
                         <Typography variant="subtitle2" color={'secondary'}>{v.title}</Typography>

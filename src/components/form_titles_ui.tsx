@@ -18,7 +18,7 @@ export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick:(
                     <ListItemButton key={'b'+index} sx={{
                         borderRadius: '100px',
                         backgroundColor: selected ? primary90: undefined,
-                    }}>
+                    }} onClick={(ev)=>onClick({title,selected,icon,check,dot}, index)}>
                         <ListItemIcon>
                             {icon??(check?<CheckCircleOutline color="primary"/>:dot?<Circle sx={{color:primary90}}/>:null)}
                         </ListItemIcon>
