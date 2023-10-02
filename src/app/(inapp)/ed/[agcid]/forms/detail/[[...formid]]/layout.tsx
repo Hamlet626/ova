@@ -43,7 +43,8 @@ export default async function FormIndex({children, params}: { children: React.Re
             <Box height={32}/>
             <Typography sx={font3}>Form</Typography>
             <Box height={60}/>
-            <EDFormTitles/>
+            <EDFormTitles formid={params.formid ?? '0'} 
+            pathPrefix={`/ed/${params.agcid}/forms/detail`}/>
         </Paper>
         {children}
     </Box>
