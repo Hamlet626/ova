@@ -18,19 +18,19 @@ export default async function FormIndex({children, params}: { children: React.Re
     const myRole=user.role!;
     
     const formTemplate=await unstable_cache(
-        ()=>{
+        async()=>{
             console.log('form template in Detail Layout')
             return getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`))},
         [params.agcid],
         {tags:['form_template'],revalidate:false}
-    );
+    )();
     const formData=await unstable_cache(
-        ()=>{
+        async()=>{
             console.log('form data in Detail Layout')
             return getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`))},
         [user.id],
         {tags:['form_data'],revalidate:60}
-    );
+    )();
 
     return <Box display={'flex'}>
         <Paper sx={{width:'326px', alignSelf:'stretch',height:'9999px',px:4,pt:4}}>

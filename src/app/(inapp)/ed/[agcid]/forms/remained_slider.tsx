@@ -13,7 +13,6 @@ export const RemainedSlider=({remainedData})=>{
     const swiperRef=useRef<HTMLDivElement|null>(null);
     const [showNext,setShowNext]=useState(false);
     const [showPre,setShowPre]=useState(false);
-    console.log(swiperRef.current)
     const onscroll=()=>{
         if(swiperRef.current){
           console.log(swiperRef.current.scrollLeft,swiperRef.current.offsetWidth,swiperRef.current.scrollWidth);
@@ -23,7 +22,6 @@ export const RemainedSlider=({remainedData})=>{
     };
 
     useEffect(()=>{
-      console.log("here",swiperRef.current)
       if(swiperRef.current){
         setShowNext(swiperRef.current.scrollLeft+swiperRef.current.offsetWidth<swiperRef.current.scrollWidth);
         setShowPre(swiperRef.current.scrollLeft>0);
