@@ -1,4 +1,4 @@
-import { Typography, Container, Avatar, Grid, Box } from '@mui/material'
+import { Typography, Stack, Avatar, Grid, Box } from '@mui/material'
 import { outline_variant, neutral96 } from '@/components/ThemeRegistry/theme_consts'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
@@ -11,8 +11,9 @@ export default async function Setting() {
     <>
       <main>
         <Typography variant="h6">Setting</Typography>
-        <Grid container
+        <Box
           sx={{
+            display: 'flex',
             border: '1px',
             borderStyle: 'solid',
             borderColor: outline_variant,
@@ -20,73 +21,67 @@ export default async function Setting() {
             padding: '20px 32px 20px 32px',
             marginTop: '24px'
           }}>
-          <Grid container>
-            <Grid container item
+          <Box
+            sx={{
+              display: 'flex',
+              borderRight: '1px',
+              borderStyle: 'solid',
+              borderColor: outline_variant
+            }}>
+            <Avatar
               sx={{
-                borderRight: '1px',
-                borderStyle: 'solid',
-                borderColor: outline_variant
+                width: 138,
+                height: 138,
+                marginRight: 2,
+                bgcolor: 'primary.main'
               }}
+            >{user.image}</Avatar>
+            <Stack
+              direction='column'
+              justifyContent={'center'}
             >
-              <Grid item>
+              <Typography
+                sx={{
+                  fontFamily: 'roboto.style.fontFamily',
+                  fontWeight: 500,
+                  fontSize: '24px',
+                  lineHeight: '32px'
+                }}
+              >{user.name}</Typography>
+              <Stack direction={'row'}>
                 <Avatar
                   sx={{
-                    width: 138,
-                    height: 138,
-                    marginRight: 2,
+                    width: 28,
+                    height: 28,
                     bgcolor: 'primary.main'
                   }}
-                >{user.picture}</Avatar>
-              </Grid>
-              <Grid item
-                direction={'column'}
-                alignSelf={'center'}
-                justifySelf={'center'}
-                sx={{
-                  padding: '0px 16px 0px 0px'
-                }}
-              >
+                >
+                  <Link />
+                </Avatar>
                 <Typography
                   sx={{
                     fontFamily: 'roboto.style.fontFamily',
-                    fontWeight: 500,
-                    fontSize: '24px',
-                    lineHeight: '32px'
+                    fontWeight: 400,
+                    fontSize: '16px',
+                    lineHeight: '24px',
+                    letterSpacing: '0.5px',
+                    marginLeft: 1
                   }}
-                >{user.name}</Typography>
-                <Grid container item>
-                  <Avatar
-                    sx={{
-                      width: 28,
-                      height: 28,
-                      bgcolor: 'primary.main'
-                    }}
-                  >
-                    <Link />
-                  </Avatar>
-                  <Typography
-                    sx={{
-                      fontFamily: 'roboto.style.fontFamily',
-                      fontWeight: 400,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      letterSpacing: '0.5px',
-                      marginLeft: 1
-                    }}
-                  >{user.email}</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+                >{user.email}</Typography>
+              </Stack>
+            </Stack>
+          </Box>
+          <Box sx={{ display: 'flex' }}>
+
+          </Box>
+        </Box>
         <Grid container spacing={2} marginTop={5}>
           <Grid item xs={4}>
             <Box display={'flex'} p={1.5}
               sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
-              }}
-            >
+              }}>
               <Avatar sx={{
                 width: '60px', height: '60px'
               }}>
@@ -100,8 +95,7 @@ export default async function Setting() {
               sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
-              }}
-            >
+              }}>
               <Avatar sx={{
                 width: '60px', height: '60px'
               }}>
@@ -114,8 +108,7 @@ export default async function Setting() {
               sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
-              }}
-            >
+              }}>
               <Avatar sx={{
                 width: '60px', height: '60px'
               }}>
@@ -128,8 +121,7 @@ export default async function Setting() {
               sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
-              }}
-            >
+              }}>
               <Avatar sx={{
                 width: '60px', height: '60px'
               }}>
@@ -142,8 +134,7 @@ export default async function Setting() {
               sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
-              }}
-            >
+              }}>
               <Avatar sx={{
                 width: '60px', height: '60px'
               }}>
@@ -156,8 +147,7 @@ export default async function Setting() {
               sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
-              }}
-            >
+              }}>
               <Avatar sx={{
                 width: '60px', height: '60px'
               }}>
