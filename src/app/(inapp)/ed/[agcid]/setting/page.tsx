@@ -1,7 +1,12 @@
 import { Typography, Container, Avatar, Grid, Box } from '@mui/material'
 import { outline_variant, neutral96 } from '@/components/ThemeRegistry/theme_consts'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { BarChart, EditNote, Link, ListAlt, Notifications, Person, PersonAdd, ShoppingBag } from '@mui/icons-material'
 
 export default async function Setting() {
+  const user = (await getServerSession(authOptions))!.user!;
+
   return (
     <>
       <main>
@@ -25,8 +30,13 @@ export default async function Setting() {
             >
               <Grid item>
                 <Avatar
-                  sx={{ width: 138, height: 138}}
-                >B</Avatar>
+                  sx={{
+                    width: 138,
+                    height: 138,
+                    marginRight: 2,
+                    bgcolor: 'primary.main'
+                  }}
+                >{user.picture}</Avatar>
               </Grid>
               <Grid item
                 direction={'column'}
@@ -43,20 +53,27 @@ export default async function Setting() {
                     fontSize: '24px',
                     lineHeight: '32px'
                   }}
-                >Brandon</Typography>
+                >{user.name}</Typography>
                 <Grid container item>
                   <Avatar
-                    sx={{ width: 28, height: 28}}
-                  >A</Avatar>
+                    sx={{
+                      width: 28,
+                      height: 28,
+                      bgcolor: 'primary.main'
+                    }}
+                  >
+                    <Link />
+                  </Avatar>
                   <Typography
                     sx={{
                       fontFamily: 'roboto.style.fontFamily',
                       fontWeight: 400,
                       fontSize: '16px',
                       lineHeight: '24px',
-                      letterSpacing: '0.5px'
+                      letterSpacing: '0.5px',
+                      marginLeft: 1
                     }}
-                  >www.ova.com/brandon</Typography>
+                  >{user.email}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -64,70 +81,88 @@ export default async function Setting() {
         </Grid>
         <Grid container spacing={2} marginTop={5}>
           <Grid item xs={4}>
-            <Box display={'flex'} p={1.5} sx={{
+            <Box display={'flex'} p={1.5}
+              sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
               }}
             >
               <Avatar sx={{
                 width: '60px', height: '60px'
-              }}>H</Avatar>
-              <Typography alignSelf={'center'}>Feature</Typography>
+              }}>
+                <ListAlt />
+              </Avatar>
+              <Typography alignSelf={'center'}>Customize List</Typography>
             </Box>
           </Grid>
           <Grid item xs={4}>
-            <Box display={'flex'} p={1.5} sx={{
+            <Box display={'flex'} p={1.5}
+              sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
               }}
             >
               <Avatar sx={{
                 width: '60px', height: '60px'
-              }}>H</Avatar>
+              }}>
+                <EditNote />
+              </Avatar>
+              <Typography alignSelf={'center'}>Edit Files</Typography>
+            </Box>
+          </Grid><Grid item xs={4}>
+            <Box display={'flex'} p={1.5}
+              sx={{
+                borderRadius: '12px',
+                backgroundColor: neutral96,
+              }}
+            >
+              <Avatar sx={{
+                width: '60px', height: '60px'
+              }}>
+                <Notifications />
+              </Avatar>
+              <Typography alignSelf={'center'}>Notification Setting</Typography>
+            </Box>
+          </Grid><Grid item xs={4}>
+            <Box display={'flex'} p={1.5}
+              sx={{
+                borderRadius: '12px',
+                backgroundColor: neutral96,
+              }}
+            >
+              <Avatar sx={{
+                width: '60px', height: '60px'
+              }}>
+                <BarChart />
+              </Avatar>
               <Typography alignSelf={'center'}>Feature</Typography>
             </Box>
           </Grid><Grid item xs={4}>
-            <Box display={'flex'} p={1.5} sx={{
+            <Box display={'flex'} p={1.5}
+              sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
               }}
             >
               <Avatar sx={{
                 width: '60px', height: '60px'
-              }}>H</Avatar>
+              }}>
+                <PersonAdd />
+              </Avatar>
               <Typography alignSelf={'center'}>Feature</Typography>
             </Box>
           </Grid><Grid item xs={4}>
-            <Box display={'flex'} p={1.5} sx={{
+            <Box display={'flex'} p={1.5}
+              sx={{
                 borderRadius: '12px',
                 backgroundColor: neutral96,
               }}
             >
               <Avatar sx={{
                 width: '60px', height: '60px'
-              }}>H</Avatar>
-              <Typography alignSelf={'center'}>Feature</Typography>
-            </Box>
-          </Grid><Grid item xs={4}>
-            <Box display={'flex'} p={1.5} sx={{
-                borderRadius: '12px',
-                backgroundColor: neutral96,
-              }}
-            >
-              <Avatar sx={{
-                width: '60px', height: '60px'
-              }}>H</Avatar>
-              <Typography alignSelf={'center'}>Feature</Typography>
-            </Box>
-          </Grid><Grid item xs={4}>
-            <Box display={'flex'} p={1.5} sx={{
-                borderRadius: '12px',
-                backgroundColor: neutral96,
-              }}
-            >
-              <Avatar sx={{
-                width: '60px', height: '60px'
-              }}>H</Avatar>
+              }}>
+                <ShoppingBag />
+              </Avatar>
               <Typography alignSelf={'center'}>Feature</Typography>
             </Box>
           </Grid>
