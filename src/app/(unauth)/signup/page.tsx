@@ -59,15 +59,13 @@ const options = ["Company1", "Company2","Company3"]; // Replace with your list o
                    {...field}
                    fullWidth
                    startAdornment={
-                                        <InputAdornment position="start">
-                                          <BusinessOutlinedIcon />
-                                        </InputAdornment>
-                                      }
+                  <InputAdornment position="start">
+                   <BusinessOutlinedIcon />
+                    </InputAdornment>
+                 }
                    placeholder="companyName"
                    type="text"
-                   onBlur={() => {
-                     trigger('companyName');
-                   }}
+
                  />
      {errors.companyName && <FormHelperText error>{errors.companyName.message}</FormHelperText>}
 
@@ -102,9 +100,7 @@ export function NameInputs_Clinic({ control, errors, trigger }) {
               fullWidth
               placeholder="First Name"
               type="text"
-              onBlur={() => {
-                trigger('firstName');
-              }}
+
             />
             {errors.firstName && <FormHelperText error>{errors.firstName.message}</FormHelperText>}
           </div>
@@ -132,9 +128,7 @@ export function NameInputs_Clinic({ control, errors, trigger }) {
               fullWidth
               placeholder="Last Name"
               type="text"
-              onBlur={() => {
-                trigger('lastName');
-              }}
+
             />
             {errors.lastName && <FormHelperText error>{errors.lastName.message}</FormHelperText>}
           </div>
@@ -168,7 +162,7 @@ export function SignUp1(){
 const { register, handleSubmit, control, formState: { errors }, trigger,getValues  } = useForm();
 
 
-const isButtonDisabled =
+    const isButtonDisabled =
     !!errors.email ||
     !!errors.password ||
     (errors.email && errors.email.message) ||
@@ -177,6 +171,12 @@ const isButtonDisabled =
    const validatePassword = (password) => {
      return /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(password);
    };
+
+    const handleLinkClick = (event) => {
+       if (!isButtonDisabled) {
+         event.preventDefault(); // Prevent navigation when the button is not disabled
+       }
+     };
 
     return (
         <Box maxWidth="400px" >
@@ -216,9 +216,7 @@ const isButtonDisabled =
                    }
                    placeholder="Email"
                    type="email"
-                   onBlur={() => {
-                     trigger('email');
-                   }}
+
                  />
  {errors.email && (
                 <FormHelperText error>{errors.email.message}</FormHelperText>
@@ -261,9 +259,7 @@ const isButtonDisabled =
               }
               placeholder="Password"
               type={showPw ? "text" : "password"}
-              onBlur={() => {
-                trigger('password');
-              }}
+
 
             />
             {errors.password && (
@@ -274,8 +270,7 @@ const isButtonDisabled =
            />
 
 </form>
-
-      <Link href="/profile">
+<Link href={isButtonDisabled ? undefined : '/profile'}>
           <Box height={40}/>
           <Button type="submit"
         disabled={isButtonDisabled}

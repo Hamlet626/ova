@@ -7,7 +7,7 @@ import { Bg2 } from "@/components/background/bg2";
 import { useRouter } from "next/navigation";
 import { cliAuth  } from "@/utils/firebase/firebase_client";
 
-import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from "react";
 import {Google, Lock, Login, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
@@ -22,14 +22,16 @@ import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CardContent from "@mui/material/CardContent";
 
+import { getClinic } from "@/utils/clinic_check";
+import { useUrl } from 'nextjs-current-url';
+import { useSearchParams } from 'next/navigation'
+
 
 const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
+  height: 8,
   overflow: 'hidden',
   position: 'absolute',
-  bottom: 0,
+  bottom: 8,
   left: 0,
   whiteSpace: 'nowrap',
   width: 1,
@@ -37,7 +39,11 @@ const VisuallyHiddenInput = styled('input')({
 
 
 export function Signup_profile1() {
-//state that when user select file
+    const hostName=useUrl()?.host;
+    const clinic = getClinic(hostName);
+    const searchParams = useSearchParams();
+    const role = searchParams.get('role');
+
     const [selectedFile,setSelectedFile]=useState(null);
 
     const handleFileChange=(event)=>{
@@ -56,14 +62,13 @@ export function Signup_profile1() {
 
   return (
   <>
-          {/* Sign Up text and progress bar */}
           <Box maxWidth='400px'>
-         <Box sx={{ position: "absolute", top: 63, left: 80, margin: "16px", display: "flex", alignItems: "center" }}>
-               <Typography variant="h4">
+         <Box sx={{ position: "absolute", top: 48, left: 80,  display: "flex", alignItems: "center" }}>
+               <Typography variant="h4" style={{whiteSpace: 'nowrap'}}>
                  Sign Up
                </Typography>
-          <Box width={191}/>
-      <LinearProgress variant="determinate" value={66.67} sx={{ width: '700px', backgroundColor: "grey", "& .MuiLinearProgress-bar": { backgroundColor: "orange" } }} />
+          <Box width={191} />
+      <LinearProgress variant="determinate" value={66.67} sx={{ width: '700px', maxWidth: '100%',backgroundColor: "grey", "& .MuiLinearProgress-bar": { backgroundColor: "orange" } }} />
             <Box width={38}/>
               <Typography className="progress-text">
                        <span style={{ color: "orange" }}>50</span>/100%
@@ -73,13 +78,13 @@ export function Signup_profile1() {
  <Box
          sx={{
            position: "absolute",
-           top: "50%",
+           top: "40%",
            left: "50%",
            transform: "translate(-50%, -50%)",
          }}
        >
 
-<Card variant="outlined" sx={{ padding: 3, maxWidth: '400px', borderRadius: 0 }}>
+<Card variant="outlined" sx={{ padding: 3,  borderRadius: '10px'  }}>
   <div style={{ display: 'flex', alignItems: 'center' }}>
     {selectedFile && (
       <CardMedia
@@ -87,56 +92,59 @@ export function Signup_profile1() {
         src={URL.createObjectURL(selectedFile)}
         alt="Preview"
         style={{
-          width: '100px',
-          height: '100px',
+          width: '160px',
+          height: '160px',
           borderRadius: '100%',
         }}
       />
     )}
 
-    <div style={{ marginLeft: '16px', flex: 1 }}>
+    <div style={{ marginLeft: '30px', flex: 1 }}>
       <Typography variant="h6" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-        Upload Egg Donor's Photo
+      Upload Egg Donor's Photo
+{/*        {clinic !== null ? 'Upload Logo' : role === 'ed' ? "Upload Egg Donor's Photo" : "Upload Recipient's Photo"} */}
       </Typography>
       {selectedFile && (
-        <div style={{ marginBottom: '1px' }}>
-          <Typography variant='body1' style={{ textDecoration: 'underline', color: 'grey' }}>
+        <div style={{ marginTop: '16px' }}>
+          <Typography variant='body1' style={{ textDecoration: 'underline', color: 'grey', marginTop:'16px' }}>
             {selectedFile.name}
           </Typography>
-          <Typography variant='body1' style={{ textDecoration: 'underline', color: 'grey' }}>
+
+          <Typography variant='body1' style={{ textDecoration: 'underline', color: 'grey', marginTop:'4px' }}>
             {formatFileSize(selectedFile.size)}
           </Typography>
         </div>
       )}
 
 
-  <div style={{ marginTop: '10px', flex: 1 }}>
-    <Button component="label" variant="contained" startIcon={<SourceOutlinedIcon />}>
+  <div style={{ marginTop: '16px', flex: 1 }}>
+    <Button component="label" variant="contained" startIcon={<SourceOutlinedIcon />} sx={{ textTransform: 'none' }} >
       Browse Photos
-      <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+      <VisuallyHiddenInput type="file" accept=".jpg, .jpeg, .png" onChange={handleFileChange} />
     </Button>
   </div>
+
 
   </div>
 </div>
 </Card>
 
-              </Box>
-            </Box>
-    <div
-            style={{
-              position: 'fixed',
-              bottom: '0',
-              left: '0',
-              margin: '30px',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <Button variant="outlined" >
-              Cancel
-            </Button>
-          </div>
+    </Box>
+    </Box>
+{/*     <div */}
+{/*             style={{ */}
+{/*               position: 'fixed', */}
+{/*               bottom: '0', */}
+{/*               left: '0', */}
+{/*               margin: '30px', */}
+{/*               display: 'flex', */}
+{/*               alignItems: 'center', */}
+{/*             }} */}
+{/*           > */}
+{/*             <Button variant="outlined" > */}
+{/*               Cancel */}
+{/*             </Button> */}
+{/*           </div> */}
             <div
                     style={{
                       position: 'absolute',
@@ -147,14 +155,14 @@ export function Signup_profile1() {
                       alignItems: 'center',
                     }}
                   >
-                  <Typography  variant="h6" style={{ whiteSpace: 'nowrap' }}>Do it later</Typography >
+
+                  <Typography  variant="h6" style={{ whiteSpace: 'nowrap',fontSize:'16px' }}>Do it later</Typography >
                     <Button
                       fullWidth
                       variant="contained"
                       size="large"
-                      startIcon={<ArrowCircleRightOutlinedIcon />}
-                      style={{ marginLeft: '24px' }}
-
+                      startIcon={<ArrowForwardIcon  />}
+                      sx={{marginLeft: '24px', marginRight: '40px',color:'white', textTransform:'none',width:'193px'}}
                     >
                       Next
                     </Button>
