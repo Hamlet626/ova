@@ -11,22 +11,18 @@ import { unstable_cache } from "next/cache";
 
 export default async function FormIndex({children, params}: { children: React.ReactNode, params: { agcid: string, formid?:string } }) {
     
-    // console.log(params.formid);
-    // return <Box bgcolor={'red'} width={'19900px'} height={'199900px'}/>;
     const user=(await getServerSession(authOptions))!.user!;
     
     const myRole=user.role!;
     
     const formTemplate=await unstable_cache(
         async()=>{
-            console.log('form template in Detail Layout')
             return getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`))},
         [params.agcid],
         {tags:['form_template'],revalidate:false}
     )();
     const formData=await unstable_cache(
         async()=>{
-            console.log('form data in Detail Layout')
             return getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`))},
         [user.id],
         {tags:['form_data'],revalidate:60}

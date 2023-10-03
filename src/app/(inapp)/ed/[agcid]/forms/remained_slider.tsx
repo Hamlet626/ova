@@ -15,9 +15,8 @@ export const RemainedSlider=({remainedData})=>{
     const [showPre,setShowPre]=useState(false);
     const onscroll=()=>{
         if(swiperRef.current){
-          console.log(swiperRef.current.scrollLeft,swiperRef.current.offsetWidth,swiperRef.current.scrollWidth);
-            setShowNext(swiperRef.current.scrollLeft+swiperRef.current.offsetWidth<swiperRef.current.scrollWidth);
-            setShowPre(swiperRef.current.scrollLeft>0);
+          setShowNext(swiperRef.current.scrollLeft+swiperRef.current.offsetWidth<swiperRef.current.scrollWidth);
+          setShowPre(swiperRef.current.scrollLeft>0);
         }
     };
 

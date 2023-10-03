@@ -21,7 +21,6 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     
     const formTemplate=await unstable_cache(
         async()=>{
-            console.log('form template in Forms')
             const r = await getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`));
             return r.docs.map(v=>({...v.data(),id:v.id}));
         },
@@ -30,7 +29,6 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     )();
     const formData=await unstable_cache(
         async()=>{
-            console.log('form data in Forms')
             const r = await getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`));
             return r.docs.map(v=>({...v.data(),id:v.id}));
         },
@@ -38,7 +36,6 @@ export default async function Forms({params}:{params: { agcid: string }}) {
         {tags:['form_data'],revalidate:6}
     )();
 
-    console.log(formData);
     const formsStatus=getFinishStatus(formTemplate,formData);
     const remained=formsStatus.filter((v)=>v.subs.remained);
 
