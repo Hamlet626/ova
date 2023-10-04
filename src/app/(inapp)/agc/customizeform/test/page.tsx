@@ -1,26 +1,13 @@
 'use client'
-import { useEffect } from 'react'
 import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Stack from '@mui/system/Stack';
-import { alpha, createTheme, Tabs, Tab, ThemeProvider, Typography, Button, TableContainer, TableRow, TableCell, Input, TableHead, IconButton, Collapse } from "@mui/material";
+import {  Tabs, Tab, Typography, Button, TableContainer, TableRow, TableCell, Input, IconButton, Collapse } from "@mui/material";
 import LinearProgress from '@mui/material/LinearProgress';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import { Toolbar } from "@mui/material";
 import { Add, Check, CheckCircle, CheckCircleOutline, Circle, CircleOutlined, HomeOutlined, Scale, TableRows } from "@mui/icons-material";
 import theme from "@/components/ThemeRegistry/theme";
 import { primary90, neutral96 } from "@/components/ThemeRegistry/theme_consts";
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import * as form_const from "@/utils/form/consts";
 import * as form_template from "@/utils/form/template";
 import Table from '@mui/material/Table';
