@@ -25,10 +25,18 @@ const theme = createTheme({
             letterSpacing: '0.1px',
             textAlign: 'left'
         },
-        body3: {
+        label1: {
+            fontSize: '14px',
+            fontWeight: 500,
+            lineHeight: '20px',
+            letterSpacing: '0.1px',
+            textAlign: 'left'
+        },
+        label2: {
             fontSize: '12px',
-            fontWeight: 400,
+            fontWeight: 500,
             lineHeight: '16px',
+            letterSpacing: '0.5px',
             textAlign: 'left'
         },
     },
@@ -36,9 +44,10 @@ const theme = createTheme({
         MuiTypography: {
             defaultProps: {
                 variantMapping: {
-                    // Map subtitle3, body3 to render a <h6>, <p> respectively by default
-                    subtitle3: 'h6',
-                    body3: 'p',
+                    // Map subtitle3, label1, label2 to render a <label> by default
+                    subtitle3: 'label',
+                    label1: 'label',
+                    label2: 'label',
                 },
             },
         },

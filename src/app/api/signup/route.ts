@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 
         return Response.json({success:true,data:{uid:uRec.uid}});
     }catch(e: any) {
-        console.log(e);
+        console.error(e);
         if(uRec!==null)
             await auth().deleteUser(uRec.uid);
         return Response.json(e,{status:502});

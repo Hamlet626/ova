@@ -11,26 +11,22 @@ import { unstable_cache } from "next/cache";
 
 export default async function FormIndex({children, params}: { children: React.ReactNode, params: { agcid: string, formid?:string } }) {
     
-    // console.log(params.formid);
-    // return <Box bgcolor={'red'} width={'19900px'} height={'199900px'}/>;
     const user=(await getServerSession(authOptions))!.user!;
     
     const myRole=user.role!;
     
     const formTemplate=await unstable_cache(
-        ()=>{
-            console.log('form template in Detail Layout')
+        async()=>{
             return getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`))},
         [params.agcid],
         {tags:['form_template'],revalidate:false}
-    );
+    )();
     const formData=await unstable_cache(
-        ()=>{
-            console.log('form data in Detail Layout')
+        async()=>{
             return getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`))},
         [user.id],
         {tags:['form_data'],revalidate:60}
-    );
+    )();
 
     return <Box display={'flex'}>
         <Paper sx={{width:'326px', alignSelf:'stretch',height:'9999px',px:4,pt:4}}>
@@ -43,7 +39,8 @@ export default async function FormIndex({children, params}: { children: React.Re
             <Box height={32}/>
             <Typography sx={font3}>Form</Typography>
             <Box height={60}/>
-            <EDFormTitles/>
+            <EDFormTitles formid={params.formid ?? '0'} 
+            pathPrefix={`/ed/${params.agcid}/forms/detail`}/>
         </Paper>
         {children}
     </Box>

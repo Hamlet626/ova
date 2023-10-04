@@ -11,19 +11,17 @@ export default async function Form({children, params}: { children: React.ReactNo
     const myRole=user.role!;
     
     const formTemplate=await unstable_cache(
-        ()=>{
-            console.log('form template in Detail Page')
+        async()=>{
             return getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`))},
         [params.agcid],
         {tags:['form_template'],revalidate:false}
-    );
+    )();
     const formData=await unstable_cache(
-        ()=>{
-            console.log('form data in Detail Page')
+        async()=>{
             return getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`))},
         [user.id],
         {tags:['form_data'],revalidate:60}
-    );
+    )();
     return <Box>
         
     </Box>

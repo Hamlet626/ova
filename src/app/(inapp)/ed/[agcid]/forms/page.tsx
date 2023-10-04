@@ -20,24 +20,27 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     const myRole=user.role!;
     
     const formTemplate=await unstable_cache(
-        ()=>{
-            console.log('form template in Forms')
-            return getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`))},
+        async()=>{
+            const r = await getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`));
+            return r.docs.map(v=>({...v.data(),id:v.id}));
+        },
         [params.agcid],
         {tags:['form_template'],revalidate:false}
-    );
+    )();
     const formData=await unstable_cache(
-        ()=>{
-            console.log('form data in Forms')
-            return getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`))},
+        async()=>{
+            const r = await getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`));
+            return r.docs.map(v=>({...v.data(),id:v.id}));
+        },
         [user.id],
-        {tags:['form_data'],revalidate:60}
-    );
+        {tags:['form_data'],revalidate:6}
+    )();
 
     const formsStatus=getFinishStatus(formTemplate,formData);
     const remained=formsStatus.filter((v)=>v.subs.remained);
 
     return <Box pt={'30px'} pl={4} pr='80px'>
+        <Typography>{`${formData}`}</Typography>
         <Typography sx={font3}>My Form</Typography>
         <Box height={12}/>
         {remained.length>0 &&
@@ -57,12 +60,12 @@ export default async function Forms({params}:{params: { agcid: string }}) {
         <Box height={16}/>
         <RemainedSlider remainedData={remained} />
         <Box height={32}/>
-        <Divider sx={{ml:'-999px', mr:'-999px'}}/>
+        <Divider sx={{ml:'-999px', mr:'-80px'}}/>
         </>}
         <Box height={32}/>
         <Stack spacing={16}>
-            {formsStatus.map((v)=>(
-                <Card  key={v.title} variant="outlined">
+            {formsStatus.map(v=>(
+                <Card key={v.title} variant="outlined">
                     <CardActionArea>
                         <CardContent>
                         <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
@@ -92,7 +95,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
 }
 
 const getFinishStatus=(template,data)=>{
-    return [{title:'basic_info',stats:{time:'4 min',finished:15,all:24},subs:{finished:[],remained:['sub1','sub2','sub1','sub2','sub1','sub2','sub1','sub2','sub1','sub2']}}];
+    return [{title:'basic_info',stats:{time:'4 min',finished:15,all:24},subs:{finished:[],remained:['sub1','sub2','sub3','sub4','sub5','sub6','sub7','sub8','sub9','sub0']}}];
 }
 
 const SubfieldsBlock=({section,finished,sx}:{section:any[],finished?:boolean,sx?:any})=>{
