@@ -15,6 +15,7 @@ import NextLink from "next/link";
 import {font2} from "@/components/ThemeRegistry/theme_consts";
 //icons
 import SourceOutlinedIcon from '@mui/icons-material/SourceOutlined';
+import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 
 //import grid
 import Grid from '@mui/material/Grid';
@@ -84,7 +85,7 @@ export function Signup_profile1() {
          }}
        >
 
-<Card variant="outlined" sx={{ padding: 3,  borderRadius: '10px'  }}>
+<Card variant="outlined" sx={{ padding: 3,  borderRadius: '10px' ,width: '600px', height: clinic !== null ? '300px' : '200px',}}>
   <div style={{ display: 'flex', alignItems: 'center' }}>
     {selectedFile && (
       <CardMedia
@@ -100,9 +101,8 @@ export function Signup_profile1() {
     )}
 
     <div style={{ marginLeft: '30px', flex: 1 }}>
-      <Typography variant="h6" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-      Upload Egg Donor's Photo
-{/*        {clinic !== null ? 'Upload Logo' : role === 'ed' ? "Upload Egg Donor's Photo" : "Upload Recipient's Photo"} */}
+      <Typography variant="h6" style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
+       {clinic !== null ? 'Upload Logo' : role === 'ed' ? "Upload Egg Donor's Photo" : "Upload Recipient's Photo"}
       </Typography>
       {selectedFile && (
         <div style={{ marginTop: '16px' }}>
@@ -118,7 +118,7 @@ export function Signup_profile1() {
 
 
   <div style={{ marginTop: '16px', flex: 1 }}>
-    <Button component="label" variant="contained" startIcon={<SourceOutlinedIcon />} sx={{ textTransform: 'none' }} >
+    <Button component="label" variant="contained" startIcon={<SourceOutlinedIcon />} sx={{ typography: 'label1'}} >
       Browse Photos
       <VisuallyHiddenInput type="file" accept=".jpg, .jpeg, .png" onChange={handleFileChange} />
     </Button>
@@ -126,25 +126,18 @@ export function Signup_profile1() {
 
 
   </div>
+
 </div>
+{clinic !== null && (
+      <Input name="url" placeholder="Desired URL" variant="outlined"  type="text" sx={{ width: '100%', marginTop: '24px' }}
+      startAdornment={ <InputAdornment position="start"> <LinkOutlinedIcon /></InputAdornment> }
+      />
+    )}
 </Card>
 
     </Box>
     </Box>
-{/*     <div */}
-{/*             style={{ */}
-{/*               position: 'fixed', */}
-{/*               bottom: '0', */}
-{/*               left: '0', */}
-{/*               margin: '30px', */}
-{/*               display: 'flex', */}
-{/*               alignItems: 'center', */}
-{/*             }} */}
-{/*           > */}
-{/*             <Button variant="outlined" > */}
-{/*               Cancel */}
-{/*             </Button> */}
-{/*           </div> */}
+
             <div
                     style={{
                       position: 'absolute',
@@ -156,13 +149,13 @@ export function Signup_profile1() {
                     }}
                   >
 
-                  <Typography  variant="h6" style={{ whiteSpace: 'nowrap',fontSize:'16px' }}>Do it later</Typography >
+                  <Typography  variant="subtitle2" >Do it later</Typography >
                     <Button
                       fullWidth
                       variant="contained"
                       size="large"
                       startIcon={<ArrowForwardIcon  />}
-                      sx={{marginLeft: '24px', marginRight: '40px',color:'white', textTransform:'none',width:'193px'}}
+                      sx={{typography: 'label1', marginLeft: '24px', marginRight: '40px',color:'white',width:'193px'}}
                     >
                       Next
                     </Button>

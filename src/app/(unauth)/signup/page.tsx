@@ -63,8 +63,9 @@ const options = ["Company1", "Company2","Company3"]; // Replace with your list o
                    <BusinessOutlinedIcon />
                     </InputAdornment>
                  }
-                   placeholder="companyName"
+                   placeholder="Company Name"
                    type="text"
+                   onBlur={()=> trigger('companyName')}
 
                  />
      {errors.companyName && <FormHelperText error>{errors.companyName.message}</FormHelperText>}
@@ -100,6 +101,7 @@ export function NameInputs_Clinic({ control, errors, trigger }) {
               fullWidth
               placeholder="First Name"
               type="text"
+              onBlur={()=> trigger('firstName')}
 
             />
             {errors.firstName && <FormHelperText error>{errors.firstName.message}</FormHelperText>}
@@ -128,6 +130,7 @@ export function NameInputs_Clinic({ control, errors, trigger }) {
               fullWidth
               placeholder="Last Name"
               type="text"
+              onBlur={()=> trigger('lastName')}
 
             />
             {errors.lastName && <FormHelperText error>{errors.lastName.message}</FormHelperText>}
@@ -216,6 +219,8 @@ const { register, handleSubmit, control, formState: { errors }, trigger,getValue
                    }
                    placeholder="Email"
                    type="email"
+                    onBlur={()=> trigger('email')}
+
 
                  />
  {errors.email && (
@@ -259,6 +264,7 @@ const { register, handleSubmit, control, formState: { errors }, trigger,getValue
               }
               placeholder="Password"
               type={showPw ? "text" : "password"}
+               onBlur={()=> trigger('password')}
 
 
             />
@@ -346,7 +352,6 @@ export default function SignUp() {
             </Bg1>
 );
 }
-
 
 
 
