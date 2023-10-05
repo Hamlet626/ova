@@ -14,17 +14,13 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }>(({ theme, open }) => {
     const shift=open?drawerWidth:drawerMinWidth;
     return ({
-    flexGrow: 1,
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    display:'flex',flexDirection:'column',
-    width:'100%',
+    width:`calc(100% - ${shift}px)`,
     height:'100vh',
-    // overflowY:'auto',
-    // marginLeft: -shift,
-    // paddingLeft: shift,
+    overflowY:'auto',
     ///todo:remove animation or make it better
     ...(open && {
       transition: theme.transitions.create('margin', {

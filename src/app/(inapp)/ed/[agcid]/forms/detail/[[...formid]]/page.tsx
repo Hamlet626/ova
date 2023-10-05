@@ -28,13 +28,14 @@ export default function Form({children, params}: { children: React.ReactNode, pa
     //     [data!.user!.id],
     //     {tags:['form_data'],revalidate:60}
     // )();
-    return <Box pl={3} pr={10} pt={'35px'} flex={1} bgcolor={'red'} //sx={{position:'realative'}} 
+    return <Box ml={3} mr={10} pt={'35px'} flex={1} bgcolor={'red'} 
+    display={'flex'} //width={'100%'}
+    sx={{position:'relative'}} 
     >
         <Button onClick={()=>{
             localStorage.setItem(`form${params.formid??0}`,JSON.stringify({test:'new data'}));
         }}>test</Button>
 
-        <Box position={'absolute'} top={'30px'} width={'100%'} height={'300px'} bgcolor={'blue'}/>
         <Stack position={'absolute'} direction={'row'} bottom={'47px'} width={'100%'} justifyContent="space-between">
             <Button color={'secondary'} variant="outlined" startIcon={<ArrowBack/>}>Previous</Button>
             <Button variant="contained" startIcon={<ArrowForward/>}>Continue</Button>
