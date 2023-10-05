@@ -13,7 +13,7 @@
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
-    "@mui/lab": "^5.0.0-alpha.143",
+    "@mui/lab": "latest",
     "@mui/material": "latest",
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",
