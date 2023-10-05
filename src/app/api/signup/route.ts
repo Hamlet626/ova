@@ -5,7 +5,7 @@ import {RoleNum, roles} from "@/utils/roles";
 import { auth, firestore} from "firebase-admin";
 import { serverInitFirebase } from '@/utils/firebase/firebase_server';
 import { UserRecord } from "firebase-admin/auth";
-import { AgencyRef, UserRef, UsersAgcDataRef, withTime } from "@/utils/firebase/database_utils";
+import { AgencyRef, UserRef, UsersAgcDataRef, withTime } from "@/utils/firebase/database_utils_server";
 import { EDStatus } from "@/utils/status";
 import { headers } from "next/headers";
 
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 
         return Response.json({success:true,data:{uid:uRec.uid}});
     }catch(e: any) {
-        console.log(e);
+        console.error(e);
         if(uRec!==null)
             await auth().deleteUser(uRec.uid);
         return Response.json(e,{status:502});

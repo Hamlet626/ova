@@ -148,9 +148,9 @@ export function SignUp1(){
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
 
- const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
-        event.preventDefault();
-    };
+//  const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
+//         event.preventDefault();
+//     };
     const [showPw, setShowPw] = useState(false);
 
     //const role = 'null';
@@ -158,11 +158,9 @@ export function SignUp1(){
         setShowPw((show) => !show);
     };
 
-    const signup = () => {
-        createUserWithEmailAndPassword(cliAuth , email, password);
-    };
+ 
 
-const { register, handleSubmit, control, formState: { errors }, trigger,getValues  } = useForm();
+const {  control, formState: { errors }, trigger,getValues  } = useForm();
 
 
     const isButtonDisabled =
@@ -175,19 +173,18 @@ const { register, handleSubmit, control, formState: { errors }, trigger,getValue
      return /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(password);
    };
 
-    const handleLinkClick = (event) => {
-       if (!isButtonDisabled) {
-         event.preventDefault(); // Prevent navigation when the button is not disabled
-       }
-     };
+    // const handleLinkClick = (event) => {
+    //    if (!isButtonDisabled) {
+    //      event.preventDefault(); // Prevent navigation when the button is not disabled
+    //    }
+    //  };
 
     return (
         <Box maxWidth="400px" >
 
         <Typography variant="h4" sx={font2}>
-        <span sx={font2}>
           {clinic !== null ? 'Clinics Sign Up' : (role === 'ed' ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
-        </span>
+
         </Typography>
 
              <Box height={50} />
@@ -276,10 +273,9 @@ const { register, handleSubmit, control, formState: { errors }, trigger,getValue
            />
 
 </form>
-<Link href={isButtonDisabled ? undefined : '/profile'}>
           <Box height={40}/>
           <Button type="submit"
-        disabled={isButtonDisabled}
+            disabled={isButtonDisabled}
               onClick={async () => {
                 const emailValue = getValues('email');
                  const passwordValue = getValues('password');
@@ -302,7 +298,7 @@ const { register, handleSubmit, control, formState: { errors }, trigger,getValue
 
                 if (r.status === 200) {
                   const rr = await signIn('credentials', {
-                    redirect: false,
+                    redirect: true,
                     callbackUrl: '/',
                     email: emailValue,
                     password: passwordValue,
@@ -311,16 +307,16 @@ const { register, handleSubmit, control, formState: { errors }, trigger,getValue
                   console.log(rr);
 
                 }
-              }}
+              }
+            }
             fullWidth
             variant="contained"
             size="large"
-            sx={{color:'white', textTransform:'none'}}
+            sx={{color:'white'}}
             startIcon={<ArrowCircleRightOutlinedIcon />}
           >
             Next
           </Button>
-   </Link>
 
          <Box height={33}/>
           <Typography variant="h6" sx={{textAlign: 'center'}}>Log In</Typography>
@@ -334,13 +330,13 @@ const { register, handleSubmit, control, formState: { errors }, trigger,getValue
 export default function SignUp() {
   return (
             <Bg1>
-           <Box sx={{
+             <Box sx={{
                display: 'flex',
                justifyContent: 'center',
                alignItems: 'center',
                height: '100vh',
                overflowY: 'auto',
-             }}>
+              }}>
              <Box
                    sx={{
                      maxHeight: '100vh', // Adjust the maxHeight as needed

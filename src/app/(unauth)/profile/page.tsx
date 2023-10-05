@@ -65,7 +65,7 @@ export function Signup_profile1() {
   <>
           <Box maxWidth='400px'>
          <Box sx={{ position: "absolute", top: 48, left: 80,  display: "flex", alignItems: "center" }}>
-               <Typography variant="h4" style={{whiteSpace: 'nowrap'}}>
+               <Typography variant="h4" sx={{whiteSpace: 'nowrap'}}>
                  Sign Up
                </Typography>
           <Box width={191} />
@@ -91,8 +91,8 @@ export function Signup_profile1() {
       <CardMedia
         component="img"
         src={URL.createObjectURL(selectedFile)}
-        alt="Preview"
-        style={{
+         alt="Preview"
+        sx={{
           width: '160px',
           height: '160px',
           borderRadius: '100%',
@@ -101,16 +101,16 @@ export function Signup_profile1() {
     )}
 
     <div style={{ marginLeft: '30px', flex: 1 }}>
-      <Typography variant="h6" style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
+      <Typography variant="h6" sx={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
        {clinic !== null ? 'Upload Logo' : role === 'ed' ? "Upload Egg Donor's Photo" : "Upload Recipient's Photo"}
       </Typography>
       {selectedFile && (
         <div style={{ marginTop: '16px' }}>
-          <Typography variant='body1' style={{ textDecoration: 'underline', color: 'grey', marginTop:'16px' }}>
+          <Typography variant='body1' sx={{ textDecoration: 'underline', color: 'grey', marginTop:'16px' }}>
             {selectedFile.name}
           </Typography>
 
-          <Typography variant='body1' style={{ textDecoration: 'underline', color: 'grey', marginTop:'4px' }}>
+          <Typography variant='body1' sx={{ textDecoration: 'underline', color: 'grey', marginTop:'4px' }}>
             {formatFileSize(selectedFile.size)}
           </Typography>
         </div>
@@ -153,7 +153,6 @@ export function Signup_profile1() {
                     <Button
                       fullWidth
                       variant="contained"
-                      size="large"
                       startIcon={<ArrowForwardIcon  />}
                       sx={{typography: 'label1', marginLeft: '24px', marginRight: '40px',color:'white',width:'193px'}}
                     >
