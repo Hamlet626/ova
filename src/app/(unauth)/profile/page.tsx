@@ -69,11 +69,10 @@ export function Signup_profile1() {
                  Sign Up
                </Typography>
           <Box width={191} />
-      <LinearProgress variant="determinate" value={66.67} sx={{ width: '700px', maxWidth: '100%',backgroundColor: "grey", "& .MuiLinearProgress-bar": { backgroundColor: "orange" } }} />
+      <LinearProgress variant="determinate" value={66.67} color="primary" sx={{ width: '700px', maxWidth: '100%',backgroundColor: "grey",  }} />
             <Box width={38}/>
-              <Typography className="progress-text">
-                       <span style={{ color: "orange" }}>50</span>/100%
-                     </Typography>
+              <Typography color="primary"> 50 </Typography>
+               <Typography > /100% </Typography>
                    </Box>
 <Box height={33}/>
  <Box
@@ -129,7 +128,7 @@ export function Signup_profile1() {
 
 </div>
 {clinic !== null && (
-      <Input name="url" placeholder="Desired URL" variant="outlined"  type="text" sx={{ width: '100%', marginTop: '24px' }}
+      <Input name="url" fullWidth placeholder="Desired URL" variant="outlined"  type="text" sx={{ width: '100%', marginTop: '24px' }}
       startAdornment={ <InputAdornment position="start"> <LinkOutlinedIcon /></InputAdornment> }
       />
     )}
@@ -167,7 +166,7 @@ export function Signup_profile1() {
 
 export default function SignUp() {
   return (
-    <Grid
+    <Box
       sx={{
         position: 'relative',
         display: 'flex',
@@ -179,6 +178,8 @@ export default function SignUp() {
       <Bg2 />
 
       <Signup_profile1 />
-    </Grid>
+    </Box>
+
+
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'
 import { cliAuth  } from "@/utils/firebase/firebase_client";
 import {Box,  Button, Container, Input, InputAdornment, Link,  Typography} from "@mui/material";
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
@@ -33,28 +33,17 @@ const flexContainerStyle = {
 };
 
 
-
-
 function Name_Clinic({control, errors, trigger}){
-const options = ["Company1", "Company2","Company3"]; // Replace with your list of company names
-  const [selectedCompany, setSelectedCompany] = useState('');
-
   return (
-  <form style={{  maxWidth: "400px", borderRadius: 0,}}>
-
+  <form >
       <Controller
              name="companyName"
              control={control}
-             defaultValue=""
              rules={{
                required: "companyName is required",
-               minLength: {
-                 value: 2,
-                 message: "Invalid",
-               },
              }}
              render={({ field }) => (
-               <div>
+               <Box>
                  <Input
                    {...field}
                    fullWidth
@@ -66,75 +55,57 @@ const options = ["Company1", "Company2","Company3"]; // Replace with your list o
                    placeholder="Company Name"
                    type="text"
                    onBlur={()=> trigger('companyName')}
-
                  />
-     {errors.companyName && <FormHelperText error>{errors.companyName.message}</FormHelperText>}
-
-       </div>
-              )}
+                {errors.companyName && <FormHelperText error>{errors.companyName.message}</FormHelperText>}
+                </Box>
+        )}
             />
   </form>
-
   );
 }
 
-export function NameInputs_Clinic({ control, errors, trigger }) {
+export function Name_NotClinic({ control, errors, trigger }) {
   return (
-        <Box sx={flexContainerStyle}>
-
-      {/* First Name Input */}
+     <Box sx={flexContainerStyle}>
       <Controller
         name="firstName"
         control={control}
-        defaultValue=""
         rules={{
           required: "First name is required",
-          minLength: {
-            value: 2,
-            message: "Invalid",
-          },
         }}
         render={({ field }) => (
-          <div>
+          <Box>
             <Input
               {...field}
               fullWidth
               placeholder="First Name"
               type="text"
               onBlur={()=> trigger('firstName')}
-
             />
             {errors.firstName && <FormHelperText error>{errors.firstName.message}</FormHelperText>}
-          </div>
+          </Box>
         )}
       />
 
       <Box width={23} />
 
-      {/* Last Name Input */}
       <Controller
         name="lastName"
         control={control}
-        defaultValue=""
         rules={{
           required: "Last name is required",
-          minLength: {
-            value: 2,
-            message: "Invalid",
-          },
         }}
         render={({ field }) => (
-          <div>
+          <Box>
             <Input
               {...field}
               fullWidth
               placeholder="Last Name"
               type="text"
               onBlur={()=> trigger('lastName')}
-
             />
             {errors.lastName && <FormHelperText error>{errors.lastName.message}</FormHelperText>}
-          </div>
+          </Box>
         )}
       />
     </Box>
@@ -147,27 +118,39 @@ export function SignUp1(){
     const clinic = getClinic(hostName);
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
+    const router = useRouter()
 
-//  const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
-//         event.preventDefault();
-//     };
-    const [showPw, setShowPw] = useState(false);
 
-    //const role = 'null';
-    const clickPwIcon = () => {
-        setShowPw((show) => !show);
+ const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
+        event.preventDefault();
     };
+    const [showPw, setShowPw] = useState(false);
+    const clickPwIcon = () => { setShowPw((show) => !show); };
+    const {  control, formState: { errors }, trigger,getValues  } = useForm();
 
- 
+    const nameError= (!!errors.firstName || !!errors.lastName)
+//     const isButtonDisabled =
+//     ( nameError || !!errors.companyName) ||
+//     !!errors.email ||
+//     !!errors.password ||
+//     (errors.email && errors.email.message) ||
+//     (errors.password && errors.password.message);
+const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-const {  control, formState: { errors }, trigger,getValues  } = useForm();
+// ...
 
-
-    const isButtonDisabled =
+// Update isButtonDisabled whenever there are errors
+useEffect(() => {
+  const hasErrors =
+    nameError ||
+    !!errors.companyName ||
     !!errors.email ||
     !!errors.password ||
     (errors.email && errors.email.message) ||
     (errors.password && errors.password.message);
+
+  setIsButtonDisabled(hasErrors);
+}, [nameError, errors.companyName, errors.email, errors.password]);
 
    const validatePassword = (password) => {
      return /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(password);
@@ -182,15 +165,14 @@ const {  control, formState: { errors }, trigger,getValues  } = useForm();
     return (
         <Box maxWidth="400px" >
 
-        <Typography variant="h4" sx={font2}>
+        <Typography  sx={font2}>
           {clinic !== null ? 'Clinics Sign Up' : (role === 'ed' ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
-
         </Typography>
 
              <Box height={50} />
-         <Name_Clinic control={control} errors={errors} trigger={trigger} />
 
-{/*}      {clinic !== null ? <NameInputs_Clinic /> : <NameInputs_Clinic />}*/}
+      {clinic !== null ? <Name_Clinic control={control} errors={errors} trigger={trigger} />
+        : <Name_NotClinic control={control} errors={errors} trigger={trigger}  />}
          <Box height={41} />
 <form >
     <Controller
@@ -255,7 +237,7 @@ const {  control, formState: { errors }, trigger,getValues  } = useForm();
                 </InputAdornment>
               }
               endAdornment={
-                <InputAdornment position="end" onClick={clickPwIcon}>
+                <InputAdornment position="end" onClick={clickPwIcon} onMouseDown={mouseDownPwIcon}>
                   {showPw ? <VisibilityOff/> : <Visibility />}
                 </InputAdornment>
               }
@@ -277,6 +259,7 @@ const {  control, formState: { errors }, trigger,getValues  } = useForm();
           <Button type="submit"
             disabled={isButtonDisabled}
               onClick={async () => {
+              router.push('/profile');
                 const emailValue = getValues('email');
                  const passwordValue = getValues('password');
 
@@ -298,14 +281,13 @@ const {  control, formState: { errors }, trigger,getValues  } = useForm();
 
                 if (r.status === 200) {
                   const rr = await signIn('credentials', {
-                    redirect: true,
+                    redirect: false,
                     callbackUrl: '/',
                     email: emailValue,
                     password: passwordValue,
                   });
 
                   console.log(rr);
-
                 }
               }
             }
