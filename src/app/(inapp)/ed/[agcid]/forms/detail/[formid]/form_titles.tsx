@@ -5,7 +5,7 @@ import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "@/utils/firebase/firebase_client";
 
 export default function EDFormTitles({pathPrefix,formid,edid}:{pathPrefix:string,formid:string,edid:string}) {
-    const primary90='#FFDBCE';
+    
     const [selectedInd,setSelectedInd]=useState(Number(formid));
 
     let titles=[{title:'Basic Information'},

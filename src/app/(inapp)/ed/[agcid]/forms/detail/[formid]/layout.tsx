@@ -9,7 +9,7 @@ import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { getServerSession } from "next-auth";
 import { unstable_cache } from "next/cache";
 
-export default async function FormIndex({children, params}: { children: React.ReactNode, params: { agcid: string, formid?:string } }) {
+export default async function FormIndex({children, params}: { children: React.ReactNode, params: { agcid: string, formid:string } }) {
     
     const user=(await getServerSession(authOptions))!.user!;
     
@@ -29,7 +29,7 @@ export default async function FormIndex({children, params}: { children: React.Re
     )();
 
     return <Box display={'flex'} height='100%'>
-        <Paper sx={{width:'326px', alignSelf:'stretch',px:4,pt:4}} elevation={24}>
+        <Paper sx={{width:'326px', alignSelf:'stretch',px:4,pt:4,ml:-1,pl:5}} elevation={24}>
             <Link href={`/ed/${params.agcid}/forms`} passHref>
                 <Stack direction={'row'} spacing={'10px'}>
                     <ArrowBackIos/>
@@ -39,9 +39,11 @@ export default async function FormIndex({children, params}: { children: React.Re
             <Box height={32}/>
             <Typography sx={font3}>Form</Typography>
             <Box height={60}/>
-            <EDFormTitles formid={params.formid ?? '0'} edid={user.id}
+            <EDFormTitles formid={params.formid} edid={user.id}
             pathPrefix={`/ed/${params.agcid}/forms/detail`}/>
         </Paper>
-        {children}
+        <Box ml={3} mr={10} pt={'35px'} flex={1} display={'flex'} sx={{position:'relative'}} >
+            {children}
+        </Box>
     </Box>
 }

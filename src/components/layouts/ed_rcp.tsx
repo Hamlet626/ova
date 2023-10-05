@@ -14,6 +14,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }>(({ theme, open }) => {
     const shift=open?drawerWidth:drawerMinWidth;
     return ({
+      display:'flex', flexDirection:'column',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,

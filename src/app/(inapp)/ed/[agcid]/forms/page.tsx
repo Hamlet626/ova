@@ -50,7 +50,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
             <QuestionAnswerOutlined/>
             <Typography variant="subtitle2">Remained Question Groups</Typography>
             <Box flexGrow={1}></Box>
-            <Link href={`/ed/${params.agcid}/forms/detail`} passHref>
+            <Link href={`/ed/${params.agcid}/forms/detail/0`} passHref>
             <Button variant="contained" startIcon={<ArrowForward/>} 
             // onClick={()=>redirect(`/ed/${params.agcid}/forms/xxx`)}
             >
@@ -65,7 +65,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
         </>}
         <Box height={32}/>
         <Stack spacing={16}>
-            {formsStatus.map(v=>(
+            {formsStatus.map((v,i)=>(
                 <Card key={v.title} variant="outlined">
                     <CardActionArea>
                         <CardContent>
@@ -84,9 +84,9 @@ export default async function Forms({params}:{params: { agcid: string }}) {
                     <Divider/>
                     <CardContent>
                         <Box display={'flex'} flexDirection={'row'} height={60}>
-                            <SubfieldsBlock section={v.subs.remained}/>
+                            <SubfieldsBlock section={v.subs.remained} agcid={params.agcid} formIndex={i}/>
                             <Divider orientation="vertical" sx={{mx:'27px'}}/>
-                            <SubfieldsBlock section={v.subs.finished} finished/>
+                            <SubfieldsBlock section={v.subs.finished} agcid={params.agcid} formIndex={i} finished/>
                         </Box>
                     </CardContent>
                 </Card>
@@ -99,12 +99,15 @@ const getFinishStatus=(template,data)=>{
     return [{title:'basic_info',stats:{time:'4 min',finished:15,all:24},subs:{finished:[],remained:['sub1','sub2','sub3','sub4','sub5','sub6','sub7','sub8','sub9','sub0']}}];
 }
 
-const SubfieldsBlock=({section,finished,sx}:{section:any[],finished?:boolean,sx?:any})=>{
+const SubfieldsBlock=({section,finished,agcid,formIndex,sx}:{section:any[],finished?:boolean,agcid:string,formIndex:Number, sx?:any})=>{
     return(<Box display={'flex'} flexDirection={'column'} flex={1} {...sx}>
         <Typography sx={font6}>{finished?'Finished Question Group':'Remained Question Group'}</Typography>
         <Box height={8}/>
         <Stack spacing='8px' direction={'row'}>
-            {...section.map(v=>(<Chip key={v} label={v} color={finished?'secondary':'primary'}/>))}
+            {...section.map(v=>(
+                <Link href={`/ed/${agcid}/forms/detail/${formIndex}?section=${encodeURIComponent("Text sec's& xx")}`}>
+            <Chip key={v} label={v} color={finished?'secondary':'primary'} clickable />
+            </Link>))}
         </Stack>
     </Box>);
 }

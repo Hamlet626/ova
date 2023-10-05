@@ -17,6 +17,7 @@ export const font1={
 };
 
 
+
 export const font3={
     fontFamily: roboto.style.fontFamily,
     fontSize: '28px',
@@ -53,5 +54,6 @@ export const font7={
 
 export const outline_variant='#D8C2BB';
 export const neutral96='#FEF1ED';
-
 export const OVA_very_soft_grey='#EEF0F4';
+export const primary90="#FFDBCE";
+// if you want to def M3_Primary70="#F98F64" please use primary.main
