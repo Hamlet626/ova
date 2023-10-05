@@ -17,7 +17,7 @@ export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick:(
     return(
             <List >
                 {titles.map(({title,selected,icon,check,dot,href}, index) => {
-                    const button=<ListItemButton key={'b'+index} sx={{
+                    const button=<ListItemButton  sx={{
                         borderRadius: '100px',
                         backgroundColor: selected ? primary90: undefined,
                     }} onClick={href==null?(ev)=>onClick({title,selected,icon,check,dot}, index):undefined}>
@@ -27,12 +27,11 @@ export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick:(
                         <ListItemText primary={<Typography variant={selected?'subtitle3':'body2'}>{title}</Typography>} sx={{
                             ml:'-20px',
                         }}/>
-                    </ListItemButton>;
-                    
-                    return <>
+                    </ListItemButton>;                    
+                    return <div key={index}>
                     {href==null?button:<Link href={href} passHref>{button}</Link>}
-                    {index<titles.length-1 && <Divider key={'d'+index} sx={{my:'8px'}}/>}
-                </>
+                    {index<titles.length-1 && <Divider  sx={{my:'8px'}}/>}
+                </div>
 })}
             </List>
     );

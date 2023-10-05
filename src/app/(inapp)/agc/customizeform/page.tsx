@@ -233,13 +233,6 @@ export default function customize_Form() {
                                                     {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                                                 </IconButton>}
                                             </TableCell>
-                                            {/* {
-                                                field_element_list.map((field_name, field_index) => (
-                                                    <TableCell key={field_index}>
-                                                        {JSON.stringify(row[field_name])}
-                                                    </TableCell>
-                                                ))
-                                            } */}
                                             <TableCell sx={{ width: '100px', border: 1 }}>
                                                 <Typography>{JSON.stringify(row['label'])}</Typography>
                                             </TableCell>
@@ -375,40 +368,6 @@ export default function customize_Form() {
                 }}>
                     Create Form
                 </Typography>
-                {/* <List sx={{
-                    mt: "16px",
-                    ml: "80px",
-                    width: '197px',
-                    height: 'auto',
-                    gap: '12px',
-                }}>
-                    {customizedformlist.map((template, index) => (
-                        < div key={index} >
-                            <ListItem disablePadding
-                                //   reset sectionno to 0 when change template, otherwise the sectionno will be the same as the previous template
-                                onClick={(ev: React.SyntheticEvent) => { handleTemplateChange(ev, index); handleTabChange(ev, 0); setSectionNo(0); }}>
-                                <ListItemButton sx={{
-                                    borderRadius: '100px',
-                                    backgroundColor: index === templateid ? primary90 : "white",
-                                    width: '93px',
-                                }}>
-                                    <ListItemIcon sx={{
-                                        width: '20px',
-                                        height: '20px',
-                                    }}>
-                                        <Circle sx={{ color: primary90 }} />
-                                    </ListItemIcon>
-                                    <ListItemText primary={template.name} sx={{
-                                        ml: '-20px',
-                                        color: 'black',
-                                    }} />
-                                </ListItemButton>
-                            </ListItem>
-                            <Divider />
-                        </div>
-                    ))}
-
-                </List> */}
 
                 <Box sx={{
                     mt: "16px",
