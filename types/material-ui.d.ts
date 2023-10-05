@@ -21,12 +21,5 @@ declare module '@mui/material/styles' {
         label2: true;
     }
   }
-  
-  declare module '@mui/material' {
-    interface TypographyPropsVariantOverrides {
-        subtitle3: true;
-        label1: true;
-        label2: true;
-    }
-}
+
   

@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react";
 import FormTitlesUI from "../../../../../../../components/form_titles_ui";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 
 export default function EDFormTitles({pathPrefix,formid}:{pathPrefix:string,formid:string}) {
     const primary90='#FFDBCE';
@@ -21,6 +22,9 @@ export default function EDFormTitles({pathPrefix,formid}:{pathPrefix:string,form
             onClick={(t,i)=>{
                 if(selectedInd===i)return;
                         // await onClick(titles[index],index); 
+                        const formData=localStorage.getItem(`${selectedInd}`);
+                        if(formData)
+                        setDoc(doc(getFirestore(),`${pathPrefix}/${i}`),JSON.parse(formData),{merge:true});
                         setSelectedInd(i);
             }}/>
     );
