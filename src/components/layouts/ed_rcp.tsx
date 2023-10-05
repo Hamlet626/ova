@@ -19,9 +19,12 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    display:'flex',flexDirection:'column',
     width:'100%',
-    marginLeft: -shift,
-    paddingLeft: shift,
+    height:'100vh',
+    // overflowY:'auto',
+    // marginLeft: -shift,
+    // paddingLeft: shift,
     ///todo:remove animation or make it better
     ...(open && {
       transition: theme.transitions.create('margin', {

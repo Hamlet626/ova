@@ -12,6 +12,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
+import { app } from "@/utils/firebase/firebase_client";
 
 export default async function Forms({params}:{params: { agcid: string }}) {
     // const {user}=useSession({required:true}).data!;
@@ -21,7 +22,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     
     const formTemplate=await unstable_cache(
         async()=>{
-            const r = await getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`));
+            const r = await getDocs(collection(getFirestore(app),`user groups/agc/users/${params.agcid}/forms`));
             return r.docs.map(v=>({...v.data(),id:v.id}));
         },
         [params.agcid],
@@ -29,7 +30,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     )();
     const formData=await unstable_cache(
         async()=>{
-            const r = await getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`));
+            const r = await getDocs(collection(getFirestore(app),`user groups/${roles[myRole].id}/users/${user.id}/form data`));
             return r.docs.map(v=>({...v.data(),id:v.id}));
         },
         [user.id],

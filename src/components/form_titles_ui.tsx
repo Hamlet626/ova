@@ -1,5 +1,5 @@
 import { CheckCircleOutline, Circle } from "@mui/icons-material";
-import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, alpha } from "@mui/material";
 // import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -17,9 +17,15 @@ export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick:(
     return(
             <List >
                 {titles.map(({title,selected,icon,check,dot,href}, index) => {
-                    const button=<ListItemButton key={'b'+index} sx={{
+                    const button=<ListItemButton key={'b'+index} selected={selected} sx={{
                         borderRadius: '100px',
-                        backgroundColor: selected ? primary90: undefined,
+                        // backgroundColor: selected ? primary90: undefined,
+                        '&.Mui-selected': {
+                            backgroundColor: primary90,
+                            '&:hover, &.Mui-focusVisible': {
+                              backgroundColor:alpha(primary90,0.86),
+                            }
+                          },
                     }} onClick={href==null?(ev)=>onClick({title,selected,icon,check,dot}, index):undefined}>
                         <ListItemIcon>
                             {icon??(check?<CheckCircleOutline color="primary"/>:dot?<Circle sx={{color:primary90}}/>:null)}
