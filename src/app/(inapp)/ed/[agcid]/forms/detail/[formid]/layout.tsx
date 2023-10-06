@@ -42,7 +42,7 @@ export default async function FormIndex({children, params}: { children: React.Re
             <EDFormTitles formid={params.formid} edid={user.id}
             pathPrefix={`/ed/${params.agcid}/forms/detail`}/>
         </Paper>
-        <Box ml={3} mr={10} pt={'35px'} flex={1} display={'flex'} sx={{position:'relative'}} >
+        <Box ml={3} mr={10} pt={'35px'} flex={1} display={'flex'} flexDirection={'column'} sx={{position:'relative'}} >
             {children}
         </Box>
     </Box>

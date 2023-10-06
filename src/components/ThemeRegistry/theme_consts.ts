@@ -52,6 +52,14 @@ export const font7={
     letterSpacing: '0.15px',
 };
 
+export const font8={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '14px',
+    fontWeight: 400,
+    lineHeight: '24px',
+    letterSpacing: '0.15px',
+};
+
 export const outline_variant='#D8C2BB';
 export const neutral96='#FEF1ED';
 export const OVA_very_soft_grey='#EEF0F4';
