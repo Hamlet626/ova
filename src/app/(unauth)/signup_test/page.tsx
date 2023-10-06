@@ -17,6 +17,15 @@ import {font2} from "@/components/ThemeRegistry/theme_consts";
 //import grid
 import Grid from '@mui/material/Grid';
 
+//disable button
+  const nameError= (!!errors.firstName || !!errors.lastName)
+    const isButtonDisabled =
+    ( nameError || !!errors.companyName) ||
+    !!errors.email ||
+    !!errors.password ||
+    (errors.email && errors.email.message) ||
+    (errors.password && errors.password.message);
+
 export function Signup_profile1() {
 //state that when user select file
   const [selectedFile, setSelectedFile] = useState(null);

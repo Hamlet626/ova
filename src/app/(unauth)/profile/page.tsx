@@ -26,6 +26,7 @@ import CardContent from "@mui/material/CardContent";
 import { getClinic } from "@/utils/clinic_check";
 import { useUrl } from 'nextjs-current-url';
 import { useSearchParams } from 'next/navigation'
+import { getSession, signIn } from "next-auth/react";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -44,6 +45,7 @@ export function Signup_profile1() {
     const clinic = getClinic(hostName);
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
+
 
     const [selectedFile,setSelectedFile]=useState(null);
 
@@ -90,7 +92,6 @@ export function Signup_profile1() {
       <CardMedia
         component="img"
         src={URL.createObjectURL(selectedFile)}
-         alt="Preview"
         sx={{
           width: '160px',
           height: '160px',
@@ -105,11 +106,11 @@ export function Signup_profile1() {
       </Typography>
       {selectedFile && (
         <div style={{ marginTop: '16px' }}>
-          <Typography variant='body1' sx={{ textDecoration: 'underline', color: 'grey', marginTop:'16px' }}>
+          <Typography variant='body1' sx={{ textDecoration: 'underline', color: 'ref', marginTop:'16px' }}>
             {selectedFile.name}
           </Typography>
 
-          <Typography variant='body1' sx={{ textDecoration: 'underline', color: 'grey', marginTop:'4px' }}>
+          <Typography variant='body1' sx={{ textDecoration: 'underline', color: 'ref', marginTop:'4px' }}>
             {formatFileSize(selectedFile.size)}
           </Typography>
         </div>
@@ -168,7 +169,6 @@ export default function SignUp() {
   return (
     <Box
       sx={{
-        position: 'relative',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -176,10 +176,7 @@ export default function SignUp() {
       }}
     >
       <Bg2 />
-
       <Signup_profile1 />
     </Box>
-
-
   );
 }
