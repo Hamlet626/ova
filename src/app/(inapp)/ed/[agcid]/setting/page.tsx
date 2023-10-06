@@ -1,8 +1,8 @@
-import { Typography, Stack, Avatar, Grid, Box } from '@mui/material'
+import { Typography, Stack, Avatar, Grid, Box, Button } from '@mui/material'
 import { outline_variant, neutral96 } from '@/components/ThemeRegistry/theme_consts'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { BarChart, EditNote, Link, ListAlt, Notifications, Person, PersonAdd, ShoppingBag } from '@mui/icons-material'
+import { BarChart, Edit, EditNote, Link, ListAlt, Notifications, PersonAdd, ShoppingBag } from '@mui/icons-material'
 
 export default async function Setting() {
   const user = (await getServerSession(authOptions))!.user!;
@@ -26,13 +26,14 @@ export default async function Setting() {
               display: 'flex',
               borderRight: '1px',
               borderStyle: 'solid',
-              borderColor: outline_variant
+              borderColor: outline_variant,
+              paddingRight: 4
             }}>
             <Avatar
               sx={{
-                width: 138,
-                height: 138,
-                marginRight: 2,
+                width: 120,
+                height: 120,
+                marginRight: 3,
                 bgcolor: 'primary.main'
               }}
             >{user.image}</Avatar>
@@ -44,15 +45,15 @@ export default async function Setting() {
                 sx={{
                   fontFamily: 'roboto.style.fontFamily',
                   fontWeight: 500,
-                  fontSize: '24px',
+                  fontSize: '20px',
                   lineHeight: '32px'
                 }}
               >{user.name}</Typography>
               <Stack direction={'row'}>
                 <Avatar
                   sx={{
-                    width: 28,
-                    height: 28,
+                    width: 25,
+                    height: 25,
                     bgcolor: 'primary.main'
                   }}
                 >
@@ -71,8 +72,34 @@ export default async function Setting() {
               </Stack>
             </Stack>
           </Box>
-          <Box sx={{ display: 'flex' }}>
-
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              paddingLeft: 4
+            }}
+          >
+            <Stack direction={'column'}>
+              <Typography>
+                Price
+              </Typography>
+              <Stack direction={'row'}>
+                <Typography>
+                  $1,234
+                </Typography>
+                <Edit />
+              </Stack>
+            </Stack>
+            <Button
+              variant="contained"
+              sx={{
+                justifySelf: 'end',
+                color: 'white',
+                textTransform: 'capitalize'
+              }}
+            >
+              <Edit fontSize={'small'}/> Edit
+            </Button>
           </Box>
         </Box>
         <Grid container spacing={2} marginTop={5}>
