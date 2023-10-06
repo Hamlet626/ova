@@ -27,7 +27,7 @@ export default function FormContent({formid, template, data}:{ formid:string, te
 
             <Box flex={1} display={'flex'} flexDirection={'column'} overflow={'auto'}>
                 <Box height={42}/>
-                <Stack direction={'row'}>
+                <Stack direction={'row'} alignItems={'end'}>
                     <Typography variant="h5" color={'secondary'} minWidth={'360px'}>{template.content[sectionNum].title}</Typography>
                     <Box width={40}/>
                     <TimelineOutlined color="secondary"/>
