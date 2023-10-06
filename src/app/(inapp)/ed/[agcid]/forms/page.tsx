@@ -75,7 +75,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
                             <Box width={8}/>
                             <Typography sx={font5}>Time Estimate: {v.stats.time}</Typography>
                             <Box width={40}/>
-                            <LinearProgress variant="determinate" value={v.stats.finished/v.stats.all*100} sx={{width:'136px'}}/>
+                            <LinearProgress value={v.stats.finished/v.stats.all*100} sx={{width:'136px'}}/>
                             <Box width={12}/>
                             <Typography sx={font5}>{v.stats.finished}/{v.stats.all} questions</Typography>
                         </Box>

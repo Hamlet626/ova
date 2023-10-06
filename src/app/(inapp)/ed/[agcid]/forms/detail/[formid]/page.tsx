@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { unstable_cache } from "next/cache";
 import FormContent from "./form_content";
+import { basic_info } from "@/utils/form/template";
 
 export default async function Form({params}: {params: { agcid: string, formid:string } }) {
     // const {data,status}=useSession({required:true});
@@ -29,5 +30,5 @@ export default async function Form({params}: {params: { agcid: string, formid:st
         {tags:['form_data'],revalidate:60}
     )();
 
-    return <FormContent formid={params.formid} template={undefined} data={undefined}/>;
+    return <FormContent formid={params.formid} template={basic_info} data={{}}/>;
 }

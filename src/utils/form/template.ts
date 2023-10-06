@@ -29,16 +29,16 @@ import {
     personalities, skills, skillTypes
 } from "@/utils/form/consts";
 
-interface FormTemp{
+export interface FormTemp{
     name:string,
     content:FormSection[]
 }
-interface FormSection{
+export interface FormSection{
     title:string,
     fields:FormField[]
 }
 
-interface FormField{
+export interface FormField{
     id?:string,
     label:string,
     type:'text'|'multi-select'|'date'|'address'|"yes/no"|"checkbox"|"number"|'populate',
