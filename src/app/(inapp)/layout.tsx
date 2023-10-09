@@ -4,6 +4,8 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {LogoutButton} from "@/components/logout_button";
 import { RoleNum } from "@/utils/roles";
 import { AuthSessionProvider } from "@/components/auth_session_provider";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 export default async function InAppLayout({children}: { children: React.ReactNode }) {
     const session = await getServerSession(authOptions);
@@ -14,9 +16,11 @@ export default async function InAppLayout({children}: { children: React.ReactNod
 
     return (
         <AuthSessionProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
         <section>
             {children}
         </section>
+        </LocalizationProvider>
         </AuthSessionProvider>
     )
 }

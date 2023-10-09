@@ -5,6 +5,7 @@ import { ArrowBack, ArrowForward, TimelineOutlined } from "@mui/icons-material";
 import { Box, Button, LinearProgress, Stack, Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import FormFieldUI from "./form_field";
 
 export default function FormContent({formid, template, data}:{ formid:string, template:FormTemp, data:any } ){
     const sectionName = decodeURIComponent(useSearchParams().get("section")??"");
@@ -35,7 +36,7 @@ export default function FormContent({formid, template, data}:{ formid:string, te
                     <Typography sx={font8} color={'secondary'}>{'time xxx'}</Typography>
                 </Stack>
                 <Box height={32}/>
-
+                <FormFieldUI data={template.content[0].fields[0]}></FormFieldUI>
                 </Box>
 
         <Stack position={'absolute'} direction={'row'} bottom={'47px'} width={'100%'} justifyContent="space-between">
