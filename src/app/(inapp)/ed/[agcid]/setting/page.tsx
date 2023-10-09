@@ -1,5 +1,5 @@
 import { Typography, Stack, Avatar, Grid, Box, Button } from '@mui/material'
-import { outline_variant, neutral96 } from '@/components/ThemeRegistry/theme_consts'
+import { outline_variant, neutral96, font5, font3, font7 } from '@/components/ThemeRegistry/theme_consts'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { BarChart, Edit, EditNote, Link, ListAlt, Notifications, PersonAdd, ShoppingBag } from '@mui/icons-material'
@@ -17,9 +17,11 @@ export default async function Setting() {
     <>
       <main>
         <Box sx={{
-          margin: '50px 100px 50px 100px'
+          width: '130vh',
+          paddingTop: '50px',
+          margin: 'auto'
         }}>
-          <Typography variant="h6">Setting</Typography>
+          <Typography sx={font3}>Setting</Typography>
           <Box
             sx={{
               display: 'flex',
@@ -92,14 +94,13 @@ export default async function Setting() {
               }}
             >
               <Stack direction={'column'}>
-                <Typography>
+                <Typography sx={font5}>
                   Price
                 </Typography>
                 <Stack direction={'row'}>
-                  <Typography>
+                  <Typography sx={font3}>
                     $1,234
                   </Typography>
-                  <Edit />
                 </Stack>
               </Stack>
               <Button
@@ -109,7 +110,7 @@ export default async function Setting() {
                   textTransform: 'capitalize'
                 }}
               >
-                <Edit fontSize={'small'}/> Edit
+                <Edit fontSize={'small'} sx={{marginRight:'3px'}}/> Edit
               </Button>
             </Box>
           </Box>
@@ -123,10 +124,11 @@ export default async function Setting() {
                 <Avatar
                   src={file_icon.src}
                   sx={{
-                    width: '60px', height: '60px'
+                    width: '60px', height: '60px',
+                    marginRight: 1.5
                   }}
                 />
-                <Typography alignSelf={'center'}>Customize List</Typography>
+                <Typography sx={font7} alignSelf={'center'} >Customize List</Typography>
               </Box>
             </Grid>
             <Grid item xs={4}>
@@ -138,10 +140,11 @@ export default async function Setting() {
                 <Avatar
                   src={notebook_icon.src}
                   sx={{
-                    width: '60px', height: '60px'
+                    width: '60px', height: '60px',
+                    marginRight: 1.5
                   }}
                 />
-                <Typography alignSelf={'center'}>Edit Files</Typography>
+                <Typography sx={font7} alignSelf={'center'}>Edit Files</Typography>
               </Box>
             </Grid><Grid item xs={4}>
               <Box display={'flex'} p={1.5}
@@ -152,10 +155,11 @@ export default async function Setting() {
                 <Avatar
                   src={bell_icon.src}
                   sx={{
-                    width: '60px', height: '60px'
+                    width: '60px', height: '60px',
+                    marginRight: 1.5
                   }}
                 />
-                <Typography alignSelf={'center'}>Notification Setting</Typography>
+                <Typography sx={font7} alignSelf={'center'}>Notification Setting</Typography>
               </Box>
             </Grid><Grid item xs={4}>
               <Box display={'flex'} p={1.5}
@@ -166,10 +170,11 @@ export default async function Setting() {
                 <Avatar
                   src={chart_icon.src}
                   sx={{
-                    width: '60px', height: '60px'
+                    width: '60px', height: '60px',
+                    marginRight: 1.5
                   }}
                 />
-                <Typography alignSelf={'center'}>Feature</Typography>
+                <Typography sx={font7} alignSelf={'center'}>Feature</Typography>
               </Box>
             </Grid><Grid item xs={4}>
               <Box display={'flex'} p={1.5}
@@ -180,10 +185,11 @@ export default async function Setting() {
                 <Avatar
                   src={boy_icon.src}
                   sx={{
-                    width: '60px', height: '60px'
+                    width: '60px', height: '60px',
+                    marginRight: 1.5
                   }}
                 />
-                <Typography alignSelf={'center'}>Feature</Typography>
+                <Typography sx={font7} alignSelf={'center'}>Feature</Typography>
               </Box>
             </Grid><Grid item xs={4}>
               <Box display={'flex'} p={1.5}
@@ -194,10 +200,11 @@ export default async function Setting() {
                 <Avatar
                   src={bag_icon.src}
                   sx={{
-                    width: '60px', height: '60px'
+                    width: '60px', height: '60px',
+                    marginRight: 1.5
                   }}
                 />
-                <Typography alignSelf={'center'}>Feature</Typography>
+                <Typography sx={font7} alignSelf={'center'}>Feature</Typography>
               </Box>
             </Grid>
           </Grid>
