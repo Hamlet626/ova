@@ -290,7 +290,7 @@ export default function SignUp() {
                overflowY: 'auto',
               }}>
 
-             <Box sx={{ maxHeight: '100vh',  }} >
+             <Box sx={{ maxHeight: '100%',  }} >
             < SignUp1/>
              </Box>
 
