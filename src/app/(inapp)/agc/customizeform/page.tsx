@@ -23,7 +23,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm, Controller,SubmitHandler } from "react-hook-form";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { Checkbox } from '@mui/material';
@@ -196,7 +196,8 @@ export default function customize_Form() {
         //console.log(customizedformlist[templateid].content[tabId]);
     }
 
-    const { control, handleSubmit, reset } = useForm();
+    //const { control, handleSubmit, reset } = useForm();
+    const { handleSubmit, reset, register } = useForm();
 
     const onSubmit = (data) => {
         console.log(data);
@@ -445,11 +446,12 @@ export default function customize_Form() {
                                                                         <TableRow key={index} hover >
                                                                             <Controller
                                                                                 name={field_name[0]}
-                                                                                control={control}
+                                                                                register={register}
+                                                                                // control={control}
                                                                                 defaultValue={String(field_name[1])}
                                                                                 render={({ field }) => (
                                                                                     <>
-                                                                                        {(field_name[0] === "id") &&
+                                                                                    {(field_name[0] === "id"||field_name[0] === "label") &&
                                                                                             <>
                                                                                                 <TableCell>
                                                                                                     {field_name[0]}
@@ -457,18 +459,7 @@ export default function customize_Form() {
                                                                                                 <TableCell>
                                                                                                     <TextField
                                                                                                         {...field}
-                                                                                                    />
-                                                                                                </TableCell>
-                                                                                            </>
-                                                                                        }
-                                                                                        {(field_name[0] === "label") &&
-                                                                                            <>
-                                                                                                <TableCell>
-                                                                                                    {field_name[0]}
-                                                                                                </TableCell>
-                                                                                                <TableCell>
-                                                                                                    <TextField
-                                                                                                        {...field}
+                                                                                                        {...register}
                                                                                                     />
                                                                                                 </TableCell>
                                                                                             </>

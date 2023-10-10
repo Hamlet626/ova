@@ -33,6 +33,8 @@ import FormTitlesUI from '@/components/form_titles_ui';
 import ListIcon from '@mui/icons-material/List';
 import { cookies } from 'next/headers';
 import { on } from 'events';
+import { TreeView } from '@mui/x-tree-view/TreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 // const field_element_list = ["id", "label", "type", "length", "required", "options", "sub"]
 const field_element_list = ["id", "label", "type", "length", "required",]
@@ -272,11 +274,11 @@ function showTable_backup(dataset: table_definition[], depth: number = 1) {
     //console.log("displayTable dataset", dataset);
 }
 
-function ShowTable({ dataset, depth, onEditField, onDeleteField }: { dataset: table_definition[], depth: number, onEditFieldCallback: (index: number) => void}) {
+function ShowTable({ dataset, depth, onEditField, onDeleteField }: { dataset: table_definition[], depth: number, onEditFieldCallback: (index: number) => void }) {
     const [openSubStatus, setOpenSubStatus] = React.useState(false);
     const [openEditFieldStatus, setOpenEditFieldStatus] = React.useState(false);
     const [editField, setEditField] = React.useState({});
-    
+
 
     function showRow(row: table_definition, index: number, depth: number) {
         return (
@@ -320,14 +322,14 @@ function ShowTable({ dataset, depth, onEditField, onDeleteField }: { dataset: ta
                             </Box>
                             <Box sx={{ width: '200px' }}>
                                 <Button variant="solid" startIcon={<EditIcon color='primary' />}
-                                    // onClick={(ev: React.SyntheticEvent) => {
-                                    //     console.log("The index of the editing field index is ", { index });
-                                    //     console.log("The field is ", JSON.stringify(row));
-                                    //     setOpenEditFieldStatus(true);
-                                    //     console.log("The openEditFieldStatus is ", { openEditFieldStatus });
-                                    //     setEditField(row);
-                                    // }}
-                                    //onClick={editFieldfunc(index)}
+                                // onClick={(ev: React.SyntheticEvent) => {
+                                //     console.log("The index of the editing field index is ", { index });
+                                //     console.log("The field is ", JSON.stringify(row));
+                                //     setOpenEditFieldStatus(true);
+                                //     console.log("The openEditFieldStatus is ", { openEditFieldStatus });
+                                //     setEditField(row);
+                                // }}
+                                //onClick={editFieldfunc(index)}
                                 >
                                 </Button>
                                 <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
@@ -352,6 +354,136 @@ function ShowTable({ dataset, depth, onEditField, onDeleteField }: { dataset: ta
                     showRow(row, index, depth,)
                 ))}
             </List>
+            {/* <EditFieldDialogBox field_definition={editField} open_status={openEditFieldStatus} /> */}
+        </>
+    )
+}
+
+function ShowTree({ dataset, depth, onEditField, onDeleteField }: { dataset: table_definition[], depth: number, onEditFieldCallback: (index: number) => void }) {
+    const [openSubStatus, setOpenSubStatus] = React.useState(false);
+    const [openEditFieldStatus, setOpenEditFieldStatus] = React.useState(false);
+    const [editField, setEditField] = React.useState({});
+    function showRow(row: table_definition, index: number, depth: number) {
+        return (
+            <TreeItem nodeId={(depth + 1) * 100 + index} key={index} disablePadding sx={{ width: '600px' }} label={
+            <List>
+                <ListItem disablePadding sx={{ width: '600px' }}>
+                        <Box sx={{ display: 'flex' }}>
+                            <Box sx={{ width: `calc(${depth}*20px + 20px)` }}>
+                                <Typography>
+                                    {depth}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ width: '40px' }}>
+                                {row.sub ? <IconButton
+                                    aria-label="expand row"
+                                    size="small"
+                                    onClick={() => { setOpenSubStatus(true), setEditField(row) }}
+                                >
+                                    {openSubStatus ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                </IconButton>
+                                    :
+                                    <IconButton
+                                        aria-label="expand row"
+                                        size="small"
+                                    >
+                                        <ListIcon />
+                                    </IconButton>}
+                            </Box>
+                            <Box sx={{ width: '250px' }}>
+                                <Typography>
+                                    {row['label']}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ width: '120px' }}>
+                                <Typography>
+                                    {row['type']}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ width: '40px' }}>
+                                {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                            </Box>
+                            <Box sx={{ width: '200px' }}>
+                                <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                >
+                                </Button>
+                                <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                            </Box>
+                        </Box>
+                    </ListItem>
+                {row.sub && <ListItem disablePadding sx={{ width: '600px' }}>
+                        <Collapse in={openSubStatus} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
+                            {<ShowTree dataset={row.sub} depth={depth + 1} />}
+                        </Collapse>
+                    </ListItem>
+                    }                
+                </List>}>
+                {console.log("The depth is ", (depth + 1) * 100 + index)}
+                {/* <List>
+                <ListItem disablePadding sx={{ width: '600px' }}>
+                        <Box sx={{ display: 'flex' }}>
+                            <Box sx={{ width: `calc(${depth}*20px + 20px)` }}>
+                                <Typography>
+                                    {depth}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ width: '40px' }}>
+                                {row.sub ? <IconButton
+                                    aria-label="expand row"
+                                    size="small"
+                                    onClick={() => { setOpenSubStatus(true), setEditField(row) }}
+                                >
+                                    {openSubStatus ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                </IconButton>
+                                    :
+                                    <IconButton
+                                        aria-label="expand row"
+                                        size="small"
+                                    >
+                                        <ListIcon />
+                                    </IconButton>}
+                            </Box>
+                            <Box sx={{ width: '250px' }}>
+                                <Typography>
+                                    {row['label']}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ width: '120px' }}>
+                                <Typography>
+                                    {row['type']}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ width: '40px' }}>
+                                {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                            </Box>
+                            <Box sx={{ width: '200px' }}>
+                                <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                >
+                                </Button>
+                                <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                            </Box>
+                        </Box>
+                    </ListItem>
+                {row.sub && <ListItem disablePadding sx={{ width: '600px' }}>
+                        <Collapse in={openSubStatus} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
+                            {<ShowTree dataset={row.sub} depth={depth + 1} />}
+                        </Collapse>
+                    </ListItem>
+                    }                
+                </List> */}
+            
+            </TreeItem>
+        )
+    }
+
+    return (
+        <>
+            <TreeView>
+                {console.log("Display TreeView")}
+                {dataset.map((row, index) => (
+                    showRow(row, index, depth,)
+                ))}
+            </TreeView>
             {/* <EditFieldDialogBox field_definition={editField} open_status={openEditFieldStatus} /> */}
         </>
     )
@@ -803,7 +935,7 @@ export default function customize_Form() {
                                         onClick={(ev: React.SyntheticEvent) => { addTableField(ev, 0, initialField); }}>Add a field
                                     </Button>
                                     <br />
-                                    <ShowTable dataset={customizedformlist[templateid].content[tabId].fields} depth={0} onEditFieldCallback={console.log()}/>
+                                    <ShowTree dataset={customizedformlist[templateid].content[tabId].fields} depth={0} onEditFieldCallback={console.log()} />
                                     <EditFieldDialogBox field_definition={customizedformlist[templateid].content[tabId].fields[index_no_field]} open_status={true} />
                                     {/* <Dialog open={editFieldState} onClose={closeEditField} PaperProps={{ sx: { borderRadius: '1px' } }}>
                                         <DialogTitle>Edit the field</DialogTitle>
