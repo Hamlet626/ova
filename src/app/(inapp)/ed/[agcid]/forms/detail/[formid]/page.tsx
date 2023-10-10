@@ -10,7 +10,7 @@ import { unstable_cache } from "next/cache";
 import FormContent from "./form_content";
 import { basic_info } from "@/utils/form/template";
 
-export default async function Form({params}: {params: { agcid: string, formid:string } }) {
+export default async function FormDetail({params}: {params: { agcid: string, formid:string } }) {
     // const {data,status}=useSession({required:true});
     // if(status==='loading')return <Box/>
     const user=(await getServerSession(authOptions))!.user!;

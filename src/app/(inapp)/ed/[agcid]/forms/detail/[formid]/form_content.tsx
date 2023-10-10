@@ -6,6 +6,7 @@ import { Box, Button, LinearProgress, Stack, Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import FormFieldUI from "./form_field";
+import { Form, useForm } from "react-hook-form";
 
 export default function FormContent({formid, template, data}:{ formid:string, template:FormTemp, data:any } ){
     const sectionName = decodeURIComponent(useSearchParams().get("section")??"");
@@ -14,6 +15,15 @@ export default function FormContent({formid, template, data}:{ formid:string, te
     const [sectionNum,setSectionNum]=useState(initialSec);
     const [fieldNum,setFieldNum]=useState(initialField);
     const [progression,setProg]=useState(0);
+
+    const {handleSubmit, register, formState:{errors} }=useForm({defaultValues:{"password":10}});
+
+    const onSubmit = async (data) => {
+    console.log(data);
+    const preData=JSON.parse(localStorage.getItem(`form${formid}`)??'');
+    localStorage.setItem(`form${formid}`,JSON.stringify({...preData,data}));
+    
+    }
 
     return <>
         {/* <Button sx={{position:'absolute'}} onClick={()=>{
@@ -36,12 +46,16 @@ export default function FormContent({formid, template, data}:{ formid:string, te
                     <Typography sx={font8} color={'secondary'}>{'time xxx'}</Typography>
                 </Stack>
                 <Box height={32}/>
-                <FormFieldUI data={template.content[0].fields[0]}></FormFieldUI>
+                <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'center'} pb={20} px={6}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                <FormFieldUI data={template.content[sectionNum].fields[fieldNum]} register={register}/>
+                </form>
+                </Box>
                 </Box>
 
         <Stack position={'absolute'} direction={'row'} bottom={'47px'} width={'100%'} justifyContent="space-between">
             <Button color={'secondary'} variant="outlined" startIcon={<ArrowBack/>}>Previous</Button>
-            <Button variant="contained" startIcon={<ArrowForward/>}>Continue</Button>
+            <Button variant="contained" startIcon={<ArrowForward/>} onClick={handleSubmit(onSubmit)}>Continue</Button>
         </Stack>
     </>
 }
