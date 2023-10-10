@@ -25,8 +25,13 @@ import CardContent from "@mui/material/CardContent";
 
 import { getClinic } from "@/utils/clinic_check";
 import { useUrl } from 'nextjs-current-url';
-import { useSearchParams } from 'next/navigation'
-import { getSession, signIn } from "next-auth/react";
+import { useSearchParams } from 'next/navigation';
+import {useSession} from "next-auth/react";
+import { getServerSession } from "next-auth";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+
+import { unstable_cache } from "next/cache";
+
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -40,11 +45,10 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 
-export function Signup_profile1() {
-    const hostName=useUrl()?.host;
-    const clinic = getClinic(hostName);
-    const searchParams = useSearchParams();
-    const role = searchParams.get('role');
+export function Signup_profile() {
+  const { data: session } = useSession();
+    const role = session?.user?.role;
+    const clinic = session?.user?.agencies?.[0];
 
 
     const [selectedFile,setSelectedFile]=useState(null);
@@ -126,6 +130,7 @@ export function Signup_profile1() {
       />
     )}
 </Card>
+
     </Box>
 
             <box
@@ -155,7 +160,7 @@ export function Signup_profile1() {
         }
 
 
-export default function SignUp() {
+export default function SignUp2() {
   return (
   <Bg2>
                <Box sx={{
@@ -167,7 +172,7 @@ export default function SignUp() {
                 }}>
 
                <Box sx={{ maxHeight: '100vh',  }} >
-              < Signup_profile1/>
+              < Signup_profile/>
                </Box>
 
               </Box>

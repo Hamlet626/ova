@@ -134,7 +134,6 @@ export function SignUp1(){
    const isValid = await trigger();
 
    if (isValid) {
-    router.push('/profile');
      const emailValue = getValues('email');
      const passwordValue = getValues('password');
 
@@ -163,6 +162,9 @@ export function SignUp1(){
        });
 
        console.log(rr);
+
+      router.push('/profile');
+      console.log('d');
 
 
 
