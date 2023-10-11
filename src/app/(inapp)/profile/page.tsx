@@ -100,7 +100,7 @@ export function Signup_profile() {
 
         <Stack direction="column" justifyContent="center" alignItems="flex-start" spacing={2}>
           <Typography variant="h6" sx={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
-            {clinic !== null ? 'Upload Logo' : role === 'ed' ? "Upload Egg Donor's Photo" : "Upload Recipient's Photo"}
+            {clinic === null ? 'Upload Logo' : role === 'ed' ? "Upload Egg Donor's Photo" : "Upload Recipient's Photo"}
           </Typography>
           {selectedFile && (
             <Stack spacing={1}>
@@ -124,7 +124,7 @@ export function Signup_profile() {
     </Stack>
 
 
-{clinic !== null && (
+{clinic === null && (
       <Input name="url" fullWidth placeholder="Desired URL" variant="outlined"  type="text" sx={{ width: '100%', marginTop: '24px' }}
       startAdornment={ <InputAdornment position="start"> <LinkOutlinedIcon /></InputAdornment> }
       />
@@ -133,7 +133,7 @@ export function Signup_profile() {
 
     </Box>
 
-            <box
+            <Box
                     style={{
                       position: 'absolute',
                       bottom: '0',
@@ -153,7 +153,7 @@ export function Signup_profile() {
                     >
                       Next
                     </Button>
-                  </box>
+                  </Box>
                 </>
 
           );
@@ -171,9 +171,7 @@ export default function SignUp2() {
                  overflowY: 'auto',
                 }}>
 
-               <Box sx={{ maxHeight: '100vh',  }} >
               < Signup_profile/>
-               </Box>
 
               </Box>
               </Bg2>

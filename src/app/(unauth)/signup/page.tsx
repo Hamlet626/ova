@@ -33,85 +33,69 @@ const flexContainerStyle = {
 };
 
 
-function Name_Clinic({control, errors, trigger}){
+function Name_Clinic({ register, errors, trigger}){
   return (
-  <Box >
-      <Controller
-             name="companyName"
-             control={control}
-             rules={{
-               required: "companyName is required",
-             }}
-             render={({ field }) => (
-               <Box>
-                 <Input
-                   {...field}
-                   fullWidth
-                   startAdornment={
-                  <InputAdornment position="start">
-                   <BusinessOutlinedIcon />
-                    </InputAdornment>
-                 }
-                   placeholder="Company Name"
-                   type="text"
-                   onBlur={()=> trigger('companyName')}
-                 />
-                {errors.companyName && <FormHelperText error>{errors.companyName.message}</FormHelperText>}
-                </Box>
-        )}
-            />
-  </Box>
+  <Box>
+          <Input
+            {...register("companyName", {
+              required: "companyName is required",
+            })}
+            fullWidth
+           startAdornment={
+          <InputAdornment position="start">
+            <BusinessOutlinedIcon />
+           </InputAdornment>
+           }
+            placeholder="companyName"
+            type="text"
+            onBlur={() => trigger("companyName")}
+          />
+          {errors.companyName && (
+            <FormHelperText error>{errors.companyName.message}</FormHelperText>
+          )}
+        </Box>
+
+
   );
 }
 
-export function Name_NotClinic({ control, errors, trigger }) {
+export function Name_NotClinic({ register, control, errors, trigger }) {
   return (
-     <Box sx={flexContainerStyle}>
-      <Controller
-        name="firstName"
-        control={control}
-        rules={{
-          required: "First name is required",
-        }}
-        render={({ field }) => (
-          <Box>
-            <Input
-              {...field}
-              fullWidth
-              placeholder="First Name"
-              type="text"
-              onBlur={()=> trigger('firstName')}
-            />
-            {errors.firstName && <FormHelperText error>{errors.firstName.message}</FormHelperText>}
-          </Box>
+    <Box sx={flexContainerStyle}>
+      <Box>
+        <Input
+          {...register("firstName", {
+            required: "First name is required",
+          })}
+          fullWidth
+          placeholder="First Name"
+          type="text"
+          onBlur={() => trigger("firstName")}
+        />
+        {errors.firstName && (
+          <FormHelperText error>{errors.firstName.message}</FormHelperText>
         )}
-      />
+      </Box>
 
       <Box width={23} />
 
-      <Controller
-        name="lastName"
-        control={control}
-        rules={{
-          required: "Last name is required",
-        }}
-        render={({ field }) => (
-          <Box>
-            <Input
-              {...field}
-              fullWidth
-              placeholder="Last Name"
-              type="text"
-              onBlur={()=> trigger('lastName')}
-            />
-            {errors.lastName && <FormHelperText error>{errors.lastName.message}</FormHelperText>}
-          </Box>
+      <Box>
+        <Input
+          {...register("lastName", {
+            required: "Last name is required",
+          })}
+          fullWidth
+          placeholder="Last Name"
+          type="text"
+          onBlur={() => trigger("lastName")}
+        />
+        {errors.lastName && (
+          <FormHelperText error>{errors.lastName.message}</FormHelperText>
         )}
-      />
+      </Box>
     </Box>
   );
 }
-
 
 export function SignUp1(){
     const hostName=useUrl()?.host;
@@ -126,7 +110,7 @@ export function SignUp1(){
     };
     const [showPw, setShowPw] = useState(false);
     const clickPwIcon = () => { setShowPw((show) => !show); };
-    const {  control, formState: { errors }, trigger,getValues  } = useForm();
+    const {  register, control, formState: { errors }, trigger,getValues  } = useForm();
     const [formSubmitted, setFormSubmitted] = useState(false);
 
  const handleNextButtonClick = async () => {
@@ -164,7 +148,6 @@ export function SignUp1(){
        console.log(rr);
 
       router.push('/profile');
-      console.log('d');
 
 
 
@@ -186,45 +169,38 @@ export function SignUp1(){
          <Box height={50} />
 
     <form >
-        {clinic !== null ? <Name_Clinic control={control} errors={errors} trigger={trigger} />
-          : <Name_NotClinic control={control} errors={errors} trigger={trigger}  />}
+        {clinic !== null ? <Name_Clinic register={register} errors={errors} trigger={trigger} />
+          : <Name_NotClinic register={register} errors={errors} trigger={trigger}  />}
          <Box height={41} />
-
-            <Controller
-             name="email"
-             control={control}
-             rules={{
-               required: "Email is required",
+           <Input
+             {...register('email', {
+               required: 'Email is required',
                pattern: {
-                value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
-                message: "Invalid email address",
+                 value: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)*(\.[a-zA-Z]{2,})$/,
+                 message: 'Invalid email address',
                },
-             }}
-             render={({ field }) => (
-               <Box>
-                 <Input
-                   {...field}
-                   fullWidth
-                   startAdornment={
-                     <InputAdornment position="start">
-                       <Mail />
-                     </InputAdornment>
-                   }
-                   placeholder="Email"
-                   type="email"
-                   onBlur={()=> trigger('email')}
-                 />
-        {errors.email && ( <FormHelperText error>{errors.email.message}</FormHelperText> )}
-           </Box>
-             )}
+             })}
+             fullWidth
+             startAdornment={
+               <InputAdornment position="start">
+                 <Mail />
+               </InputAdornment>
+             }
+             placeholder="Email"
+             type="email"
+             onBlur={() => trigger("email")}
+
            />
+           {errors.email && (
+             <FormHelperText error>{errors.email.message}</FormHelperText>
+           )}
+
 
              <Box height={16}/>
 
-          <Controller
-            name="password"
-            control={control}
-            rules={{
+             <Box>
+          <Input
+            {...register("password", {
               required: "Password is required",
               minLength: {
                 value: 6,
@@ -233,31 +209,27 @@ export function SignUp1(){
               validate: (value) =>
                 validatePassword(value) ||
                 "Password must contain one lowercase letter and one uppercase letter",
-            }}
-            render={({ field }) => (
-              <Box>
-                <Input
-                  {...field}
-                  fullWidth
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <Lock />
-                    </InputAdornment>
-                  }
-                  endAdornment={
-                    <InputAdornment position="end" onClick={clickPwIcon} onMouseDown={mouseDownPwIcon}>
-                      {showPw ? <VisibilityOff/> : <Visibility />}
-                    </InputAdornment>
-                  }
-                  placeholder="Password"
-                  type={showPw ? "text" : "password"}
-                  onBlur={()=> trigger('password')}
-                />
-                {errors.password && ( <FormHelperText error>{errors.password.message}</FormHelperText> )}
-              </Box>
-                 )}
-               />
-       </form>
+            })}
+            fullWidth
+            startAdornment={
+              <InputAdornment position="start">
+                <Lock />
+              </InputAdornment>
+            }
+            endAdornment={
+              <InputAdornment position="end" onClick={clickPwIcon} onMouseDown={mouseDownPwIcon}>
+                {showPw ? <VisibilityOff /> : <Visibility />}
+              </InputAdornment>
+            }
+            placeholder="Password"
+            type={showPw ? "text" : "password"}
+            onBlur={() => trigger("password")}
+          />
+          {errors.password && (
+            <FormHelperText error>{errors.password.message}</FormHelperText>
+          )}
+        </Box>
+      </form>
 
           <Box height={40}/>
 
