@@ -80,12 +80,204 @@ form_template.background_history,
 form_template.family_partner,
 form_template.personal_and_medical,]
 
+// to be deleted
+function showTable_backup(dataset: table_definition[], depth: number = 1) {
+    //const [openSubStatus, setOpenSubStatus] = React.useState(false);        
+    function showRow(row: table_definition, index: number, depth: number) {
+        //console.log("displayRow row", row);
+        if (row.sub) {
+            // console.log("displaySub from a row", row.sub)
+            // displayTable(row.sub);
+            return (
+                <ListItem key={index} disablePadding sx={{ width: '600px' }}>
+                    <List>
+                        <ListItem disablePadding sx={{ width: '600px' }}>
+                            {/* <Table>
+                                <TableBody>
+                                    <TableRow hover>
+                                        <TableCell sx={{ border: 1, width: '20px' }}>
+                                            {row.sub && <IconButton
+                                                aria-label="expand row"
+                                                size="small"
+                                                onClick={() => setOpen(!open)}
+                                            >
+                                                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                            </IconButton>}
+                                        </TableCell>
+                                        <TableCell sx={{ width: '100px', border: 1 }}>
+                                            <Typography>{JSON.stringify(row['label'])}</Typography>
+                                        </TableCell>
+                                        <TableCell sx={{ width: '60px', border: 1 }}>
+                                            <Typography>{JSON.stringify(row['type'])}</Typography>
+                                        </TableCell>
+                                        <TableCell sx={{ border: 1 }}>
+                                            <div>
+                                                {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell sx={{ border: 1 }}>
+                                            <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                                onClick={(ev: React.SyntheticEvent) => {
+                                                    openEditField();
+                                                    console.log("The index of the editing field index is ", { index });
+                                                    updateIndexNoFieldNewValue(index);
+                                                }}>
+                                            </Button>
+                                            <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table> */}
+                            <Box sx={{ display: 'flex' }}>
+                                <Box sx={{ width: `calc(${depth}*20px)` }}>
+                                    <Typography>
+                                        {depth}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ width: '40px' }}>
+                                    {row.sub && <IconButton
+                                        aria-label="expand row"
+                                        size="small"
+                                        onClick={() => setOpen(!open)}
+                                    >
+                                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                    </IconButton>}
+                                </Box>
+                                <Box sx={{ width: '250px' }}>
+                                    <Typography>
+                                        {row['label']}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ width: '120px' }}>
+                                    <Typography>
+                                        {row['type']}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ width: '40px' }}>
+                                    {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                                </Box>
+                                <Box sx={{ width: '200px' }}>
+                                    <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                        onClick={(ev: React.SyntheticEvent) => {
+                                            openEditField();
+                                            console.log("The index of the editing field index is ", { index });
+                                            updateIndexNoFieldNewValue(index);
+                                        }}>
+                                    </Button>
+                                    <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                                </Box>
+                            </Box>
+                        </ListItem>
+                        <ListItem disablePadding sx={{ width: '600px' }}>
+                            <Collapse in={open} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
+                                {showTable(row.sub, depth + 1)}
+                            </Collapse>
+                        </ListItem>
+                    </List>
+                </ListItem>
+            )
+        }
+        else return (
+            <ListItem key={index} disablePadding sx={{ width: '600px' }}>
+                {/* <Table sx={{
+                    '& .MuiTable-root': {
+                        padding: 0, // Override default padding styles
+                    },
+                }}>
+                    <TableBody>
+                        <TableRow hover sx={{
+                            '& .MuiTable-root': {
+                                padding: 0, // Override default padding styles
+                            },
+                        }}>
+                            <TableCell sx={{ border: 1, width: '20px' }}>
+                                {<IconButton
+                                    aria-label="expand row"
+                                    size="small"
+                                >
+                                    <ListIcon />
+                                </IconButton>}
+                            </TableCell>
+                            <TableCell sx={{ width: '100px', border: 1 }}>
+                                <Typography>{JSON.stringify(row['label'])}</Typography>
+                            </TableCell>
+                            <TableCell sx={{ width: '60px', border: 1 }}>
+                                <Typography>{JSON.stringify(row['type'])}</Typography>
+                            </TableCell>
+                            <TableCell sx={{ border: 1 }}>
+                                <div>
+                                    {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                                </div>
+                            </TableCell>
+                            <TableCell sx={{ border: 1 }}>                                    
+                                <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                    onClick={(ev: React.SyntheticEvent) => {
+                                        openEditField();
+                                        console.log("The index of the editing field index is ", { index });
+                                        updateIndexNoFieldNewValue(index);
+                                    }}>
+                                </Button>
+                                <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table> */}
+                <Box sx={{ display: 'flex' }}>
+                    <Box sx={{ width: `calc(${depth}*20px)` }}>
+                        <Typography>
+                            {depth}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ width: '40px' }}>
+                        {<IconButton
+                            aria-label="expand row"
+                            size="small"
+                        >
+                            <ListIcon />
+                        </IconButton>}
+                    </Box>
+                    <Box sx={{ width: '250px' }}>
+                        <Typography>
+                            {row['label']}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ width: '120px' }}>
+                        <Typography>
+                            {row['type']}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ width: '40px' }}>
+                        {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                    </Box>
+                    <Box sx={{ width: '200px' }}>
+                        <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                            onClick={(ev: React.SyntheticEvent) => {
+                                openEditField();
+                                console.log("The index of the editing field index is ", { index });
+                                updateIndexNoFieldNewValue(index);
+                            }}>
+                        </Button>
+                        <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                    </Box>
+                </Box>
+            </ListItem>
+        )
+    }
 
+    return (
+        <List>
+            {dataset.map((row, index) => (
+                showRow(row, index, depth)
+            ))}
+        </List>
+    )
+    //console.log("displayTable dataset", dataset);
+}
 
-function ShowTable({ dataset, depth, onEditField }: { dataset: table_definition[], depth: number, field: {}, onEditField: (index: number, dataset: table_definition[]) => void }) {
+function ShowTable({ dataset, depth, onEditField }: { dataset: table_definition[], depth: number, field:{},onEditField: (index: number, dataset: table_definition[]) => void }) {
     //const [openSubStatus, setOpenSubStatus] = React.useState(false);
     //const [openEditFieldStatus, setOpenEditFieldStatus] = React.useState(false);
-
+    
     const handleEditField = (index: number, dataset: table_definition[]) => {
         // console.log("handleEditField dataset and index", dataset,index);
         // console.log("dataset[index]",dataset[index]); 
@@ -161,10 +353,7 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: table_definition[
                                     onClick={(ev: React.SyntheticEvent) => {
                                         //console.log(dataset,dataset[index],row,index);
                                         onEditField(index, dataset);
-                                        console.log("The index of the editing field index is ", { index });
-                                        //handleEditField(index, dataset)
-                                        // reset upper level index
-                                        setEditField(dataset[index]);
+                                        handleEditField(index, dataset)
                                     }}
                                 >
                                 </Button>
@@ -174,123 +363,11 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: table_definition[
                     </ListItem>
                     {row.sub && <ListItem disablePadding sx={{ width: '600px' }}>
                         <Collapse in={openSubStatus} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <ShowTable dataset={row.sub}
+                            {<ShowTable dataset={row.sub}
                                 depth={depth + 1}
                                 onEditField={(index, dataset) => {
-                                    console.log("call onEditField in nested item", index, dataset, dataset[index]);
-                                    setEditField(dataset[index]);
-                                    setEditDialogBox(true);
-                                }} />
-                            <Dialog open={editDialogBox} onClose={closeEditField} PaperProps={{ sx: { borderRadius: '1px' } }}>
-                                <DialogTitle>Edit the field</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        Edit the field
-                                        {JSON.stringify(editField)}
-                                    </DialogContentText>
-                                    <form onSubmit={handleSubmit(onSubmit)}>
-                                        <TableContainer >
-                                            <Table>
-                                                <TableBody>
-                                                    {
-                                                        Object.entries(editField ?? {}).map((field_name, index) => {
-                                                            return (
-                                                                <TableRow key={index} hover >
-                                                                    <Controller
-                                                                        name={field_name[0]}
-                                                                        control={control}
-                                                                        defaultValue={String(field_name[1])}
-                                                                        render={({ field }) => (
-                                                                            <>
-                                                                                {(field_name[0] === "id") &&
-                                                                                    <>
-                                                                                        <TableCell>
-                                                                                            {field_name[0]}
-                                                                                        </TableCell>
-                                                                                        <TableCell>
-                                                                                            <TextField
-                                                                                                {...field}
-                                                                                            />
-                                                                                        </TableCell>
-                                                                                    </>
-                                                                                }
-                                                                                {(field_name[0] === "label") &&
-                                                                                    <>
-                                                                                        <TableCell>
-                                                                                            {field_name[0]}
-                                                                                        </TableCell>
-                                                                                        <TableCell>
-                                                                                            <TextField
-                                                                                                {...field}
-                                                                                            />
-                                                                                        </TableCell>
-                                                                                    </>
-                                                                                }
-                                                                                {(field_name[0] === "type") &&
-                                                                                    <>
-                                                                                        <TableCell>
-                                                                                            {field_name[0]}
-                                                                                        </TableCell>
-                                                                                        <TableCell>
-                                                                                            <Select {...field} >
-                                                                                                {field_type_list.map((field_type, index) => {
-                                                                                                    return (
-                                                                                                        <MenuItem key={index} value={field_type}>{field_type}</MenuItem>
-                                                                                                    )
-                                                                                                })
-                                                                                                }
-                                                                                            </Select>
-                                                                                        </TableCell>
-                                                                                    </>
-                                                                                }
-                                                                                {(field_name[0] === "length") &&
-                                                                                    <>
-                                                                                        <TableCell>
-                                                                                            {field_name[0]}
-                                                                                        </TableCell>
-                                                                                        <TableCell>
-                                                                                            <Select {...field}>
-                                                                                                {field_length_list.map((field_type, index) => {
-                                                                                                    return (
-                                                                                                        <MenuItem key={index} value={field_type}>{field_type}</MenuItem>
-                                                                                                    )
-                                                                                                })
-                                                                                                }
-                                                                                            </Select>
-                                                                                        </TableCell>
-                                                                                    </>
-                                                                                }
-                                                                                {(field_name[0] === "required") &&
-                                                                                    <>
-                                                                                        <TableCell>
-                                                                                            {field_name[0]}
-                                                                                        </TableCell>
-                                                                                        <TableCell>
-                                                                                            <Checkbox
-                                                                                                {...field}
-                                                                                                defaultChecked={field_name[1] == true ? true : false}
-                                                                                            />
-                                                                                        </TableCell>
-                                                                                    </>
-                                                                                }
-                                                                            </>
-                                                                        )}
-                                                                    />
-                                                                </TableRow>
-                                                            )
-                                                        })
-                                                    }
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
-                                        <Button type="submit">Submit</Button>
-                                        <Button onClick={closeEditField}>Cancel</Button>
-                                    </form>
-                                </DialogContent>
-                                <DialogActions>
-                                </DialogActions>
-                            </Dialog>
-
+                                    console.log("call onEditField", index, dataset, dataset[index]);
+                                }} />}
                         </Collapse>
                     </ListItem>
                     }
@@ -482,6 +559,59 @@ function ShowTree({ dataset, depth, onEditField, onDeleteField }: { dataset: tab
                     }
                 </List>}>
                 {console.log("The depth is ", (depth + 1) * 100 + index)}
+                {/* <List>
+                <ListItem disablePadding sx={{ width: '600px' }}>
+                        <Box sx={{ display: 'flex' }}>
+                            <Box sx={{ width: `calc(${depth}*20px + 20px)` }}>
+                                <Typography>
+                                    {depth}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ width: '40px' }}>
+                                {row.sub ? <IconButton
+                                    aria-label="expand row"
+                                    size="small"
+                                    onClick={() => { setOpenSubStatus(true), setEditField(row) }}
+                                >
+                                    {openSubStatus ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                </IconButton>
+                                    :
+                                    <IconButton
+                                        aria-label="expand row"
+                                        size="small"
+                                    >
+                                        <ListIcon />
+                                    </IconButton>}
+                            </Box>
+                            <Box sx={{ width: '250px' }}>
+                                <Typography>
+                                    {row['label']}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ width: '120px' }}>
+                                <Typography>
+                                    {row['type']}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ width: '40px' }}>
+                                {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                            </Box>
+                            <Box sx={{ width: '200px' }}>
+                                <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                >
+                                </Button>
+                                <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                            </Box>
+                        </Box>
+                    </ListItem>
+                {row.sub && <ListItem disablePadding sx={{ width: '600px' }}>
+                        <Collapse in={openSubStatus} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
+                            {<ShowTree dataset={row.sub} depth={depth + 1} />}
+                        </Collapse>
+                    </ListItem>
+                    }                
+                </List> */}
+
             </TreeItem>
         )
     }
@@ -532,6 +662,7 @@ function EditFieldDialogBox({ field_definition, open_status }: { field_definitio
 function FormTemplateEditor({ dataset }: { dataset: table_definition[] }) {
     const [editDialogBox, setEditDialogBox] = React.useState(false);
     const [editField, setEditField] = React.useState({});
+    const [rendercount, setRenderCount] = React.useState(0);
     // to be revised
     const [openSubStatus, setOpenSubStatus] = React.useState(false);
     const closeEditField = () => {
@@ -552,6 +683,7 @@ function FormTemplateEditor({ dataset }: { dataset: table_definition[] }) {
                     console.log("call onEditField", index, dataset, dataset[index]);
                     setEditDialogBox(true);
                     setEditField(dataset[index]);
+                    setRenderCount(rendercount + 1);
                     reset()
                 }
                 } />
@@ -560,7 +692,7 @@ function FormTemplateEditor({ dataset }: { dataset: table_definition[] }) {
                 <DialogTitle>Edit the field</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Edit the field                        
+                        Edit the field
                         {JSON.stringify(editField)}
                     </DialogContentText>
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -804,6 +936,198 @@ export default function customize_Form() {
     // Testing collapse row
     const [open, setOpen] = React.useState(false);
 
+    function showTable1(dataset: table_definition[], depth: number = 1) {
+        //const [openSubStatus, setOpenSubStatus] = React.useState(false);        
+        function showRow(row: table_definition, index: number, depth: number) {
+            //console.log("displayRow row", row);
+            if (row.sub) {
+                // console.log("displaySub from a row", row.sub)
+                // displayTable(row.sub);
+                return (
+                    <ListItem key={index} disablePadding sx={{ width: '600px' }}>
+                        <List>
+                            <ListItem disablePadding sx={{ width: '600px' }}>
+                                {/* <Table>
+                                    <TableBody>
+                                        <TableRow hover>
+                                            <TableCell sx={{ border: 1, width: '20px' }}>
+                                                {row.sub && <IconButton
+                                                    aria-label="expand row"
+                                                    size="small"
+                                                    onClick={() => setOpen(!open)}
+                                                >
+                                                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                                </IconButton>}
+                                            </TableCell>
+                                            <TableCell sx={{ width: '100px', border: 1 }}>
+                                                <Typography>{JSON.stringify(row['label'])}</Typography>
+                                            </TableCell>
+                                            <TableCell sx={{ width: '60px', border: 1 }}>
+                                                <Typography>{JSON.stringify(row['type'])}</Typography>
+                                            </TableCell>
+                                            <TableCell sx={{ border: 1 }}>
+                                                <div>
+                                                    {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell sx={{ border: 1 }}>
+                                                <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                                    onClick={(ev: React.SyntheticEvent) => {
+                                                        openEditField();
+                                                        console.log("The index of the editing field index is ", { index });
+                                                        updateIndexNoFieldNewValue(index);
+                                                    }}>
+                                                </Button>
+                                                <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table> */}
+                                <Box sx={{ display: 'flex' }}>
+                                    <Box sx={{ width: `calc(${depth}*20px)` }}>
+                                        <Typography>
+                                            {depth}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ width: '40px' }}>
+                                        {row.sub && <IconButton
+                                            aria-label="expand row"
+                                            size="small"
+                                            onClick={() => setOpen(!open)}
+                                        >
+                                            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                        </IconButton>}
+                                    </Box>
+                                    <Box sx={{ width: '250px' }}>
+                                        <Typography>
+                                            {row['label']}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ width: '120px' }}>
+                                        <Typography>
+                                            {row['type']}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ width: '40px' }}>
+                                        {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                                    </Box>
+                                    <Box sx={{ width: '200px' }}>
+                                        <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                            onClick={(ev: React.SyntheticEvent) => {
+                                                openEditField();
+                                                console.log("The index of the editing field index is ", { index });
+                                                updateIndexNoFieldNewValue(index);
+                                            }}>
+                                        </Button>
+                                        <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                                    </Box>
+                                </Box>
+                            </ListItem>
+                            <ListItem disablePadding sx={{ width: '600px' }}>
+                                <Collapse in={open} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
+                                    {showTable(row.sub, depth + 1)}
+                                </Collapse>
+                            </ListItem>
+                        </List>
+                    </ListItem>
+                )
+            }
+            else return (
+                <ListItem key={index} disablePadding sx={{ width: '600px' }}>
+                    {/* <Table sx={{
+                        '& .MuiTable-root': {
+                            padding: 0, // Override default padding styles
+                        },
+                    }}>
+                        <TableBody>
+                            <TableRow hover sx={{
+                                '& .MuiTable-root': {
+                                    padding: 0, // Override default padding styles
+                                },
+                            }}>
+                                <TableCell sx={{ border: 1, width: '20px' }}>
+                                    {<IconButton
+                                        aria-label="expand row"
+                                        size="small"
+                                    >
+                                        <ListIcon />
+                                    </IconButton>}
+                                </TableCell>
+                                <TableCell sx={{ width: '100px', border: 1 }}>
+                                    <Typography>{JSON.stringify(row['label'])}</Typography>
+                                </TableCell>
+                                <TableCell sx={{ width: '60px', border: 1 }}>
+                                    <Typography>{JSON.stringify(row['type'])}</Typography>
+                                </TableCell>
+                                <TableCell sx={{ border: 1 }}>
+                                    <div>
+                                        {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                                    </div>
+                                </TableCell>
+                                <TableCell sx={{ border: 1 }}>                                    
+                                    <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                        onClick={(ev: React.SyntheticEvent) => {
+                                            openEditField();
+                                            console.log("The index of the editing field index is ", { index });
+                                            updateIndexNoFieldNewValue(index);
+                                        }}>
+                                    </Button>
+                                    <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table> */}
+                    <Box sx={{ display: 'flex' }}>
+                        <Box sx={{ width: `calc(${depth}*20px)` }}>
+                            <Typography>
+                                {depth}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ width: '40px' }}>
+                            {<IconButton
+                                aria-label="expand row"
+                                size="small"
+                            >
+                                <ListIcon />
+                            </IconButton>}
+                        </Box>
+                        <Box sx={{ width: '250px' }}>
+                            <Typography>
+                                {row['label']}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ width: '120px' }}>
+                            <Typography>
+                                {row['type']}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ width: '40px' }}>
+                            {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                        </Box>
+                        <Box sx={{ width: '200px' }}>
+                            <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                onClick={(ev: React.SyntheticEvent) => {
+                                    openEditField();
+                                    console.log("The index of the editing field index is ", { index });
+                                    updateIndexNoFieldNewValue(index);
+                                }}>
+                            </Button>
+                            <Button variant="solid" startIcon={<ClearOutlinedIcon color='primary' />} onClick={(ev: React.SyntheticEvent) => { deleteTableField(ev, index); }}> </Button>
+                        </Box>
+                    </Box>
+                </ListItem>
+            )
+        }
+
+        return (
+            <List>
+                {dataset.map((row, index) => (
+                    showRow(row, index, depth)
+                ))}
+            </List>
+        )
+        //console.log("displayTable dataset", dataset);
+    }
 
 
 
@@ -1017,8 +1341,8 @@ export default function customize_Form() {
                                         <DialogActions>
                                         </DialogActions>
                                     </Dialog> */}
-                                    <FormTemplateEditor dataset={customizedformlist[templateid].content[tabId].fields} />
-                                    {/* <ShowTree dataset={customizedformlist[templateid].content[tabId].fields} depth={0} onEditFieldCallback={(index) => { console.log("call onEditField", index); }} /> */}
+                                    {/* <FormTemplateEditor dataset={customizedformlist[templateid].content[tabId].fields} /> */}
+                                    <ShowTree dataset={customizedformlist[templateid].content[tabId].fields} depth={0} onEditFieldCallback={(index) => { console.log("call onEditField", index); }} />
                                 </CustomTabPanel>
                             ))}
                         </Box>
