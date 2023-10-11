@@ -22,16 +22,15 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
 
     const {handleSubmit, register, formState:{errors} }=useForm({defaultValues:{"password":10}});
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data: { password: number; },next: boolean) => {
     console.log(data);
     const preData=JSON.parse(localStorage.getItem(`form${formid}`)??'');
     localStorage.setItem(`form${formid}`,JSON.stringify({...preData,data}));
-    if(isLastSec){
+    if(isLastSec&&next){
         setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${Number(formid)+1}`),{...preData,data},{merge:true});
         router.push(`ed/${agcid}/forms/detail/${Number(formid)+1}`);                
-    }else{
-        setSectionNum(sectionNum+1);
     }
+    else setSectionNum(sectionNum+(next?1:-1));
     }
 
     return <>
@@ -55,16 +54,20 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
                     <Typography sx={font8} color={'secondary'}>{'time xxx'}</Typography>
                 </Stack>
                 <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'center'} pt={10} pb={20} px={6}>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit((d)=>onSubmit(d,true))}>
                     {template.content[sectionNum].fields.map((v)=><FormFieldUI data={v} register={register}/>)}
                 </form>
                 </Box>
                 </Box>
 
-        <Stack position={'absolute'} direction={'row'} pb={'47px'} bottom={0} width={'100%'} justifyContent="space-between" 
+        <Stack position={'absolute'} direction={'row'} pb={'47px'} bottom={0} width={'100%'} 
+        justifyContent="end"
+        justifyItems='stretch'
         sx={{backdropFilter: 'blur(2px)', background:'linear-gradient(to top, white, transparent)'}}>
-            <Button color={'secondary'} variant="outlined" startIcon={<ArrowBack/>}>Previous</Button>
-            <Button variant="contained" startIcon={<ArrowForward/>} onClick={handleSubmit(onSubmit)}>Continue</Button>
+            {sectionNum>0 && <Button color={'secondary'} variant="outlined" startIcon={<ArrowBack/>} 
+            onClick={handleSubmit((d)=>onSubmit(d,false))}>Previous</Button>}
+            <Button variant="contained" startIcon={<ArrowForward/>}
+            onClick={handleSubmit((d)=>onSubmit(d,true))}>{isLastSec?'done':'Continue'}</Button>
         </Stack>
     </>
 }
