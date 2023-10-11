@@ -28,8 +28,8 @@ export default async function FormIndex({children, params}: { children: React.Re
         {tags:['form_data'],revalidate:60}
     )();
 
-    return <Box display={'flex'} height='100%'>
-        <Paper sx={{width:'326px', alignSelf:'stretch',px:4,pt:4,ml:-1,pl:5}} elevation={24}>
+    return <Box display={'flex'} height='100%' alignContent={'stretch'}>
+        <Paper sx={{width:'326px', height:'100%', alignSelf:'stretch',px:4,pt:4, borderRadius:0}} elevation={24}>
             <Link href={`/ed/${params.agcid}/forms`} passHref>
                 <Stack direction={'row'} spacing={'10px'}>
                     <ArrowBackIos/>
@@ -42,7 +42,7 @@ export default async function FormIndex({children, params}: { children: React.Re
             <EDFormTitles formid={params.formid} edid={user.id}
             pathPrefix={`/ed/${params.agcid}/forms/detail`}/>
         </Paper>
-        <Box ml={3} mr={10} pt={'35px'} flex={1} display={'flex'} flexDirection={'column'} sx={{position:'relative'}} >
+        <Box ml={3} mr={10} pt={'35px'} flex={1} height={'100%'} display={'flex'} flexDirection={'column'} sx={{position:'relative'}} >
             {children}
         </Box>
     </Box>

@@ -4,9 +4,9 @@ import { DateField } from "@mui/x-date-pickers";
 import { useForm } from "react-hook-form";
 
 export default function FormFieldUI({data,register}:{data:FormField,register:any}){
-    return <Stack>
+    return <Stack mb={4}>
         <Typography variant="body1">{data.label}</Typography>
-        <Box height={32}/>
+        <Box height={8}/>
         {data.type==='text'?[<Input/>,
         <FormHelperText error>Please fill in valid value</FormHelperText>]
         :data.type==='date'?[<DateField/>]

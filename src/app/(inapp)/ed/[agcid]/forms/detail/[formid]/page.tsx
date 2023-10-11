@@ -30,5 +30,5 @@ export default async function FormDetail({params}: {params: { agcid: string, for
         {tags:['form_data'],revalidate:60}
     )();
 
-    return <FormContent formid={params.formid} template={basic_info} data={{}}/>;
+    return <FormContent formid={params.formid} agcid={params.agcid} template={basic_info} data={{}} uid={user.id}/>;
 }

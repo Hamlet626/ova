@@ -72,7 +72,9 @@ export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:stri
             <AppMenu role={role} open={open} agcid={agcid} />
             <Main open={drawerFix&&open}>
         <Toolbar />
+        <Box maxHeight={'calc(100vh - 64.5px)'} flexGrow={1}>
         {children}
+        </Box>
         </Main>
         </Box>
     )
