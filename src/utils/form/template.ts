@@ -52,6 +52,7 @@ export interface FormField{
     exCondition?:any[],
 }
 
+
 export const basic_info:FormTemp={
     name:"basic info",
     content:[
@@ -1043,3 +1044,6 @@ function optQuestion(question: string):FormField {
         required: false
     };
 }
+
+
+export const formTemplates=[basic_info,physical_personal_trait,education_occupation,background_history,family_partner,other_clinic_questions];

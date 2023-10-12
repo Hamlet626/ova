@@ -13,6 +13,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Link from "next/link";
 import { unstable_cache } from "next/cache";
 import { app } from "@/utils/firebase/firebase_client";
+import { FormTemp, formTemplates } from "@/utils/form/template";
+import { formStatus, secFinished } from "@/utils/form/utils";
 
 export default async function Forms({params}:{params: { agcid: string }}) {
     // const {user}=useSession({required:true}).data!;
@@ -23,7 +25,8 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     const formTemplate=await unstable_cache(
         async()=>{
             const r = await getDocs(collection(getFirestore(app),`user groups/agc/users/${params.agcid}/forms`));
-            return r.docs.map(v=>({...v.data(),id:v.id}));
+            return Array.from({ length: 6 },
+                (v,i)=>r.docs.find(v=>Number(v.id)===i)?.data()??formTemplates[i]);
         },
         [params.agcid],
         {tags:['form_template'],revalidate:false}
@@ -31,17 +34,16 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     const formData=await unstable_cache(
         async()=>{
             const r = await getDocs(collection(getFirestore(app),`user groups/${roles[myRole].id}/users/${user.id}/form data`));
-            return r.docs.map(v=>({...v.data(),id:v.id}));
+            return Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i));
         },
         [user.id],
         {tags:['form_data'],revalidate:6}
     )();
 
-    const formsStatus=getFinishStatus(formTemplate,formData);
-    const remained=formsStatus.filter((v)=>v.subs.remained);
+    const formsStatus=getFinishStatus(formTemplate as FormTemp[],formData);
+    const remained=formsStatus.filter((v)=>v.subs.remained.length>0);
 
     return <Box pt={'30px'} pl={4} pr='80px'>
-        <Typography>{`${formData}`}</Typography>
         <Typography sx={font3}>My Form</Typography>
         <Box height={12}/>
         {remained.length>0 &&
@@ -64,7 +66,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
         <Divider sx={{ml:'-999px', mr:'-80px'}}/>
         </>}
         <Box height={32}/>
-        <Stack spacing={16}>
+        <Stack spacing={2}>
             {formsStatus.map((v,i)=>(
                 <Card key={v.title} variant="outlined">
                     <CardActionArea>
@@ -92,11 +94,18 @@ export default async function Forms({params}:{params: { agcid: string }}) {
                 </Card>
             ))}
         </Stack>
+        <Box height={32}/>
     </Box>
 }
 
-const getFinishStatus=(template,data)=>{
-    return [{title:'basic_info',stats:{time:'4 min',finished:15,all:24},subs:{finished:[],remained:['sub1','sub2','sub3','sub4','sub5','sub6','sub7','sub8','sub9','sub0']}}];
+const getFinishStatus=(template:FormTemp[],data:any[])=>{
+    return template.map((v,i)=>({
+        title:v.name,stats:formStatus(data[i],v),
+        subs:{
+            finished:v.content.filter(v=>secFinished(data[i],v)).map(v=>v.title),
+            remained:v.content.filter(v=>!secFinished(data[i],v)).map(v=>v.title)
+        }}
+    ));
 }
 
 const SubfieldsBlock=({section,finished,agcid,formIndex,sx}:{section:any[],finished?:boolean,agcid:string,formIndex:Number, sx?:any})=>{
