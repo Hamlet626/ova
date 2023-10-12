@@ -26,7 +26,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { useForm, Controller, SubmitHandler, set } from "react-hook-form";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import Checkbox from '@mui/material/Checkbox';
+import { Checkbox } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FormTitlesUI from '@/components/form_titles_ui';
@@ -36,11 +36,10 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 // const field_element_list = ["id", "label", "type", "length", "required", "options", "sub"]
 const field_element_list = ["id", "label", "type", "length", "required",]
-const field_type_list = ["text", "number", "date", "multi-select", "yes/no", "checkbox", "address"]
+const field_type_list = ["text", "number", "date", "multi-select", "yes/no", "checkbox"]
 const field_length_list = ["short", "medium", "long"]
 
-type field_definition = { id: string, label: string, type: string, length: number, required: boolean, options: string[], sub: [] }
-type section_definition = { name: string, content:[] }
+type table_definition = { id: string, label: string, type: string, length: number, required: boolean, options: string[], sub: [] }
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -81,15 +80,14 @@ form_template.background_history,
 form_template.family_partner,
 form_template.personal_and_medical,]
 
-function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[], depth: number, onEditField: (index: number, dataset: field_definition[]) => void }) {
+function ShowTable({ dataset, depth, onEditField }: { dataset: table_definition[], depth: number, onEditField: (index: number, dataset: table_definition[]) => void }) {
     const [editDialogBox, setEditDialogBox] = React.useState(false);
     const [editField, setEditField] = React.useState({});
     const [openSubStatus, setOpenSubStatus] = React.useState(false);
     const closeEditField = () => {
         setEditDialogBox(false);
     }  
-    
-    function showRow(row: field_definition, index: number, depth: number) {  
+    function showRow(row: table_definition, index: number, depth: number) {  
         return (
             <ListItem key={index} disablePadding sx={{ width: '600px' }}>
                 <List>
@@ -135,7 +133,7 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
                                         onEditField(index, dataset);
                                         console.log("The index of the editing field index is ", { index });
                                         // reset upper level index                                        
-                                        setEditField(dataset[index]);                 
+                                        setEditField(dataset[index]);
                                     }}
                                 >
                                 </Button>
@@ -172,11 +170,11 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
     )
 }
 
-function ShowTree({ dataset, depth, onEditField, onDeleteField }: { dataset: field_definition[], depth: number, onEditFieldCallback: (index: number) => void }) {
+function ShowTree({ dataset, depth, onEditField, onDeleteField }: { dataset: table_definition[], depth: number, onEditFieldCallback: (index: number) => void }) {
     const [openSubStatus, setOpenSubStatus] = React.useState(false);
     const [openEditFieldStatus, setOpenEditFieldStatus] = React.useState(false);
     const [editField, setEditField] = React.useState({});
-    function showRow(row: field_definition, index: number, depth: number) {
+    function showRow(row: table_definition, index: number, depth: number) {
         return (
             <TreeItem nodeId={((depth + 1) * 100 + index).toString} key={index} disablePadding sx={{ width: '600px' }} label={
                 <List>
@@ -251,7 +249,7 @@ function ShowTree({ dataset, depth, onEditField, onDeleteField }: { dataset: fie
 
 function EditFieldDialogBox({ field_definition, open_status, closeDialogBox }: { field_definition: {}, open_status: boolean, closeDialogBox: () => void }) {
     const { control, handleSubmit, reset } = useForm();    
-    const onSubmit = (data:any) => {
+    const onSubmit = (data) => {
         console.log(data);
     };
     return (
@@ -260,7 +258,7 @@ function EditFieldDialogBox({ field_definition, open_status, closeDialogBox }: {
             <DialogContent>
                 <DialogContentText>
                     Selfdefined DialogBox
-                    {/* {JSON.stringify(field_definition)} */}
+                    {JSON.stringify(field_definition)}
                 </DialogContentText>
                 <form onSubmit={handleSubmit(onSubmit)}>
                         <TableContainer >
@@ -283,8 +281,8 @@ function EditFieldDialogBox({ field_definition, open_status, closeDialogBox }: {
                                                                         </TableCell>
                                                                         <TableCell>
                                                                             <TextField
-                                                                               value={field_name[1]}
-                                                                            />                                                                            
+                                                                                {...field}
+                                                                            />
                                                                         </TableCell>
                                                                     </>
                                                                 }
@@ -295,7 +293,7 @@ function EditFieldDialogBox({ field_definition, open_status, closeDialogBox }: {
                                                                         </TableCell>
                                                                         <TableCell>
                                                                             <TextField
-                                                                                value={field_name[1]}
+                                                                                {...field}
                                                                             />
                                                                         </TableCell>
                                                                     </>
@@ -306,7 +304,7 @@ function EditFieldDialogBox({ field_definition, open_status, closeDialogBox }: {
                                                                             {field_name[0]}
                                                                         </TableCell>
                                                                         <TableCell>
-                                                                            <Select defaultValue={field_name[1]} >
+                                                                            <Select {...field} >
                                                                                 {field_type_list.map((field_type, index) => {
                                                                                     return (
                                                                                         <MenuItem key={index} value={field_type}>{field_type}</MenuItem>
@@ -323,7 +321,14 @@ function EditFieldDialogBox({ field_definition, open_status, closeDialogBox }: {
                                                                             {field_name[0]}
                                                                         </TableCell>
                                                                         <TableCell>
-                                                                            {field_name[1]}
+                                                                            <Select {...field}>
+                                                                                {field_length_list.map((field_type, index) => {
+                                                                                    return (
+                                                                                        <MenuItem key={index} value={field_type}>{field_type}</MenuItem>
+                                                                                    )
+                                                                                })
+                                                                                }
+                                                                            </Select>
                                                                         </TableCell>
                                                                     </>
                                                                 }
@@ -364,13 +369,17 @@ function EditFieldDialogBox({ field_definition, open_status, closeDialogBox }: {
 }
 
 // using table to display the form, display table definition content, and edit the selected field
-function FormTemplateEditor({ dataset }: { dataset: field_definition[] }) {
+function FormTemplateEditor({ dataset }: { dataset: table_definition[] }) {
     const [editDialogBox, setEditDialogBox] = React.useState(false);
     const [editField, setEditField] = React.useState({});
     const closeEditField = () => {
         setEditDialogBox(false);
     }
-
+    const { control, handleSubmit, reset } = useForm();
+    const onSubmit = (data) => {
+        console.log(data);
+        closeEditField();
+    };
     return (
         <>
             <ShowTable
@@ -380,6 +389,7 @@ function FormTemplateEditor({ dataset }: { dataset: field_definition[] }) {
                     console.log("call onEditField", index, dataset, dataset[index]);
                     setEditDialogBox(true);
                     setEditField(dataset[index]);
+                    reset();
                 }
                 } />
             <EditFieldDialogBox field_definition={editField} open_status={editDialogBox} closeDialogBox={closeEditField} />           
@@ -412,11 +422,28 @@ export default function customize_Form() {
 
     // Initial customized form list using deep copy
     const [customizedformlist, setCustomizedFormList] = React.useState(JSON.parse(JSON.stringify(templateList)));//React.useState([...templateList]);
-    const table_name_list = customizedformlist.map((section:section_definition, index:number) => (
+    const table_name_list = customizedformlist.map((section, index) => (
         { title: section.name, selected: index === templateid, icon: <HomeOutlined /> }
     ));
-  
-  
+
+    // The index_no_field of field in the customized sectionlist
+    const [index_no_field, setIndexNoField] = React.useState(0);
+    const updateIndexNoFieldNewValue = (newValue: number) => {
+        setIndexNoField(newValue);
+    }
+
+    // define the form of edit a field
+    const [editFieldState, setEditFieldState] = React.useState(false);
+    const openEditField = () => {
+        console.log("0 editFieldState is changed to ", { editFieldState });
+        reset();
+        setEditFieldState(true);
+        console.log("1 editFieldState is changed to ", { editFieldState });
+    };
+    const closeEditField = () => {
+        setEditFieldState(false);
+    };
+
     const addTableSection = (event: React.SyntheticEvent, newValue: any) => {
         // Add a new section to customized sectionlist
         customizedformlist[templateid].content = [...customizedformlist[templateid].content, newValue]
@@ -514,6 +541,8 @@ export default function customize_Form() {
                 }}>
                     <FormTitlesUI titles={table_name_list} onClick={
                         (t, i) => {
+                            // console.log("The index of the selected template index is ", { i });
+                            // console.log("The selected template is ", t);
                             changeTemplate(i);
                             changeTab(0);
                         }

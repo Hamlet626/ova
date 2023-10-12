@@ -260,7 +260,7 @@ function EditFieldDialogBox({ field_definition, open_status, closeDialogBox }: {
             <DialogContent>
                 <DialogContentText>
                     Selfdefined DialogBox
-                    {/* {JSON.stringify(field_definition)} */}
+                    {JSON.stringify(field_definition)}
                 </DialogContentText>
                 <form onSubmit={handleSubmit(onSubmit)}>
                         <TableContainer >
@@ -514,6 +514,8 @@ export default function customize_Form() {
                 }}>
                     <FormTitlesUI titles={table_name_list} onClick={
                         (t, i) => {
+                            // console.log("The index of the selected template index is ", { i });
+                            // console.log("The selected template is ", t);
                             changeTemplate(i);
                             changeTab(0);
                         }
