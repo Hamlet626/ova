@@ -85,7 +85,12 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
     const [editDialogBox, setEditDialogBox] = React.useState(false);
     const [editField, setEditField] = React.useState({});
     const [openSubStatus, setOpenSubStatus] = React.useState(false);
-    const { control, handleSubmit, reset } = useForm();
+    // const { control, handleSubmit, reset } = useForm();
+    const [openSubStatusList, setOpenSubStatusList] = React.useState(Array(dataset.length).fill(false));
+    const changeOpenSubStatusList = (index: number) => {
+        openSubStatusList[index] = !openSubStatusList[index];
+        setOpenSubStatusList([...openSubStatusList]);
+    }
 
     // Rerender the page after editing the field
     const [renderFlag, setRenderFlag] = React.useState(false);
@@ -115,9 +120,10 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
                                 {row.sub ? <IconButton
                                     aria-label="expand row"
                                     size="small"
-                                    onClick={() => { setOpenSubStatus(!openSubStatus) }}
+                                    onClick={() => { setOpenSubStatus(!openSubStatus); changeOpenSubStatusList(index) }}
                                 >
-                                    {openSubStatus ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                    {/* {openSubStatus ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} */}
+                                    {openSubStatusList[index] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                                 </IconButton>
                                     :
                                     <IconButton
@@ -153,7 +159,7 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
                                         console.log("The editing field dataset is ", { dataset });
                                         // reset upper level index                                        
                                         setEditField(dataset[index]);
-                                        reset();   //???                              
+                                        //reset();   //???                              
                                     }}
                                 >
                                 </Button>
@@ -162,7 +168,8 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
                         </Box>
                     </ListItem>
                     {row.sub && <ListItem disablePadding sx={{ width: '600px' }}>
-                        <Collapse in={openSubStatus} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Collapse in={openSubStatusList[index]} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
+                            {/* <Collapse in={openSubStatus} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}> */}
                             <ShowTable dataset={row.sub}
                                 depth={depth + 1}
                                 onEditField={(index, dataset) => {
@@ -433,7 +440,7 @@ function EditFieldDialogBox({ field_definition, open_status, closeDialogBox }: {
 function FormTemplateEditor({ dataset, updateDataset }: { dataset: field_definition[], updateDataset: (dataset: any) => void }) {
     const [editDialogBox, setEditDialogBox] = React.useState(false);
     const [editField, setEditField] = React.useState({});
-    const { control, handleSubmit, reset } = useForm();
+    // const { control, handleSubmit, reset } = useForm();
     const closeEditField = () => {
         setEditDialogBox(false);
     }
@@ -446,7 +453,7 @@ function FormTemplateEditor({ dataset, updateDataset }: { dataset: field_definit
                     console.log("call onEditField", index, dataset, dataset[index]);
                     setEditDialogBox(true);
                     setEditField(dataset[index]);
-                    reset();
+                    //reset();
                 }
                 } />
             { editDialogBox ? <EditFieldDialogBox field_definition={editField} open_status={editDialogBox} closeDialogBox={closeEditField} /> :<div/>}
