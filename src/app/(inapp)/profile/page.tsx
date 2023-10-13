@@ -68,10 +68,9 @@ export function Signup_profile() {
 
 
   return (
-  <>
-          <Box maxWidth='400px'>
-         <Box sx={{ position: "absolute", top: 48, left: 80,  display: "flex", alignItems: "center" }}>
-               <Typography variant="h4" sx={{whiteSpace: 'nowrap'}}>
+  <Box minWidth='400px'>
+         <Box sx={{ display: "flex",  justifyContent: 'center',   alignItems: 'center',}}>
+               <Typography variant="h4" sx={{whiteSpace: 'nowrap',marginTop: 0 }}>
                  Sign Up
                </Typography>
           <Box width={191} />
@@ -80,11 +79,16 @@ export function Signup_profile() {
               <Typography color="primary"> 50 </Typography>
                <Typography > /100% </Typography>
                    </Box>
-<Box height={33}/>
+<Box height={50}/>
 
+ <Box  sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color:'red',
+        }}>
+<Card variant="outlined" sx={{backgroundColor:'ref', padding: 3, borderRadius: '10px', width: '600px', height: clinic !== null ? '300px' : '200px', }}>
 
-<Card variant="outlined" sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
- padding: 3, borderRadius: '10px', width: '600px', height: clinic !== null ? '300px' : '200px' }}>
       <Stack direction="row" alignItems="center" spacing={2}>
         {selectedFile && (
           <CardMedia
@@ -124,37 +128,41 @@ export function Signup_profile() {
     </Stack>
 
 
-{clinic === null && (
+{clinic !== null && (
       <Input name="url" fullWidth placeholder="Desired URL" variant="outlined"  type="text" sx={{ width: '100%', marginTop: '24px' }}
       startAdornment={ <InputAdornment position="start"> <LinkOutlinedIcon /></InputAdornment> }
       />
     )}
 </Card>
+ </Box>
 
-    </Box>
+    <Box height={110}/>
 
-            <Box
-                    style={{
-                      position: 'absolute',
-                      bottom: '0',
-                      right: '0',
-                      margin: '30px',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="subtitle2" sx={{ mr: 2 }}>
+            Do it later
+          </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            startIcon={<ArrowForwardIcon />}
+            sx={{
+              typography: 'label1',
+              color: 'white',
+              width: '193px',
+            }}
+          >
+            Next
+          </Button>
+        </Box>
 
-                  <Typography  variant="subtitle2" >Do it later</Typography >
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      startIcon={<ArrowForwardIcon  />}
-                      sx={{typography: 'label1', marginLeft: '24px', marginRight: '40px',color:'white',width:'193px'}}
-                    >
-                      Next
-                    </Button>
-                  </Box>
-                </>
+                </Box>
 
           );
         }
@@ -170,9 +178,10 @@ export default function SignUp2() {
                  height: '100vh',
                  overflowY: 'auto',
                 }}>
+             <Box sx={{ maxHeight: '100%',  }} >
 
               < Signup_profile/>
-
+</Box>
               </Box>
               </Bg2>
 
