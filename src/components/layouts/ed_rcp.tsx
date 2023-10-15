@@ -14,14 +14,14 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }>(({ theme, open }) => {
     const shift=open?drawerWidth:drawerMinWidth;
     return ({
-    flexGrow: 1,
+      display:'flex', flexDirection:'column',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width:'100%',
-    marginLeft: -shift,
-    paddingLeft: shift,
+    width:`calc(100% - ${shift}px)`,
+    height:'100vh',
+    overflowY:'auto',
     ///todo:remove animation or make it better
     ...(open && {
       transition: theme.transitions.create('margin', {
@@ -72,7 +72,9 @@ export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:stri
             <AppMenu role={role} open={open} agcid={agcid} />
             <Main open={drawerFix&&open}>
         <Toolbar />
+        <Box maxHeight={'calc(100vh - 64.5px)'} flexGrow={1}>
         {children}
+        </Box>
         </Main>
         </Box>
     )

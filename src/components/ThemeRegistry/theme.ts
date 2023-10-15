@@ -61,6 +61,11 @@ const theme = createTheme({
             styleOverrides: {
                 root:{ backgroundColor: outline_variant }
             }
+        },
+        MuiLinearProgress:{
+            defaultProps:{
+                variant:"determinate"
+            }
         }
         // MuiAlert: {
         //     styleOverrides: {
