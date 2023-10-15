@@ -1,4 +1,3 @@
-'use client';
 import React from "react";
 import {Card, Paper, Box, Container, Input, Button, Typography, LinearProgress,
      Breadcrumbs,  InputAdornment, Link, Stack, TextField, CardMedia
@@ -9,7 +8,6 @@ import { cliAuth  } from "@/utils/firebase/firebase_client";
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useState } from "react";
 import {Google, Lock, Login, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
 import NextLink from "next/link";
 import {font2} from "@/components/ThemeRegistry/theme_consts";
@@ -29,43 +27,28 @@ import { useSearchParams } from 'next/navigation';
 import {useSession} from "next-auth/react";
 import { getServerSession } from "next-auth";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
-
-import { unstable_cache } from "next/cache";
-
+import Uploadprofile from "@/components/signup_image";
 
 
-const VisuallyHiddenInput = styled('input')({
-  height: 8,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 8,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
-
-
-export function Signup_profile() {
-  const { data: session } = useSession();
-    const role = session?.user?.role;
-    const clinic = session?.user?.agencies?.[0];
-
-
-    const [selectedFile,setSelectedFile]=useState(null);
-
-    const handleFileChange=(event)=>{
-    const file =event.target.files[0];
-    if (file){
-    setSelectedFile(file);
-    }
-    };
-
-    const formatFileSize = (bytes) => {
-      const sizes = ["Bytes", "KB", "MB"];
-      const i = Math.floor(Math.log(bytes) / Math.log(1024));
-      return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
-    };
-
+export  async function  Signup_profile() {
+//     const user=(await getServerSession(authOptions))!.user!;
+//     console.log(user);
+//     const myRole=user.role!;// //    const session = await getServerSession(authOptions);
+//
+//      if (session) {
+//        // Access user-related data from the session
+//        const user = session.user;
+//        const clinic = user?.agencies?.[0] || null; // Assuming the clinic is in the first position.
+//
+//        // Log the session and clinic information
+//        console.log('Session:', session);
+//        console.log('Clinic:', clinic);
+//
+//        // Now you can use the 'user' or 'clinic' data in your component.
+//      } else {
+//        // Handle the case when there's no active session
+//      }
+  const clinic = null ;
 
   return (
   <Box minWidth='400px'>
@@ -80,63 +63,9 @@ export function Signup_profile() {
                <Typography > /100% </Typography>
                    </Box>
 <Box height={50}/>
+<Uploadprofile clinic={clinic} />
 
- <Box  sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color:'red',
-        }}>
-<Card variant="outlined" sx={{backgroundColor:'ref', padding: 3, borderRadius: '10px', width: '600px', height: clinic !== null ? '300px' : '200px', }}>
-
-      <Stack direction="row" alignItems="center" spacing={2}>
-        {selectedFile && (
-          <CardMedia
-            component="img"
-            src={URL.createObjectURL(selectedFile)}
-            sx={{
-              width: '160px',
-              height: '160px',
-              borderRadius: '100%',
-            }}
-          />
-        )}
-
-        <Stack direction="column" justifyContent="center" alignItems="flex-start" spacing={2}>
-          <Typography variant="h6" sx={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
-            {clinic === null ? 'Upload Logo' : role === 'ed' ? "Upload Egg Donor's Photo" : "Upload Recipient's Photo"}
-          </Typography>
-          {selectedFile && (
-            <Stack spacing={1}>
-              <Typography variant="body1" sx={{ textDecoration: 'underline', color: 'ref' }}>
-                {selectedFile.name}
-              </Typography>
-              <Typography variant="body1" sx={{ textDecoration: 'underline', color: 'ref' }}>
-                {formatFileSize(selectedFile.size)}
-              </Typography>
-            </Stack>
-          )}
-
-  <Stack >
-<Button component="label" variant="contained" startIcon={<SourceOutlinedIcon />} sx={{ typography: 'label1'}} >
-      Browse Photos
-      <VisuallyHiddenInput type="file" accept=".jpg, .jpeg, .png" onChange={handleFileChange} />
-    </Button>
-    </Stack>
-
-  </Stack>
-    </Stack>
-
-
-{clinic !== null && (
-      <Input name="url" fullWidth placeholder="Desired URL" variant="outlined"  type="text" sx={{ width: '100%', marginTop: '24px' }}
-      startAdornment={ <InputAdornment position="start"> <LinkOutlinedIcon /></InputAdornment> }
-      />
-    )}
-</Card>
- </Box>
-
-    <Box height={110}/>
+    <Box height={200}/>
 
         <Box
           sx={{
@@ -161,11 +90,11 @@ export function Signup_profile() {
             Next
           </Button>
         </Box>
-
-                </Box>
+</Box>
 
           );
         }
+
 
 
 export default function SignUp2() {
@@ -180,7 +109,7 @@ export default function SignUp2() {
                 }}>
              <Box sx={{ maxHeight: '100%',  }} >
 
-              < Signup_profile/>
+              < Signup_profile />
 </Box>
               </Box>
               </Bg2>

@@ -100,10 +100,11 @@ export function Name_NotClinic({ register, control, errors, trigger }) {
 export function SignUp1(){
     const hostName=useUrl()?.host;
     const clinic = getClinic(hostName);
+    console.log(clinic);
     const searchParams = useSearchParams();
-    const role = searchParams.get('role');
-    const router = useRouter();
+const role = searchParams.get('role');
 
+const router = useRouter();
 
  const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -129,7 +130,9 @@ export function SignUp1(){
        },
        body: JSON.stringify({
          email: emailValue,
-         name: 'Test',
+         name:'Test',
+//          name: clinic,
+//          role:role1
          role: 0,
          password: passwordValue,
        }),
@@ -163,7 +166,7 @@ export function SignUp1(){
         <Box maxWidth="400px" >
 
         <Typography  sx={font2}>
-          {clinic !== null ? 'Clinics Sign Up' : (role === 'ed' ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
+          {clinic !== null ? 'Clinics Sign Up' : (role === 0 ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
         </Typography>
 
          <Box height={50} />
