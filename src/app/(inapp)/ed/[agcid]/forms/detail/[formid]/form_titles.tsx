@@ -1,38 +1,36 @@
 'use client'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormTitlesUI from "../../../../../../../components/form_titles_ui";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "@/utils/firebase/firebase_client";
 import { formTemplates } from "@/utils/form/template";
 import { formFinished } from "@/utils/form/utils";
+import { Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function EDFormTitles({pathPrefix,formid,edid,data}:{pathPrefix:string,formid:string,edid:string,data:any[]}) {
+    const router=useRouter();
     
-    const [selectedInd,setSelectedInd]=useState(Number(formid));
+    // const [tst,settst]=useState('');
+    // useEffect(()=>{
+    //     console.log("in use effect test",window);
+    //     settst(`${localStorage?.getItem('test')}`);
+    // },[localStorage?.getItem('test')]);
 
-    let titles=formTemplates.map((v,i)=>({title:v.name,selected:selectedInd===i,
+    console.log([0,1,2,3,4,5].map(v=>Object.keys(data[v]??{}).length));
+    let titles=formTemplates.map((v,i)=>({title:v.name,selected:Number(formid)===i,
     check:formFinished(data[i],v),
-    dot:(localStorage.getItem(`form${formid}`)??'{}')==='{}'}));
+    dot: Object.keys(data[i]??{}).length===0 }));
 
-    // [{title:'Basic Information'},
-    // {title:'physical & personal trait'},
-    // {title:'education & occupation'},
-    // {title:'background history'},
-    // {title:'family & partner'},
-    // {title:'personal & medical'}];
-
-    // titles[selectedInd].selected=true;
-    // titles=titles.map((v,i)=>({...v,href:`${pathPrefix}/${i}`}));
-
-    return(
+    return (<>
             <FormTitlesUI titles={titles} 
             onClick={(t,i)=>{
-                if(selectedInd===i)return;
-                        // await onClick(titles[index],index); 
-                        const formData=localStorage.getItem(`form${selectedInd}`);
+                if(Number(formid)===i)return;
+                const formData=localStorage.getItem(`form${formid}`);
                         if(formData)
                         setDoc(doc(getFirestore(app),`user groups/ed/users/${edid}/form data/${i}`),JSON.parse(formData),{merge:true});
-                        setSelectedInd(i);
+                        router.push(`${pathPrefix}/${i}`);
             }}/>
+            </>
     );
 }

@@ -8,7 +8,9 @@ import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { unstable_cache } from "next/cache";
 import FormContent from "./form_content";
-import { basic_info } from "@/utils/form/template";
+import { FormTemp, basic_info, formTemplates } from "@/utils/form/template";
+import { app } from "@/utils/firebase/firebase_client";
+import { getFormData, getFormTemplate } from "./utils";
 
 export default async function FormDetail({params}: {params: { agcid: string, formid:string } }) {
     // const {data,status}=useSession({required:true});
@@ -17,18 +19,9 @@ export default async function FormDetail({params}: {params: { agcid: string, for
     
     const myRole=user.role;
     
-    const formTemplate=await unstable_cache(
-        async()=>{
-            return getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`))},
-        [params.agcid],
-        {tags:['form_template'],revalidate:false}
-    )();
-    const formData=await unstable_cache(
-        async()=>{
-            return getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`))},
-        [user.id],
-        {tags:['form_data'],revalidate:60}
-    )();
+    const formTemplate=await getFormTemplate(params.agcid);
+    const formData=await getFormData(user.id,myRole);
+    const formIdex=Number(params.formid);
 
-    return <FormContent formid={params.formid} agcid={params.agcid} template={basic_info} data={{}} uid={user.id}/>;
+    return <FormContent formid={formIdex} agcid={params.agcid} template={formTemplate[formIdex]} data={formData[formIdex]} uid={user.id}/>;
 }

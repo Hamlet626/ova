@@ -8,6 +8,9 @@ import { roles } from "@/utils/roles";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { getServerSession } from "next-auth";
 import { unstable_cache } from "next/cache";
+import { app } from "@/utils/firebase/firebase_client";
+import { formTemplates } from "@/utils/form/template";
+import { getFormData, getFormTemplate } from "./utils";
 
 export default async function FormIndex({children, params}: { children: React.ReactNode, params: { agcid: string, formid:string } }) {
     
@@ -15,22 +18,12 @@ export default async function FormIndex({children, params}: { children: React.Re
     
     const myRole=user.role!;
     
-    const formTemplate=await unstable_cache(
-        async()=>{
-            return getDocs(collection(getFirestore(),`user groups/agc/users/${params.agcid}/forms`))},
-        [params.agcid],
-        {tags:['form_template'],revalidate:false}
-    )();
-    const formData=await unstable_cache(
-        async()=>{
-            return getDocs(collection(getFirestore(),`user groups/${roles[myRole].id}/users/${user.id}/form data`))},
-        [user.id],
-        {tags:['form_data'],revalidate:60}
-    )();
+    const formTemplate=await getFormTemplate(params.agcid);
+    const formData=await getFormData(user.id,myRole);
 
     return <Box display={'flex'} height='100%'>
         <Paper elevation={24} 
-        sx={{width:'326px', height:'100%', alignSelf:'stretch',px:4,pt:4, borderRadius:0, overflowY:'auto'}}>
+        sx={{width:'326px',minWidth:'326px', height:'100%', alignSelf:'stretch',px:4,pt:4, borderRadius:0, overflowY:'auto'}}>
             <Link href={`/ed/${params.agcid}/forms`} passHref>
                 <Stack direction={'row'} spacing={'10px'}>
                     <ArrowBackIos/>
