@@ -15,6 +15,7 @@ import { unstable_cache } from "next/cache";
 import { app } from "@/utils/firebase/firebase_client";
 import { FormTemp, formTemplates } from "@/utils/form/template";
 import { formStatus, secFinished } from "@/utils/form/utils";
+import { getFormData, getFormTemplate } from "./detail/[formid]/utils";
 
 export default async function Forms({params}:{params: { agcid: string }}) {
     // const {user}=useSession({required:true}).data!;
@@ -22,25 +23,10 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     
     const myRole=user.role!;
     
-    const formTemplate=await unstable_cache(
-        async()=>{
-            const r = await getDocs(collection(getFirestore(app),`user groups/agc/users/${params.agcid}/forms`));
-            return Array.from({ length: 6 },
-                (v,i)=>r.docs.find(v=>Number(v.id)===i)?.data()??formTemplates[i]);
-        },
-        [params.agcid],
-        {tags:['form_template'],revalidate:false}
-    )();
-    const formData=await unstable_cache(
-        async()=>{
-            const r = await getDocs(collection(getFirestore(app),`user groups/${roles[myRole].id}/users/${user.id}/form data`));
-            return Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i));
-        },
-        [user.id],
-        {tags:['form_data'],revalidate:6}
-    )();
+    const formTemplate=await getFormTemplate(params.agcid);
+    const formData=await getFormData(user.id,myRole);
 
-    const formsStatus=getFinishStatus(formTemplate as FormTemp[],formData);
+    const formsStatus=getFinishStatus(formTemplate,formData);
     const remained=formsStatus.filter((v)=>v.subs.remained.length>0);
 
     return <Box pt={'30px'} pl={4} pr='80px'>
@@ -52,7 +38,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
             <QuestionAnswerOutlined/>
             <Typography variant="subtitle2">Remained Question Groups</Typography>
             <Box flexGrow={1}></Box>
-            <Link href={`/ed/${params.agcid}/forms/detail/0`} passHref>
+            <Link href={`/ed/${params.agcid}/forms/detail/0?section=${encodeURIComponent(remained[0].subs.remained[0])}`} passHref>
             <Button variant="contained" startIcon={<ArrowForward/>} 
             // onClick={()=>redirect(`/ed/${params.agcid}/forms/xxx`)}
             >
@@ -61,7 +47,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
                 </Link>
         </Box>
         <Box height={16}/>
-        <RemainedSlider remainedData={remained} />
+        <RemainedSlider remainedData={remained} agcid={params.agcid}/>
         <Box height={32}/>
         <Divider sx={{ml:'-999px', mr:'-80px'}}/>
         </>}
@@ -69,7 +55,8 @@ export default async function Forms({params}:{params: { agcid: string }}) {
         <Stack spacing={2}>
             {formsStatus.map((v,i)=>(
                 <Card key={v.title} variant="outlined">
-                    <CardActionArea>
+                    <Link href={`/ed/${params.agcid}/forms/detail/${v.index}?section=${encodeURIComponent(v.subs.remained[0])}`}>
+                        <CardActionArea>
                         <CardContent>
                         <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
                             <Typography variant="subtitle2" flexGrow={1}>{v.title}</Typography>
@@ -83,6 +70,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
                         </Box>
                         </CardContent>
                     </CardActionArea>
+                    </Link>
                     <Divider/>
                     <CardContent>
                         <Box display={'flex'} flexDirection={'row'} height={60}>
@@ -100,7 +88,8 @@ export default async function Forms({params}:{params: { agcid: string }}) {
 
 const getFinishStatus=(template:FormTemp[],data:any[])=>{
     return template.map((v,i)=>({
-        title:v.name,stats:formStatus(data[i],v),
+        title:v.name,index:i,
+        stats:formStatus(data[i],v),
         subs:{
             finished:v.content.filter(v=>secFinished(data[i],v)).map(v=>v.title),
             remained:v.content.filter(v=>!secFinished(data[i],v)).map(v=>v.title)
@@ -114,7 +103,7 @@ const SubfieldsBlock=({section,finished,agcid,formIndex,sx}:{section:any[],finis
         <Box height={8}/>
         <Stack spacing='8px' direction={'row'}>
             {...section.map(v=>(
-                <Link href={`/ed/${agcid}/forms/detail/${formIndex}?section=${encodeURIComponent("Text sec's& xx")}`}>
+                <Link href={`/ed/${agcid}/forms/detail/${formIndex}?section=${encodeURIComponent(v)}`}>
             <Chip key={v} label={v} color={finished?'secondary':'primary'} clickable />
             </Link>))}
         </Stack>

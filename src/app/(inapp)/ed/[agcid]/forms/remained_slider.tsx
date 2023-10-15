@@ -8,8 +8,10 @@ import { ArrowForward, NavigateBefore, NavigateNext } from "@mui/icons-material"
 import 'swiper/css';
 import { useEffect, useRef, useState } from "react";
 import { OVA_very_soft_grey } from "@/components/ThemeRegistry/theme_consts";
+import { redirect, useRouter } from "next/navigation";
 
-export const RemainedSlider=({remainedData})=>{
+export const RemainedSlider=({remainedData,agcid}:{remainedData:any[],agcid:string})=>{
+  const router=useRouter();
     const swiperRef=useRef<HTMLDivElement|null>(null);
     const [showNext,setShowNext]=useState(false);
     const [showPre,setShowPre]=useState(false);
@@ -48,7 +50,7 @@ export const RemainedSlider=({remainedData})=>{
             {(remainedData.map((v,i)=>(
               // <Paper sx={{display: 'inline-block',flexShrink: 0}}>
                 <Card key={i} elevation={0} sx={{display: 'inline-block',flexShrink: 0, bgcolor:OVA_very_soft_grey}}> 
-                <CardActionArea>
+                <CardActionArea onClick={()=>router.push(`/ed/${agcid}/forms/detail/${v.index}?section=${encodeURIComponent(v.subs.remained[0])}`)}>
                     <CardContent>
                         <Typography variant="subtitle2" color={'secondary'}>{v.title}</Typography>
                         <Typography variant="subtitle2" noWrap>{v.subs.remained.join(', ')}</Typography>

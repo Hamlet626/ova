@@ -9,46 +9,49 @@ import FormFieldUI from "./form_field";
 import { Form, useForm } from "react-hook-form";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "@/utils/firebase/firebase_client";
-import { secFinished } from "@/utils/form/utils";
+import { formStatus, secFinished } from "@/utils/form/utils";
 
-export default function FormContent({formid, agcid, template, data, uid}:{ formid:string, agcid:string, template:FormTemp, data:any, uid:string} ){
+export default function FormContent({formid, agcid, template, data, uid}:{ formid:number, agcid:string, template:FormTemp, data:any, uid:string} ){
     const sectionName = decodeURIComponent(useSearchParams().get("section")??"");
     const initialSec=Math.max(0,template.content.findIndex((v,i)=>v.title===sectionName));
-    const initialField=Math.max(0,template.content[initialSec].fields.findIndex((v)=>v.required&&data[v.id??""]==null));
+    const initialField=Math.max(0,template.content[initialSec].fields.findIndex((v)=>v.required&&data?.[v.id??""]==null));
     const [sectionNum,setSectionNum]=useState(initialSec);
     const isLastSec=template.content.length===sectionNum+1;
     const [fieldNum,setFieldNum]=useState(initialField);
     const [progression,setProg]=useState(0);
     const router=useRouter();
 
-    const {handleSubmit, register, formState:{errors} }=useForm({defaultValues:{"password":10}});
+    const {handleSubmit, register, formState:{errors} }=useForm({defaultValues:data});
+
+    const stats=formStatus(data,template);
 
     const onSubmit = async (data:any,nextSec?: number|null) => {
-    console.log(data);
-    console.log(localStorage.getItem(`form${formid}`)??'{}');
+    // console.log(data);
+    // console.log(localStorage.getItem(`form${formid}`)??'{}');
+
     const preData=JSON.parse(localStorage.getItem(`form${formid}`)??'{}');
     localStorage.setItem(`form${formid}`,JSON.stringify({...preData,data}));
     if(nextSec==null){
-        setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${Number(formid)+1}`),{...preData,data},{merge:true});
-        router.push(`ed/${agcid}/forms/detail/${Number(formid)+1}`);                
+        setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid+1}`),{...preData,data},{merge:true});
+        router.push(`ed/${agcid}/forms/detail/${formid+1}`);                
     }
     else setSectionNum(nextSec);
     }
 
     return <>
         {/* <Button sx={{position:'absolute'}} onClick={()=>{
-            localStorage.setItem(`form${formid}`,JSON.stringify({test:'new data'}));
+            localStorage.setItem(`test`,JSON.stringify({test:'new data'}));
         }}>test</Button> */}
         <Stack direction={'column'}>
             <Stack direction={'row'} alignItems={'center'}>
                     <TimelineOutlined color="secondary"/>
                     <Box width={4}/>
-                    <Typography sx={font8} color={'secondary'} whiteSpace={'nowrap'}>{'time xxx'}</Typography>
+                    <Typography sx={font8} color={'secondary'} whiteSpace={'nowrap'}>{stats.time}</Typography>
                     <Box width={4}/>
-                    <LinearProgress value={progression} sx={{width:'100%'}}/>    
-                    <Box width={24}/>     
-            <Typography sx={font7} color={'primary'}>{progression} </Typography> 
-            <Typography sx={font7} whiteSpace={'nowrap'}>/ 100%</Typography> 
+                    <LinearProgress value={stats.finished/stats.all} sx={{width:'100%'}}/>    
+                    <Box width={24}/>
+            <Typography sx={font7} color={'primary'}>{stats.finished} </Typography> 
+            <Typography sx={font7} whiteSpace={'nowrap'}>/ {stats.all}</Typography> 
             </Stack>
             <Box height={8}/>
             <Stack direction={'row'} alignItems={'end'}>
@@ -58,7 +61,7 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
                     {template.content.map((v,i)=>{
                         if(i===sectionNum)return null;
                         const finished=secFinished(data,v);
-                        return <Chip icon={finished?<Check/>:undefined} label={v.title} 
+                        return <Chip key={i} icon={finished?<Check/>:undefined} label={v.title} 
                         onClick={handleSubmit((d)=>onSubmit(d,i))}/>;
                     })}
                     </Breadcrumbs>
@@ -76,7 +79,7 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
                 </Stack> */}
                 <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'center'} pt={10} pb={20} px={6}>
                 <form onSubmit={handleSubmit((d)=>onSubmit(d,isLastSec?null:sectionNum+1))}>
-                    {template.content[sectionNum].fields.map((v)=><FormFieldUI data={v} register={register}/>)}
+                    {template.content[sectionNum].fields.map((v,i)=><FormFieldUI key={i} data={v} register={register}/>)}
                 </form>
                 </Box>
                 </Box>
