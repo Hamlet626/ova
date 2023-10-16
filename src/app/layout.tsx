@@ -23,9 +23,6 @@ export default function RootLayout({
       <ThemeRegistry>
       {children}
       </ThemeRegistry>
-      <Suspense fallback={null}>
-                <NavigationEvents />
-            </Suspense>
       </body>
     </html>
   )

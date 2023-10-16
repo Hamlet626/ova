@@ -10,7 +10,7 @@ import { Form, useForm } from "react-hook-form";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "@/utils/firebase/firebase_client";
 
-export default function FormContent({formid, agcid, template, data, uid}:{ formid:string, agcid:string, template:FormTemp, data:any, uid:string} ){
+export default function FormContent({formid, agcid, template, data, uid}:{ formid:number, agcid:string, template:FormTemp, data:any, uid:string} ){
     const sectionName = decodeURIComponent(useSearchParams().get("section")??"");
     const initialSec=Math.max(0,template.content.findIndex((v,i)=>v.title===sectionName));
     const initialField=Math.max(0,template.content[initialSec].fields.findIndex((v)=>v.required&&data[v.id??""]==null));
@@ -27,16 +27,16 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const preData=JSON.parse(localStorage.getItem(`form${formid}`)??'');
     localStorage.setItem(`form${formid}`,JSON.stringify({...preData,data}));
     if(isLastSec&&next){
-        setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${Number(formid)+1}`),{...preData,data},{merge:true});
-        router.push(`ed/${agcid}/forms/detail/${Number(formid)+1}`);                
+        setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid}`),{...preData,data},{merge:true});
+        router.push(`ed/${agcid}/forms/detail/${formid+1}`);                
     }
     else setSectionNum(sectionNum+(next?1:-1));
     }
 
     return <>
-        {/* <Button sx={{position:'absolute'}} onClick={()=>{
+        <Button sx={{position:'absolute'}} onClick={()=>{
             localStorage.setItem(`form${formid}`,JSON.stringify({test:'new data'}));
-        }}>test</Button> */}
+        }}>test</Button>
             <Stack direction={'row'} alignItems={'center'}>
             <LinearProgress value={progression} sx={{width:'100%'}}/>    
                     <Box width={24}/>     
