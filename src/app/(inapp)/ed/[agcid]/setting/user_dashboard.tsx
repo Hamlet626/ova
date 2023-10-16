@@ -1,9 +1,24 @@
 'use client';
-import { Box, Link, Avatar, Stack, Typography, Button } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { useState } from 'react'
+import { Box, Avatar, Stack, Typography, Button, Dialog, DialogTitle, DialogContent, TextField, Grid, DialogActions } from "@mui/material";
+import { Edit, Link } from "@mui/icons-material";
 import { outline_variant, font3, font5 } from "@/components/ThemeRegistry/theme_consts";
 
 export default function UserDashboard({ user }:{ user:any }) {
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenModal(true);
+  }
+
+  const handleClose = () => {
+    setOpenModal(false);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+  }
+
   return (
     <>
       <Box
@@ -93,11 +108,42 @@ export default function UserDashboard({ user }:{ user:any }) {
               color: 'white',
               textTransform: 'capitalize'
             }}
+            onClick={handleClickOpen}
           >
             <Edit fontSize={'small'} sx={{marginRight:'3px'}}/> Edit
           </Button>
         </Box>
       </Box>
+      <Dialog
+        open={openModal}
+        onClose={handleClose}
+      >
+        <DialogTitle>Edit User Information</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleSubmit}>
+            <Grid container direction="column">
+              <TextField
+                name={"name"}
+                label={"Name"}
+                sx={{
+                  margin: '7px 0px 7px 0px'
+                }}
+              />
+              <TextField
+                name={"email"}
+                label={"Email"}
+                sx={{
+                  margin: '7px 0px 7px 0px'
+                }}
+              />
+              <DialogActions>
+                <Button>Cancel</Button>
+                <Button type="submit">Submit</Button>
+              </DialogActions>
+            </Grid>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
