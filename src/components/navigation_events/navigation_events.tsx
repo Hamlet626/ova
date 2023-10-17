@@ -29,9 +29,10 @@ export function NavigationEvents() {
       const formid=pathseg[pathseg.length-1];
       const storedData=localStorage.getItem(`form${formid}`);
       if(storedData!=null){
-
-    console.log(roles[user.role].id,user.id,JSON.parse(storedData));
+        
+        console.log("form saved",roles[user.role].id,user.id,JSON.parse(storedData));
         // setDoc(doc(getFirestore(app),`user groups/${roles[user.role].id}/users/${user.id}/form data/${formid}`),JSON.parse(storedData),{merge:true});
+        localStorage.removeItem(`form${formid}`);
       }
     }
 
