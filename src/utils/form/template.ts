@@ -31,7 +31,8 @@ import {
 
 export interface FormTemp{
     name:string,
-    content:FormSection[]
+    content:FormSection[],
+    algo?:any[]
 }
 export interface FormSection{
     title:string,
@@ -59,20 +60,11 @@ export const basic_info:FormTemp={
         {
             title:"basic info",
             fields:[
-                {id:"s0",label:"First Name",type:"text",length:"short",required:true},
-                {id:"s1",label:"Middle Name",type:"text",length:"short",required:false},
-                {id:"s2",label:"Last Name",type:"text",length:"short",required:true},
+                //{label:"Name",type:"name",required:true},
                 {
                     id: "s3",
                     label: "Address",
                     type: "address",
-                    required: true
-                },
-                {
-                    id: "s4",
-                    label: "Email",
-                    type: "text",
-                    length: "medium",
                     required: true
                 },
                 {
@@ -179,6 +171,9 @@ export const basic_info:FormTemp={
                 }
             ]
         }
+    ],
+    algo:[
+        {fdid:'s2',label:'Birthday'}
     ]
 };
 
@@ -652,18 +647,30 @@ export const family_partner:FormTemp={
     ]
 };
 
-function assign_IDs(content) {
-    let count = 0;
+function assign_IDs(content:FormTemp) {
     const copyContent = JSON.parse(JSON.stringify(content));
-    const assign = (fields) => {
-        for (let field of fields) {
-            field.id = "s" + count++;
-            if (field.sub) {
-                assign(field.sub);
-            }
+    const assign = (field:FormField) => {
+        let count = 0;
+        if(field.sub)
+        for (let sub of field.sub) {
+            sub.id = "s" + count++;
+            assign(sub);
+        }
+        if(field.group)
+        for (let sub of field.group) {
+            sub.id = "s" + count++;
+            assign(sub);
         }
     };
-    assign(copyContent);
+
+    let count = 0;
+    for(let sec of copyContent.content){
+        for(let field of sec.fields){
+            field.id = "s" + count++;
+            assign(field);
+        }
+    }
+    
     return copyContent;
 }
 
@@ -967,8 +974,7 @@ export const personal_and_medical = {
     ]
 }
 
-let modified_content = assign_IDs(personal_and_medical.content);
-
+export const modified_content = assign_IDs(basic_info);
 
 export const other_clinic_questions:FormTemp={
     name:"other clinic questions",
@@ -976,7 +982,7 @@ export const other_clinic_questions:FormTemp={
 };
 
 
-const personData=(name,{addRelation,addDobAddr,addProp}):FormField[]=>{
+const personData=(name:string,{addRelation,addDobAddr,addProp}:{addRelation:boolean,addDobAddr:boolean,addProp:any}):FormField[]=>{
     const r = [
         {id:"s0",label:`${name}'s First Name`,type:"text",length:"short",required:true},
         {id:"s1",label:`${name}'s Middle Name`,type:"text",length:"short",required:false},
@@ -1046,4 +1052,6 @@ function optQuestion(question: string):FormField {
 }
 
 
-export const formTemplates=[basic_info,physical_personal_trait,education_occupation,background_history,family_partner,other_clinic_questions];
+export const formTemplates=[basic_info,physical_personal_trait,education_occupation,
+    background_history,family_partner,other_clinic_questions]
+    .map(v=>assign_IDs(v));

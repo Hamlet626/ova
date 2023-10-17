@@ -1,7 +1,7 @@
 'use client'
 import { font7, font8 } from "@/components/ThemeRegistry/theme_consts";
 import { FormTemp } from "@/utils/form/template";
-import { ArrowBack, ArrowForward, Check, CheckOutlined, TimelineOutlined } from "@mui/icons-material";
+import { ArrowBack, ArrowForward, Check, TimelapseOutlined, } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Chip, LinearProgress, Stack, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -18,7 +18,6 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const [sectionNum,setSectionNum]=useState(initialSec);
     const isLastSec=template.content.length===sectionNum+1;
     const [fieldNum,setFieldNum]=useState(initialField);
-    const [progression,setProg]=useState(0);
     const router=useRouter();
 
     const {handleSubmit, register, formState:{errors} }=useForm({defaultValues:data});
@@ -26,25 +25,24 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const stats=formStatus(data,template);
 
     const onSubmit = async (data:any,nextSec?: number|null) => {
-    // console.log(data);
-    // console.log(localStorage.getItem(`form${formid}`)??'{}');
+        
+        const preData=JSON.parse(localStorage.getItem(`form${formid}`)??'{}');
 
-    const preData=JSON.parse(localStorage.getItem(`form${formid}`)??'{}');
-    localStorage.setItem(`form${formid}`,JSON.stringify({...preData,data}));
-    if(nextSec==null){
-        setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid+1}`),{...preData,data},{merge:true});
-        router.push(`ed/${agcid}/forms/detail/${formid+1}`);                
-    }
-    else setSectionNum(nextSec);
+        localStorage.setItem(`form${formid}`,JSON.stringify({...preData,...data}));
+        if(nextSec==null){
+            //setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid}`),{...preData,data},{merge:true});
+            router.push(`ed/${agcid}/forms/detail/${formid+1}`);                
+        }
+        else setSectionNum(nextSec);
     }
 
     return <>
         {/* <Button sx={{position:'absolute'}} onClick={()=>{
             localStorage.setItem(`test`,JSON.stringify({test:'new data'}));
-        }}>test</Button> */}
+        }}>test set localStorage</Button> */}
         <Stack direction={'column'}>
             <Stack direction={'row'} alignItems={'center'}>
-                    <TimelineOutlined color="secondary"/>
+                    <TimelapseOutlined color="secondary"/>
                     <Box width={4}/>
                     <Typography sx={font8} color={'secondary'} whiteSpace={'nowrap'}>{stats.time}</Typography>
                     <Box width={4}/>

@@ -9,28 +9,12 @@ import { Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function EDFormTitles({pathPrefix,formid,edid,data}:{pathPrefix:string,formid:string,edid:string,data:any[]}) {
-    const router=useRouter();
-    
-    // const [tst,settst]=useState('');
-    // useEffect(()=>{
-    //     console.log("in use effect test",window);
-    //     settst(`${localStorage?.getItem('test')}`);
-    // },[localStorage?.getItem('test')]);
 
-    console.log([0,1,2,3,4,5].map(v=>Object.keys(data[v]??{}).length));
-    let titles=formTemplates.map((v,i)=>({title:v.name,selected:Number(formid)===i,
-    check:formFinished(data[i],v),
-    dot: Object.keys(data[i]??{}).length===0 }));
+    let titles=formTemplates.map((v,i)=>({
+        title:v.name,selected:Number(formid)===i,
+        href:`${pathPrefix}/${i}`,
+        check:formFinished(data[i],v),
+        dot: Object.keys(data[i]??{}).length===0 }));
 
-    return (<>
-            <FormTitlesUI titles={titles} 
-            onClick={(t,i)=>{
-                if(Number(formid)===i)return;
-                const formData=localStorage.getItem(`form${formid}`);
-                        if(formData)
-                        setDoc(doc(getFirestore(app),`user groups/ed/users/${edid}/form data/${i}`),JSON.parse(formData),{merge:true});
-                        router.push(`${pathPrefix}/${i}`);
-            }}/>
-            </>
-    );
+    return (<FormTitlesUI titles={titles}/>);
 }

@@ -2,6 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
+import { Suspense } from 'react';
+import { NavigationEvents } from '../components/navigation_events';
 
 const inter = Inter({ subsets: ['latin'] })
 

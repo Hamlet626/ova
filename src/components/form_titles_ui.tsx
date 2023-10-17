@@ -12,7 +12,7 @@ type title={
     dot?:boolean,
     href?:string
 }
-export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick:(title:title,index:number)=>void}) {
+export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick?:(title:title,index:number)=>void}) {
     const primary90='#FFDBCE';
     return(
             <List >
@@ -26,7 +26,7 @@ export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick:(
                               backgroundColor:alpha(primary90,0.86),
                             }
                           },
-                    }} onClick={href==null?(ev)=>onClick({title,selected,icon,check,dot}, index):undefined}>
+                    }} onClick={onClick!=null?(ev)=>onClick({title,selected,icon,check,dot}, index):undefined}>
                         <ListItemIcon>
                             {icon??(check?<CheckCircleOutline color="primary"/>:dot?<Circle sx={{color:primary90}}/>:null)}
                         </ListItemIcon>
