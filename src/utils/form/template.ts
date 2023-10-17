@@ -31,7 +31,8 @@ import {
 
 export interface FormTemp{
     name:string,
-    content:FormSection[]
+    content:FormSection[],
+    algo?:any[]
 }
 export interface FormSection{
     title:string,
@@ -59,20 +60,11 @@ export const basic_info:FormTemp={
         {
             title:"basic info",
             fields:[
-                {id:"s0",label:"First Name",type:"text",length:"short",required:true},
-                {id:"s1",label:"Middle Name",type:"text",length:"short",required:false},
-                {id:"s2",label:"Last Name",type:"text",length:"short",required:true},
+                {label:"Name",type:"name",required:true},
                 {
                     id: "s3",
                     label: "Address",
                     type: "address",
-                    required: true
-                },
-                {
-                    id: "s4",
-                    label: "Email",
-                    type: "text",
-                    length: "medium",
                     required: true
                 },
                 {
@@ -179,6 +171,9 @@ export const basic_info:FormTemp={
                 }
             ]
         }
+    ],
+    algo:[
+        {fdid:'s2',label:'Birthday'}
     ]
 };
 
@@ -658,6 +653,11 @@ function assign_IDs(content:FormTemp) {
         let count = 0;
         if(field.sub)
         for (let sub of field.sub) {
+            sub.id = "s" + count++;
+            assign(sub);
+        }
+        if(field.group)
+        for (let sub of field.group) {
             sub.id = "s" + count++;
             assign(sub);
         }
