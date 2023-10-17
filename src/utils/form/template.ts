@@ -60,7 +60,7 @@ export const basic_info:FormTemp={
         {
             title:"basic info",
             fields:[
-                {label:"Name",type:"name",required:true},
+                //{label:"Name",type:"name",required:true},
                 {
                     id: "s3",
                     label: "Address",

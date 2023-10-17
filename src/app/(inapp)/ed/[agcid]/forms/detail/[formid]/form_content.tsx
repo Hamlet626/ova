@@ -18,7 +18,6 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const [sectionNum,setSectionNum]=useState(initialSec);
     const isLastSec=template.content.length===sectionNum+1;
     const [fieldNum,setFieldNum]=useState(initialField);
-    const [progression,setProg]=useState(0);
     const router=useRouter();
 
     const {handleSubmit, register, formState:{errors} }=useForm({defaultValues:data});
@@ -26,22 +25,21 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const stats=formStatus(data,template);
 
     const onSubmit = async (data:any,nextSec?: number|null) => {
-    // console.log(data);
-    // console.log(localStorage.getItem(`form${formid}`)??'{}');
+        
+        const preData=JSON.parse(localStorage.getItem(`form${formid}`)??'{}');
 
-    const preData=JSON.parse(localStorage.getItem(`form${formid}`)??'{}');
-    localStorage.setItem(`form${formid}`,JSON.stringify({...preData,data}));
-    if(nextSec==null){
-        setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid+1}`),{...preData,data},{merge:true});
-        router.push(`ed/${agcid}/forms/detail/${formid+1}`);                
-    }
-    else setSectionNum(nextSec);
+        localStorage.setItem(`form${formid}`,JSON.stringify({...preData,...data}));
+        if(nextSec==null){
+            //setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid}`),{...preData,data},{merge:true});
+            router.push(`ed/${agcid}/forms/detail/${formid+1}`);                
+        }
+        else setSectionNum(nextSec);
     }
 
     return <>
         {/* <Button sx={{position:'absolute'}} onClick={()=>{
             localStorage.setItem(`test`,JSON.stringify({test:'new data'}));
-        }}>test</Button> */}
+        }}>test set localStorage</Button> */}
         <Stack direction={'column'}>
             <Stack direction={'row'} alignItems={'center'}>
                     <TimelapseOutlined color="secondary"/>

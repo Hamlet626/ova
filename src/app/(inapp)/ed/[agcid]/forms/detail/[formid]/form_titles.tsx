@@ -9,15 +9,7 @@ import { Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function EDFormTitles({pathPrefix,formid,edid,data}:{pathPrefix:string,formid:string,edid:string,data:any[]}) {
-    const router=useRouter();
-    
-    // const [tst,settst]=useState('');
-    // useEffect(()=>{
-    //     console.log("in use effect test",window);
-    //     settst(`${localStorage?.getItem('test')}`);
-    // },[localStorage?.getItem('test')]);
 
-    console.log([0,1,2,3,4,5].map(v=>Object.keys(data[v]??{}).length));
     let titles=formTemplates.map((v,i)=>({
         title:v.name,selected:Number(formid)===i,
         href:`${pathPrefix}/${i}`,

@@ -20,7 +20,6 @@ export function NavigationEvents() {
  
   useEffect(() => {
     const url = `${pathname}?${searchParams}`
-    console.log(url)
     // You can now use the current URL
     // ...
     
@@ -28,10 +27,11 @@ export function NavigationEvents() {
       const pathseg=prePath.current.split('/');
       const formid=pathseg[pathseg.length-1];
       const storedData=localStorage.getItem(`form${formid}`);
-      if(storedData!=null){
+      if(storedData!=null && Object.keys(storedData).length>0){
         
-        console.log("form saved",roles[user.role].id,user.id,JSON.parse(storedData));
-        // setDoc(doc(getFirestore(app),`user groups/${roles[user.role].id}/users/${user.id}/form data/${formid}`),JSON.parse(storedData),{merge:true});
+        // console.log("form saved",roles[user.role].id,user.id,JSON.parse(storedData));
+        // console.log(storedData);
+        setDoc(doc(getFirestore(app),`user groups/${roles[user.role].id}/users/${user.id}/form data/${formid}`),JSON.parse(storedData),{merge:true});
         localStorage.removeItem(`form${formid}`);
       }
     }

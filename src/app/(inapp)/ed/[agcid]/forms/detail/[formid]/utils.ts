@@ -17,7 +17,7 @@ export const getFormTemplate=(agcid:string)=>unstable_cache(
 export const getFormData=(uid:string,role:RoleNum)=>unstable_cache(
     async()=>{
         const r = await getDocs(collection(getFirestore(app),`user groups/${roles[role].id}/users/${uid}/form data`));
-        return Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i));
+        return Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i)?.data());
     },
     [uid],
     {tags:['form_data'],revalidate:6}
