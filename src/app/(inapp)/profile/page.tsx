@@ -29,26 +29,20 @@ import { getServerSession } from "next-auth";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import Uploadprofile from "@/components/signup_image";
 
+export function c2(){
+return (
+<Typography variant="subtitle2" sx={{ mr: 2 }}>
+            Do it later
+          </Typography>
+);
+}
 
-export  async function  Signup_profile() {
-//     const user=(await getServerSession(authOptions))!.user!;
-//     console.log(user);
-//     const myRole=user.role!;// //    const session = await getServerSession(authOptions);
-//
-//      if (session) {
-//        // Access user-related data from the session
-//        const user = session.user;
-//        const clinic = user?.agencies?.[0] || null; // Assuming the clinic is in the first position.
-//
-//        // Log the session and clinic information
-//        console.log('Session:', session);
-//        console.log('Clinic:', clinic);
-//
-//        // Now you can use the 'user' or 'clinic' data in your component.
-//      } else {
-//        // Handle the case when there's no active session
-//      }
-  const clinic = null ;
+export async function  Signup_profile() {
+    const user=(await getServerSession(authOptions))!.user!;
+    const clinic=user?.agencies?.[0];
+    const myRole=user.role!;
+
+
 
   return (
   <Box minWidth='400px'>
@@ -63,36 +57,12 @@ export  async function  Signup_profile() {
                <Typography > /100% </Typography>
                    </Box>
 <Box height={50}/>
-<Uploadprofile clinic={clinic} />
+<Uploadprofile clinic={clinic} role={myRole}
+c1={<Typography variant="subtitle2" sx={{ mr: 2 }}>Do it later</Typography>} />
 
-    <Box height={200}/>
 
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-          }}
-        >
-          <Typography variant="subtitle2" sx={{ mr: 2 }}>
-            Do it later
-          </Typography>
-          <Button
-            fullWidth
-            variant="contained"
-            startIcon={<ArrowForwardIcon />}
-            sx={{
-              typography: 'label1',
-              color: 'white',
-              width: '193px',
-            }}
-          >
-            Next
-          </Button>
-        </Box>
 </Box>
-
-          );
+        );
         }
 
 

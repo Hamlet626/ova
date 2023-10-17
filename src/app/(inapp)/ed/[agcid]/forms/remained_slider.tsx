@@ -5,7 +5,7 @@ import { Swiper, SwiperRef, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Mousewheel, Keyboard, FreeMode, Scrollbar } from 'swiper/modules';
 import { Button, Card, CardActionArea, CardContent, Fab, Paper, Stack, Typography } from "@mui/material";
 import { ArrowForward, NavigateBefore, NavigateNext } from "@mui/icons-material";
-import 'swiper/css';
+// import 'swiper/css';
 import { useEffect, useRef, useState } from "react";
 import { OVA_very_soft_grey } from "@/components/ThemeRegistry/theme_consts";
 import { redirect, useRouter } from "next/navigation";

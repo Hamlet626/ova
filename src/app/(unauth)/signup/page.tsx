@@ -19,6 +19,7 @@ import {   InputLabel,FormControl,useFormControl, TextField, FormHelperText} fro
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+import { RoleNum, roles } from "@/utils/roles";
 import {useForm, Controller, useFormState} from 'react-hook-form';
 import {signIn} from "next-auth/react";
 // import SigninBlock from "@/app/(unauth)/signin/signin_block";
@@ -100,10 +101,8 @@ export function Name_NotClinic({ register, control, errors, trigger }) {
 export function SignUp1(){
     const hostName=useUrl()?.host;
     const clinic = getClinic(hostName);
-    console.log(clinic);
     const searchParams = useSearchParams();
-const role = searchParams.get('role');
-
+const role = clinic == null ? 2 : RoleNum[searchParams.get('role')];
 const router = useRouter();
 
  const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
@@ -121,6 +120,7 @@ const router = useRouter();
    if (isValid) {
      const emailValue = getValues('email');
      const passwordValue = getValues('password');
+     const nameValue=clinic == null ?getValues('companyName'):getValues('lastName');
 
      const r = await fetch('/api/signup', {
        method: 'POST',
@@ -130,10 +130,9 @@ const router = useRouter();
        },
        body: JSON.stringify({
          email: emailValue,
-         name:'Test',
-//          name: clinic,
-//          role:role1
-         role: 0,
+//          name:'Test',
+         name: nameValue,
+         role: role,
          password: passwordValue,
        }),
      });
@@ -166,13 +165,13 @@ const router = useRouter();
         <Box maxWidth="400px" >
 
         <Typography  sx={font2}>
-          {clinic !== null ? 'Clinics Sign Up' : (role === 0 ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
+          {clinic == null ? 'Clinics Sign Up' : (role === 0 ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
         </Typography>
 
          <Box height={50} />
 
     <form >
-        {clinic !== null ? <Name_Clinic register={register} errors={errors} trigger={trigger} />
+        {clinic == null ? <Name_Clinic register={register} errors={errors} trigger={trigger} />
           : <Name_NotClinic register={register} errors={errors} trigger={trigger}  />}
          <Box height={41} />
            <Input

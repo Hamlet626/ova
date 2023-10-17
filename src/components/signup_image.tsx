@@ -40,12 +40,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-export default function Uploadprofile( { clinic } ) {
- const { data: session } = useSession();
-    const role = session?.user?.role;
-//     const clinic = session?.user?.agencies?.[0];
-//     console.log(role);
-//     console.log(clinic);
+export default function Uploadprofile( { clinic,role,c1 } ) {
 
 
     const [selectedFile,setSelectedFile]=useState(null);
@@ -89,7 +84,7 @@ export default function Uploadprofile( { clinic } ) {
 
         <Stack direction="column" justifyContent="center" alignItems="flex-start" spacing={2}>
           <Typography variant="h6" sx={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
-            {clinic === null ? 'Upload Logo' : role === 0  ? "Upload Egg Donor's Photo" : "Upload Recipient's Photo"}
+            {clinic == null ? 'Upload Logo' : role === 0  ? "Upload Egg Donor's Photo" : "Upload Recipient's Photo"}
           </Typography>
           {selectedFile && (
             <Stack spacing={1}>
@@ -113,7 +108,7 @@ export default function Uploadprofile( { clinic } ) {
     </Stack>
 
 
-{clinic === null && (
+{clinic ==null && (
       <Input name="url" fullWidth placeholder="Desired URL" variant="outlined"  type="text" sx={{ width: '100%', marginTop: '24px' }}
       startAdornment={ <InputAdornment position="start"> <LinkOutlinedIcon /></InputAdornment> }
       />
@@ -122,10 +117,29 @@ export default function Uploadprofile( { clinic } ) {
  </Box>
 
 
-{/*             <Typography variant="body1" sx={{px:"16px"}}> */}
-{/*                 {"Don't have a2n account? "} */}
+ <Box height={200}/>
 
-{/*             </Typography> */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
+        >
+      {c1}
+          <Button
+            fullWidth
+            variant="contained"
+            startIcon={<ArrowForwardIcon />}
+            sx={{
+              typography: 'label1',
+              color: 'white',
+              width: '193px',
+            }}
+          >
+            Next
+          </Button>
+        </Box>
         </>
     )
 }
