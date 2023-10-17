@@ -94,11 +94,11 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
         openSubStatusList[index] = !openSubStatusList[index];
         setOpenSubStatusList([...openSubStatusList]);
     }
-   
+
     const [editDialogBoxList, setEditDialogBoxList] = React.useState(Array(dataset.length).fill(false));
     const changeEditDialogBoxList = (index: number) => {
-        let newlist=Array(dataset.length).fill(false);
-        newlist[index] = true;      
+        let newlist = Array(dataset.length).fill(false);
+        newlist[index] = true;
         //editDialogBoxList[index] = !editDialogBoxList[index];
         setEditDialogBoxList([...newlist]);
     }
@@ -131,7 +131,7 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
                                 {row.sub ? <IconButton
                                     aria-label="expand row"
                                     size="small"
-                                    onClick={() => { setOpenSubStatus(!openSubStatus); changeOpenSubStatusList(index);changeEditDialogBoxList(index);setEditFieldIndex(index); console.log("selected field index",editFieldIndex)}}
+                                    onClick={() => { setOpenSubStatus(!openSubStatus); changeOpenSubStatusList(index); changeEditDialogBoxList(index); setEditFieldIndex(index); console.log("selected field index", editFieldIndex) }}
                                 >
                                     {/* {openSubStatus ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} */}
                                     {openSubStatusList[index] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -165,10 +165,10 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
                             <Box sx={{ width: '200px' }}>
                                 <Button variant="solid" startIcon={<EditIcon color='primary' />}
                                     onClick={(e: React.SyntheticEvent) => {
-                                        onEditField(index, dataset);                                   
+                                        onEditField(index, dataset);
                                         setEditField(dataset[index]);
                                         setEditFieldIndex(index);
-                                        changeEditDialogBoxList(index);               
+                                        changeEditDialogBoxList(index);
                                     }}
                                 >
                                 </Button>
@@ -189,7 +189,7 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
                                     setEditDialogBox(!editDialogBox);
                                     changeEditDialogBoxList(index);
                                 }} />
-                                { editDialogBox? <EditFieldDialogBox fieldlist={row.sub} index={editFieldIndex}  field_definition={row.sub[editFieldIndex]} open_status={editDialogBox} closeDialogBox={closeFieldEditDialogBox} /> :<div/>}
+                            {editDialogBox ? <EditFieldDialogBox fieldlist={row.sub} index={editFieldIndex} field_definition={row.sub[editFieldIndex]} open_status={editDialogBox} closeDialogBox={closeFieldEditDialogBox} /> : <div />}
                             {/* <EditFieldDialogBox field_definition={editField} open_status={editDialogBox} closeDialogBox={closeFieldEditDialogBox} /> */}
                         </Collapse>
                     </ListItem>
@@ -205,66 +205,65 @@ function ShowTable({ dataset, depth, onEditField }: { dataset: field_definition[
                     showRow(row, index, depth,)
                 ))}
             </List>
-            { (editDialogBox) ? <EditFieldDialogBox fieldlist={dataset} index={editFieldIndex} field_definition={editField} open_status={editDialogBox} closeDialogBox={closeFieldEditDialogBox} /> :<div/>}
+            {(editDialogBox) && <EditFieldDialogBox fieldlist={dataset} index={editFieldIndex} field_definition={editField} open_status={editDialogBox} closeDialogBox={closeFieldEditDialogBox} />}
             {/* <EditFieldDialogBox field_definition={editField} open_status={editDialogBox} closeDialogBox={closeFieldEditDialogBox} /> */}
         </>
     )
 }
 
 
-function EditFieldDialogBox({ fieldlist,index, field_definition,open_status, closeDialogBox }: { fieldlist:field_definition[],index:number, field_definition:field_definition,open_status: boolean, closeDialogBox: () => void }) {
-    console.log("open dialog box 1, fieldlist", fieldlist, " index ",index, " fieldlist[index] ",fieldlist[index]);
-    console.log("open dialog box 2, field_definition", field_definition);
-    console.log("open dialog box 3, index", index);
+function EditFieldDialogBox({ fieldlist, index, field_definition, open_status, closeDialogBox }: { fieldlist: field_definition[], index: number, field_definition: field_definition, open_status: boolean, closeDialogBox: () => void }) {
+    // console.log("open dialog box 1, fieldlist", fieldlist, " index ", index, " fieldlist[index] ", fieldlist[index]);
+    // console.log("open dialog box 2, field_definition", field_definition);
+    // console.log("open dialog box 3, index", index);
     const { handleSubmit, register, control } = useForm(
         {
             // defaultValues:
             // {
-            //     "id": fieldlist[index].id??"",
+            //     "id": fieldlist[index].id ?? "",
             //     //"id": "testid",
             //     //"label": "test_label", 
-            //     "label": fieldlist[index].label??"",
-            //     "type": fieldlist[index].type??"",
-            //     "length": fieldlist[index].length??"",
-            //     "required": fieldlist[index].required??false,
+            //     "label": fieldlist[index].label ?? "",
+            //     "type": fieldlist[index].type ?? "",
+            //     "length": fieldlist[index].length ?? "",
+            //     "required": fieldlist[index].required ?? false,
             // }
         }
     );
-
-    console.log("open dialog box, field_definition", field_definition);
-    console.log("open dialog box, fieldlist ", fieldlist," index ",index," fieldlist[index] ",fieldlist[index]);
-
-    const [currentEditField, setCurrentEditField] = React.useState(fieldlist[index]);
-    const updateCurrentEditField = (data: any) => {
-        setCurrentEditField(data);
-        fieldlist[index] = data;
-        console.log(" 2 updateCurrentEditField", data, currentEditField, fieldlist[index]);
-    }
+    // console.log("open dialog box, field_definition", field_definition);
+    // console.log("open dialog box, fieldlist ", fieldlist, " index ", index, " fieldlist[index] ", fieldlist[index]);
+    // const [currentEditField, setCurrentEditField] = React.useState(fieldlist[index]);
+    // const updateCurrentEditField = (data: any) => {
+    //     setCurrentEditField(data);
+    //     fieldlist[index] = data;
+    //     //console.log(" 2 updateCurrentEditField", data, currentEditField, fieldlist[index]);
+    // }
     function PaperComponent(props: PaperProps) {
         return (
-          <Draggable
-            handle="#draggable-dialog-title"
-            cancel={'[class*="MuiDialogContent-root"]'}
-          >
-            <Paper {...props} />
-          </Draggable>
+            <Draggable
+                handle="#draggable-dialog-title"
+                cancel={'[class*="MuiDialogContent-root"]'}
+            >
+                <Paper {...props} />
+            </Draggable>
         );
-      }
-   
+    }
+
     const onSubmit = (data: any) => {
-        console.log(" 1 Form submit ",data);
+        console.log(" 1 Form submit ", data);
         // field_definition = data;
         //setCurrentEditField(data);
-        updateCurrentEditField(data);
+        //updateCurrentEditField(data);
+        fieldlist[index] = data;
         closeDialogBox();
-        console.log(" 3 onSubmit currentEditField is changed to ", currentEditField);
+        //console.log(" 3 onSubmit currentEditField is changed to ", currentEditField);
     };
     return (
         <Dialog open={open_status} onClose={closeDialogBox} PaperComponent={PaperComponent} aria-labelledby="draggable-dialog-title">
             <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Edit the field</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {JSON.stringify(field_definition)}
+                    {/* {JSON.stringify(field_definition)} */}
                 </DialogContentText>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <TableContainer >
@@ -302,12 +301,10 @@ function EditFieldDialogBox({ fieldlist,index, field_definition,open_status, clo
                                                         </TableCell>
                                                         <TableCell>
                                                             <TextField
-                                                                //defaultValue={field_name[1]}
+                                                                defaultValue={field_name[1]}
                                                                 {...register(field_name[0])}
                                                             />
-                                                            <Typography>
-                                                                {field_name[1]}
-                                                            </Typography>
+
                                                         </TableCell>
                                                     </>
                                                 }
@@ -318,11 +315,8 @@ function EditFieldDialogBox({ fieldlist,index, field_definition,open_status, clo
                                                         </TableCell>
                                                         <TableCell>
                                                             <TextField {...register(field_name[0])}
-                                                                //defaultValue={field_name[1]}
+                                                                defaultValue={field_name[1]}
                                                             />
-                                                            <Typography>
-                                                                {field_name[1]}
-                                                            </Typography>
                                                         </TableCell>
                                                     </>
                                                 }
@@ -333,7 +327,7 @@ function EditFieldDialogBox({ fieldlist,index, field_definition,open_status, clo
                                                         </TableCell>
                                                         <TableCell>
                                                             <Select
-                                                                //defaultValue={field_name[1]}
+                                                                defaultValue={field_name[1]}
                                                                 {...register(field_name[0])}>
                                                                 {field_type_list.map((field_type, index) => {
                                                                     return (
@@ -352,7 +346,7 @@ function EditFieldDialogBox({ fieldlist,index, field_definition,open_status, clo
                                                         </TableCell>
                                                         <TableCell>
                                                             <Select
-                                                                //defaultValue={field_name[1]}
+                                                                defaultValue={field_name[1]}
                                                                 {...register(field_name[0])}>
                                                                 {field_length_list.map((field_length, index) => {
                                                                     return (
@@ -414,7 +408,141 @@ function FormTemplateEditor({ dataset, updateDataset }: { dataset: field_definit
                     //reset();
                 }
                 } />
-            { editDialogBox ? <EditFieldDialogBox fieldlist={dataset} index={editFieldIndex} field_definition={editField} open_status={editDialogBox} closeDialogBox={closeEditField} /> :<div/>}
+            {editDialogBox ? <EditFieldDialogBox fieldlist={dataset} index={editFieldIndex} field_definition={editField} open_status={editDialogBox} closeDialogBox={closeEditField} /> : <div />}
+        </>
+    )
+}
+
+function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
+    {
+        dataset: field_definition[],
+        index: number,
+        depth: number,
+        deleteRow: (index: number) => void,
+        updateRow: (index: number, newValue: field_definition[]) => void,
+        reRenderParent: () => void,
+    }) {
+    const row = dataset[index];
+    const [openStatus, setOpenStatus] = React.useState(false);
+    const [editDialogBox, setEditDialogBox] = React.useState(false);
+    const [fieldIndex, setFieldIndex] = React.useState(0);
+    const [renderFlag, setRenderFlag] = React.useState(false);
+    function deleteField(event: React.SyntheticEvent, index: number) {
+        console.log("deleteTableField", index);
+        dataset.splice(index, 1);
+        console.log("deleteTableField", dataset);
+        //setRenderFlag(!renderFlag);
+        reRenderParent();
+    }
+    function updateField(index: number, newValue: field_definition) {
+        console.log("updateField", index, newValue);
+        dataset[index] = newValue;
+        console.log("updateField", dataset);
+        //setRenderFlag(!renderFlag);
+        reRenderParent();
+    }
+
+
+    return (
+        <ListItem key={index} disablePadding sx={{ width: '600px' }}>
+            <List>
+                <ListItem disablePadding sx={{ width: '600px' }}>
+                    <Box sx={{ display: 'flex' }}>
+                        <Box sx={{ width: `calc(${depth}*20px + 20px)` }}>
+                            <Typography>
+                                {depth}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ width: '40px' }}>
+                            {row.sub && (row.sub.length > 0) ? <IconButton
+                                aria-label="expand row"
+                                size="small"
+                                onClick={() => { setOpenStatus(!openStatus); console.log("expend/close selected field/row index", index) }}
+                            >
+                                {openStatus ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                            </IconButton>
+                                :
+                                <IconButton
+                                    aria-label="expand row"
+                                    size="small"
+                                >
+                                    <ListIcon />
+                                </IconButton>}
+                        </Box>
+                        <Box sx={{ width: '50px' }}>
+                            <Typography>
+                                {row['id']}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ width: '250px' }}>
+                            <Typography>
+                                {row['label']}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ width: '120px' }}>
+                            <Typography>
+                                {row['type']}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ width: '40px' }}>
+                            {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />}
+                        </Box>
+                        <Box sx={{ width: '200px' }}>
+                            <Button variant="solid" startIcon={<EditIcon color='primary' />}
+                                onClick={(e: React.SyntheticEvent) => {
+                                    setFieldIndex(index);
+                                    setEditDialogBox(!editDialogBox);
+                                }}
+                            >
+                            </Button>
+                            <Button variant="solid"
+                                startIcon={<ClearOutlinedIcon color='primary' />}
+                                onClick={(ev: React.SyntheticEvent) => { deleteField(ev, index); reRenderParent }}>
+                            </Button>
+                        </Box>
+                    </Box>
+                </ListItem>
+                {row.sub && <ListItem disablePadding sx={{ width: '600px' }}>
+                    <Collapse in={openStatus} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <List>
+                            {row.sub.map((subRow, index) =>
+                            (< Row key={index}
+                                dataset={row.sub}
+                                index={index}
+                                depth={depth + 1}
+                                deleteRow={(index) => deleteField}
+                                reRenderParent={() => { setRenderFlag(!renderFlag); reRenderParent; }}
+                            />)
+                            )
+                            }
+                        </List>
+                    </Collapse>
+                </ListItem>
+                }
+            </List>
+            {editDialogBox && <EditFieldDialogBox
+                fieldlist={dataset}
+                index={fieldIndex}
+                field_definition={dataset[fieldIndex]}
+                open_status={editDialogBox}
+                closeDialogBox={() => { setEditDialogBox(!editDialogBox) }} />}
+        </ListItem>
+    )
+
+}
+
+function FormTemplateEdit({ dataset }: { dataset: field_definition[] }) {
+    const [renderFlag, setRenderFlag] = React.useState(false);
+    const manuallyRender = () => {
+        setRenderFlag(!renderFlag);
+    }
+    return (
+        <>
+            <List>
+                {dataset.map((row, index) => (
+                    <Row key={index} dataset={dataset} index={index} depth={0} deleteRow={(index) => { }} updateRow={(index, newValue) => { }} reRenderParent={manuallyRender} />
+                ))}
+            </List>
         </>
     )
 }
@@ -596,8 +724,18 @@ export default function customize_Form() {
                                         onClick={(ev: React.SyntheticEvent) => { addTableField(ev, 0, initialField); }}>Add a field
                                     </Button>
                                     <br />
-                                    <FormTemplateEditor dataset={customizedformlist[templateid].content[tabId].fields} updateDataset={updateCustomizedFormList} />
+                                    {/* <FormTemplateEditor dataset={customizedformlist[templateid].content[tabId].fields} updateDataset={updateCustomizedFormList} /> */}
                                     {/* <ShowTree dataset={customizedformlist[templateid].content[tabId].fields} depth={0} onEditFieldCallback={(index) => { console.log("call onEditField", index); }} /> */}
+                                    {/* <List>
+                                        {customizedformlist[templateid].content[tabId].fields.map((row, index) => (
+                                            <Row key={index} dataset={customizedformlist[templateid].content[tabId].fields}
+                                                index={index}
+                                                depth={0}
+                                                openSubStatus={true}                                            
+                                            />
+                                        ))}                                        
+                                    </List> */}
+                                    <FormTemplateEdit dataset={customizedformlist[templateid].content[tabId].fields} />
                                 </CustomTabPanel>
                             ))}
                         </Box>
