@@ -26,7 +26,7 @@ import {
     physicalTraits,
     bodyBuilds,
     activity,
-    personalities, skills, skillTypes
+    personalities, skills, skillTypes, medicalHistory, physicalHistory, legalHistory, countryList
 } from "@/utils/form/consts";
 import { AlgoMapping, FormField, FormTemp, HeightValue } from "./types";
 import { inch2cm } from "./utils";
@@ -509,6 +509,12 @@ export const education_occupation:FormTemp={
                 },
             ]
         }
+    ],
+    algo:[
+        {fdid:'s0',label:'highest level of education'},
+        ...tagOnlyAlgo([
+            {fdid:'s1'},{fdid:'s2'},
+        ])
     ]
 };
 
@@ -516,6 +522,53 @@ export const education_occupation:FormTemp={
 export const background_history:FormTemp={
     name:"background history",
     content: [
+        {
+            title:'medical',
+            fields:[
+                {
+                    label:'Does any of the following apply to you?',
+                    type:'checkbox',options:medicalHistory,
+                    required: false,
+                },
+                {
+                    label:'Does any of the following apply to you?',
+                    type:'checkbox',options:physicalHistory,
+                    required: false,
+                }
+            ]
+        },
+        {
+            title:'crime & history',
+            fields:[
+                {
+                    label:'Does any of the following apply to you?',
+                    type:'checkbox',options:legalHistory,
+                    required: false,
+                },
+                {
+                    label:'Have you traveled outside of the continental U.S. in the last 6 months?',
+                    type:'populate',
+                    required:false,
+                    group:[
+                        {label:'Country',type:'multi-select',options:countryList,required:true},
+                        {label:'Start Date',type:'date',required:false},
+                        {label:'End Date',type:'date',required:false}
+                    ]
+                }
+            ]
+        },
+        {
+            title:'social habits',
+            fields:[
+
+            ]
+        },
+        {
+            title:'maternal & sexual history',
+            fields:[
+
+            ]
+        }
         // {
         //     fields: [
         //
@@ -532,193 +585,6 @@ export const background_history:FormTemp={
         // }
     ]
 };
-
-export const family_partner:FormTemp={
-    name:"family & partner",
-    content:[
-        {
-            title:"title1",
-            fields:[
-                {
-                    id: "s0",
-                    label: "Marital Status",
-                    type: "multi-select",
-                    options: maritalStatuses,
-                    required: true,
-                    /*sub: personData("partner",
-                        {
-                            addDobAddr:true,
-                            addProp:{condition:["Married", "Separated"]}})*/
-                },
-                {
-                    id: "s1",
-                    label: "Emergency Contacts",
-                    type: "populate",
-                    /*group:[
-                        ...personData("Emergency Contacts",{
-                            addRelation:true
-                        })
-                    ]*/
-                },
-                {
-                    id: "s",
-                    label: "Please select the following that applied to your partner, family member, or close contact",
-                    type: "checkbox",
-                    options: familyTrait,
-                    sub: [
-                        {
-                            id: "s",
-                            condition: [fBaldness],
-                            label: "Which side of the Family?",
-                            required: true,
-                            type: "checkbox",
-                            options: familySide
-                        }
-                    ]
-                },
-            ]
-        },
-        {
-            title:"title2",
-            fields:[
-                {
-                    id: "s",
-                    label: "PLease list your family history of inheritable diseases if any",
-                    type: "text",
-                    length: "long",
-                    required: false
-                },
-                {
-                    id: "s",
-                    label: "Do you have a family history of mental illness",
-                    required: true,
-                    type: "yes/no",
-                    length: "short"
-                },
-                {
-                    id: "s",
-                    label: "Please select the following that applied to your partner, family member, or close contact",
-                    required: true,
-                    type: "checkbox",
-                    options: [
-                        "Been to Africa",
-                        "Been to Europe more than 3 months",
-                        "Been to Europe between 1980-1996",
-                        "Have sexually transmitted disease(s)",
-                        "Drug abuse or injected drugs",
-                        "Jail/Prison ore than 3 days"
-                    ]
-                },
-                {
-                    id: "s",
-                    label: "Please provide detailed medical information about your immediate family",
-                    required: true,
-                    type: "text",
-                    length: "long"
-                },
-            ]
-        },
-
-        {
-            title:"title3",
-            fields:[
-                {
-                    id: "s",
-                    label: "How many siblings do you have?",
-                    required: true,
-                    type: "text",
-                    length: "short"
-                },
-                {
-                    id: "s",
-                    label: "Please select your family history of multiple birth",
-                    required: true,
-                    type: "checkbox",
-                    options: [
-                        "Twins",
-                        "Triplets",
-                        "Other"
-                    ],
-                    sub: [
-                        {
-                            id: "s",
-                            required: true,
-                            label: "Please enter they number of children in multiple birth",
-                            condition: ["Other"],
-                            type: "text",
-                            length: "medium"
-                        }
-                    ]
-                },
-            ]
-        },
-
-        {
-            title:"title4",
-            fields:[
-                {
-                    id: "s",
-                    label: "Does your partner support your decision to become an egg donor and understand the need for temporary abstinence??",
-                    required: true,
-                    type: "text",
-                    length: "long"
-                },
-                {
-                    id: "s",
-                    label: "Do your family and/or those important to you support your decision to become an egg donor?",
-                    required: true,
-                    type: "yes/no",
-                    length: "short",
-                    sub: [
-                        {
-                            id: "s",
-                            condition: ["no"],
-                            type: "text",
-                            label: "Please explain",
-                            length: "long",
-                            required: true
-                        }
-                    ]
-                },
-                {
-                    id: "s",
-                    label: "Do you understand that the ultimate goal of your donation is the birth of a healthy child with whom you will not have a parental relationship?",
-                    required: true,
-                    type: "yes/no",
-                    length: "short"
-                }
-            ]
-        }
-    ]
-};
-
-function assign_IDs(content:FormTemp) {
-    const copyContent = JSON.parse(JSON.stringify(content));
-    const assign = (field:FormField) => {
-        let count = 0;
-        if(field.sub)
-        for (let sub of field.sub) {
-            sub.id = "s" + count++;
-            assign(sub);
-        }
-        if(field.group)
-        for (let sub of field.group) {
-            sub.id = "s" + count++;
-            assign(sub);
-        }
-    };
-
-    let count = 0;
-    for(let sec of copyContent.content){
-        for(let field of sec.fields){
-            field.id = "s" + count++;
-            assign(field);
-        }
-    }
-    
-    return copyContent;
-}
-
 
 
 
@@ -832,6 +698,7 @@ export const personal_and_medical = {
                 }
             ]
         },
+
         {
             title: "qs1",
             fields: [
@@ -865,6 +732,7 @@ export const personal_and_medical = {
                 }
             ]
         },
+
         {
             title: "Medical Symptom",
             fields: [
@@ -1019,6 +887,192 @@ export const personal_and_medical = {
     ]
 }
 
+export const family_partner:FormTemp={
+    name:"family & partner",
+    content:[
+        {
+            title:"title1",
+            fields:[
+                {
+                    id: "s0",
+                    label: "Marital Status",
+                    type: "multi-select",
+                    options: maritalStatuses,
+                    required: true,
+                    /*sub: personData("partner",
+                        {
+                            addDobAddr:true,
+                            addProp:{condition:["Married", "Separated"]}})*/
+                },
+                {
+                    id: "s1",
+                    label: "Emergency Contacts",
+                    type: "populate",
+                    /*group:[
+                        ...personData("Emergency Contacts",{
+                            addRelation:true
+                        })
+                    ]*/
+                },
+                {
+                    id: "s",
+                    label: "Please select the following that applied to your partner, family member, or close contact",
+                    type: "checkbox",
+                    options: familyTrait,
+                    sub: [
+                        {
+                            id: "s",
+                            condition: [fBaldness],
+                            label: "Which side of the Family?",
+                            required: true,
+                            type: "checkbox",
+                            options: familySide
+                        }
+                    ]
+                },
+            ]
+        },
+        {
+            title:"title2",
+            fields:[
+                {
+                    id: "s",
+                    label: "PLease list your family history of inheritable diseases if any",
+                    type: "text",
+                    length: "long",
+                    required: false
+                },
+                {
+                    id: "s",
+                    label: "Do you have a family history of mental illness",
+                    required: true,
+                    type: "yes/no",
+                    length: "short"
+                },
+                {
+                    id: "s",
+                    label: "Please select the following that applied to your partner, family member, or close contact",
+                    required: true,
+                    type: "checkbox",
+                    options: [
+                        "Been to Africa",
+                        "Been to Europe more than 3 months",
+                        "Been to Europe between 1980-1996",
+                        "Have sexually transmitted disease(s)",
+                        "Drug abuse or injected drugs",
+                        "Jail/Prison ore than 3 days"
+                    ]
+                },
+                {
+                    id: "s",
+                    label: "Please provide detailed medical information about your immediate family",
+                    required: true,
+                    type: "text",
+                    length: "long"
+                },
+            ]
+        },
+        {
+            title:"title3",
+            fields:[
+                {
+                    id: "s",
+                    label: "How many siblings do you have?",
+                    required: true,
+                    type: "text",
+                    length: "short"
+                },
+                {
+                    id: "s",
+                    label: "Please select your family history of multiple birth",
+                    required: true,
+                    type: "checkbox",
+                    options: [
+                        "Twins",
+                        "Triplets",
+                        "Other"
+                    ],
+                    sub: [
+                        {
+                            id: "s",
+                            required: true,
+                            label: "Please enter they number of children in multiple birth",
+                            condition: ["Other"],
+                            type: "text",
+                            length: "medium"
+                        }
+                    ]
+                },
+            ]
+        },
+
+        {
+            title:"title4",
+            fields:[
+                {
+                    id: "s",
+                    label: "Does your partner support your decision to become an egg donor and understand the need for temporary abstinence??",
+                    required: true,
+                    type: "text",
+                    length: "long"
+                },
+                {
+                    id: "s",
+                    label: "Do your family and/or those important to you support your decision to become an egg donor?",
+                    required: true,
+                    type: "yes/no",
+                    length: "short",
+                    sub: [
+                        {
+                            id: "s",
+                            condition: ["no"],
+                            type: "text",
+                            label: "Please explain",
+                            length: "long",
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    id: "s",
+                    label: "Do you understand that the ultimate goal of your donation is the birth of a healthy child with whom you will not have a parental relationship?",
+                    required: true,
+                    type: "yes/no",
+                    length: "short"
+                }
+            ]
+        }
+    ]
+};
+
+function assign_IDs(content:FormTemp) {
+    const copyContent = JSON.parse(JSON.stringify(content));
+    const assign = (field:FormField) => {
+        let count = 0;
+        if(field.sub)
+        for (let sub of field.sub) {
+            sub.id = "s" + count++;
+            assign(sub);
+        }
+        if(field.group)
+        for (let sub of field.group) {
+            sub.id = "s" + count++;
+            assign(sub);
+        }
+    };
+
+    let count = 0;
+    for(let sec of copyContent.content){
+        for(let field of sec.fields){
+            field.id = "s" + count++;
+            assign(field);
+        }
+    }
+    
+    return copyContent;
+}
+
+
 export const modified_content = assign_IDs(basic_info);
 
 export const other_clinic_questions:FormTemp={
@@ -1029,9 +1083,7 @@ export const other_clinic_questions:FormTemp={
 
 const personData=(name:string,{addRelation,addDobAddr,addProp}:{addRelation:boolean,addDobAddr:boolean,addProp:any}):FormField[]=>{
     const r = [
-        {id:"s0",label:`${name}'s First Name`,type:"text",length:"short",required:true},
-        {id:"s1",label:`${name}'s Middle Name`,type:"text",length:"short",required:false},
-        {id:"s2",label:`${name}'s Last Name`,type:"text",length:"short",required:true},
+        {id:"s0",label:`${name}'s Name`,type:"name",required:true},
         {
             id: "s4",
             label: `${name}'s Email`,
