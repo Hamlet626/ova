@@ -276,6 +276,9 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
         console.log("addSubField", dataset);
         reRenderParent();
     }
+    function reRenderChild() {
+        reRenderParent();
+    }
 
     return (
         <ListItem key={index} disablePadding sx={{ width: '600px' }}>
