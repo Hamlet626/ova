@@ -29,28 +29,42 @@ import {
     personalities, skills, skillTypes
 } from "@/utils/form/consts";
 
+export interface FormTemp{
+    name:string,
+    content:FormSection[],
+    algo?:any[]
+}
+export interface FormSection{
+    title:string,
+    fields:FormField[]
+}
+
+export interface FormField{
+    id?:string,
+    label:string,
+    type:'text'|'multi-select'|'date'|'address'|'name'|"yes/no"|"checkbox"|"number"|'populate',
+    required?:boolean,
+    default?:any,
+    length?:'long'|'medium'|'short',
+    group?:FormField[],
+    options?:string[],
+    sub?:FormField[],
+    condition?:any[],
+    exCondition?:any[],
+}
 
 
-export const basic_info={
+export const basic_info:FormTemp={
     name:"basic info",
     content:[
         {
             title:"basic info",
             fields:[
-                {id:"s0",label:"First Name",type:"text",length:"short",required:true},
-                {id:"s1",label:"Middle Name",type:"text",length:"short",required:false},
-                {id:"s2",label:"Last Name",type:"text",length:"short",required:true},
+                //{label:"Name",type:"name",required:true},
                 {
                     id: "s3",
                     label: "Address",
                     type: "address",
-                    required: true
-                },
-                {
-                    id: "s4",
-                    label: "Email",
-                    type: "text",
-                    length: "medium",
                     required: true
                 },
                 {
@@ -157,10 +171,13 @@ export const basic_info={
                 }
             ]
         }
+    ],
+    algo:[
+        {fdid:'s2',label:'Birthday'}
     ]
 };
 
-export const physical_personal_trait={
+export const physical_personal_trait:FormTemp={
     name:"physical & personal trait",
     content:[
         {
@@ -314,7 +331,7 @@ export const physical_personal_trait={
                     required: true
                 },
                 ...favoritesX(["Food","Color","Sport","Type of Music","Animal","Hobby"]),
-                optQuestions([
+                ...optQuestions([
                     "What do you like most about yourself and why?",
                     "What do you like least about yourself and why?",
                     "Who is your role model and why?",
@@ -327,7 +344,7 @@ export const physical_personal_trait={
     ]
 };
 
-export const education_occupation={
+export const education_occupation:FormTemp={
     name:"education & occupation",
     content:[
         {
@@ -359,7 +376,7 @@ export const education_occupation={
                             id: "s2",
                             condition: ["Associate Degree", "Bachelor's Degree", "Master's Degree", "Doctorate Degree", "Postdoctoral"],
                             label: "Major",
-                            type: "test",
+                            type: "multi-select",
                             length: "medium",
                             required: true
                         },
@@ -465,27 +482,28 @@ export const education_occupation={
     ]
 };
 
-export const background_history={
+///todo
+export const background_history:FormTemp={
     name:"background history",
     content: [
-        {
-            fields: [
-
-                {
-                    id: "s0",
-                    label: "Please fill in your background history if any",
-                    type: "text",
-                    length: "long",
-                    required: false
-                },
-               //personal_and_medical
-            ],
-
-        }
+        // {
+        //     fields: [
+        //
+        //         {
+        //             id: "s0",
+        //             label: "Please fill in your background history if any",
+        //             type: "text",
+        //             length: "long",
+        //             required: false
+        //         },
+        //         personal_and_medical
+        //     ],
+        //
+        // }
     ]
 };
 
-export const family_partner={
+export const family_partner:FormTemp={
     name:"family & partner",
     content:[
         {
@@ -570,6 +588,7 @@ export const family_partner={
                 },
             ]
         },
+
         {
             title:"title3",
             fields:[
@@ -595,7 +614,7 @@ export const family_partner={
                             id: "s",
                             required: true,
                             label: "Please enter they number of children in multiple birth",
-                            condition: "Other",
+                            condition: ["Other"],
                             type: "text",
                             length: "medium"
                         }
@@ -603,6 +622,7 @@ export const family_partner={
                 },
             ]
         },
+
         {
             title:"title4",
             fields:[
@@ -622,7 +642,7 @@ export const family_partner={
                     sub: [
                         {
                             id: "s",
-                            condition: "no",
+                            condition: ["no"],
                             type: "text",
                             label: "Please explain",
                             length: "long",
@@ -642,18 +662,30 @@ export const family_partner={
     ]
 };
 
-export function assign_IDs(content) {
-    let count = 0;
+function assign_IDs(content:FormTemp) {
     const copyContent = JSON.parse(JSON.stringify(content));
-    const assign = (fields) => {
-        for (let field of fields) {
-            field.id = "s" + count++;
-            if (field.sub) {
-                assign(field.sub);
-            }
+    const assign = (field:FormField) => {
+        let count = 0;
+        if(field.sub)
+        for (let sub of field.sub) {
+            sub.id = "s" + count++;
+            assign(sub);
+        }
+        if(field.group)
+        for (let sub of field.group) {
+            sub.id = "s" + count++;
+            assign(sub);
         }
     };
-    assign(copyContent);
+
+    let count = 0;
+    for(let sec of copyContent.content){
+        for(let field of sec.fields){
+            field.id = "s" + count++;
+            assign(field);
+        }
+    }
+    
     return copyContent;
 }
 
@@ -957,15 +989,15 @@ export const personal_and_medical = {
     ]
 }
 
-let modified_content = assign_IDs(personal_and_medical.content);
+export const modified_content = assign_IDs(basic_info);
 
-
-export const other_clinic_questions={
-    name:"other clinic questions"
+export const other_clinic_questions:FormTemp={
+    name:"other clinic questions",
+    content:[]
 };
 
 
-export const personData=(name,{addRelation,addDobAddr,addProp})=>{
+const personData=(name:string,{addRelation,addDobAddr,addProp}:{addRelation:boolean,addDobAddr:boolean,addProp:any}):FormField[]=>{
     const r = [
         {id:"s0",label:`${name}'s First Name`,type:"text",length:"short",required:true},
         {id:"s1",label:`${name}'s Middle Name`,type:"text",length:"short",required:false},
@@ -1010,7 +1042,7 @@ export const personData=(name,{addRelation,addDobAddr,addProp})=>{
 }
 
 
-function favoritesX(cate: string[]) {
+function favoritesX(cate: string[]):FormField[] {
     return cate.map((v,i,l)=>({
         id: "s6",
         label: `What's your favourite ${v}`,
@@ -1020,11 +1052,11 @@ function favoritesX(cate: string[]) {
     }));
 }
 
-function optQuestions(qs: string[]) {
+function optQuestions(qs: string[]):FormField[] {
     return qs.map((v,i,l)=>optQuestion(v));
 }
 
-function optQuestion(question: string) {
+function optQuestion(question: string):FormField {
     return {
         id: "s6",
         label: question,
@@ -1033,3 +1065,8 @@ function optQuestion(question: string) {
         required: false
     };
 }
+
+
+export const formTemplates=[basic_info,physical_personal_trait,education_occupation,
+    background_history,family_partner,other_clinic_questions]
+    .map(v=>assign_IDs(v));

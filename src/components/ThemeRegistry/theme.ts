@@ -15,6 +15,7 @@ const theme = createTheme({
         secondary: {main: '#ad897b'},
         tertiary: {main: '#9c915d'}
     },
+
     shape:{borderRadius:12},
     typography: {
         fontFamily: roboto.style.fontFamily,
@@ -60,6 +61,11 @@ const theme = createTheme({
             styleOverrides: {
                 root:{ backgroundColor: outline_variant }
             }
+        },
+        MuiLinearProgress:{
+            defaultProps:{
+                variant:"determinate"
+            }
         }
         // MuiAlert: {
         //     styleOverrides: {
@@ -74,3 +80,5 @@ const theme = createTheme({
 });
 
 export default theme;
+
+
