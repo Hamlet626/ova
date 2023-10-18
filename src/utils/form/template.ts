@@ -28,31 +28,8 @@ import {
     activity,
     personalities, skills, skillTypes
 } from "@/utils/form/consts";
-
-export interface FormTemp{
-    name:string,
-    content:FormSection[],
-    algo?:any[]
-}
-export interface FormSection{
-    title:string,
-    fields:FormField[]
-}
-
-export interface FormField{
-    id?:string,
-    label:string,
-    type:'text'|'multi-select'|'date'|'address'|'name'|"yes/no"|"checkbox"|"number"|'populate',
-    required?:boolean,
-    default?:any,
-    length?:'long'|'medium'|'short',
-    group?:FormField[],
-    options?:string[],
-    sub?:FormField[],
-    condition?:any[],
-    exCondition?:any[],
-}
-
+import { AlgoMapping, FormField, FormTemp, HeightValue } from "./types";
+import { inch2cm } from "./utils";
 
 export const basic_info:FormTemp={
     name:"basic info",
@@ -173,7 +150,10 @@ export const basic_info:FormTemp={
         }
     ],
     algo:[
-        {fdid:'s2',label:'Birthday'}
+        {fdid:'s2',label:'Birthday'},
+        {fdid:'s13',label:'Nationality'},
+        {fdid:['s13','s0'],label:'in US'},
+        {fdid:'s15',label:'Ethnicity'},
     ]
 };
 
@@ -187,8 +167,7 @@ export const physical_personal_trait:FormTemp={
                 {//todo
                     id: "s7",
                     label: "Height (in Inches)",
-                    type: "text",
-                    length: "short",
+                    type: "height",
                     required: true
                 },
                 {//todo
@@ -341,6 +320,73 @@ export const physical_personal_trait:FormTemp={
                 ]),
             ]
         },
+    ],
+    algo:[
+        {fdid:'s0',label:'Height',handler:(h:HeightValue)=>inch2cm(h)},
+        {fdid:'s1',label:'Weight'},
+        {extra:'bmi'},
+
+        ...tagOnlyAlgo([{
+            fdid: "s6",
+            label: "Body Builds",
+        },
+        {
+            fdid: "s0",
+            label: "Blood Type",
+        },
+        {
+            fdid: "s4",
+            label: "Eye Color",
+        },
+        {
+            fdid: "s5",
+            label: "Hair Color",
+        },
+        {
+            fdid: "s5",
+            label: "What is your natural hair type?"
+        },
+        {
+            fdid: "s5",
+            label: "What is your natural hair texture?"
+        },
+        {
+            fdid: "s5",
+            label: "What is your natural hair fullness? "
+        },
+        {
+            fdid: "s6",
+            label: "Skin Color",
+        },
+        {
+            fdid: "s9",
+            label: "How's your Vision?"
+        },
+        {
+            fdid: "s10",
+            label: "Does any of the following apply to you?"
+        },
+        {
+            fdid: "s11",
+            label: "Which is your dominant hand?"
+        },
+        {
+            fdid: "s",
+            label: "Please select the following options if any of which applied to you."
+        },
+        {
+            fdid: "s11",
+            label: "Sexual Orientation",
+        },
+        {
+            fdid: "s11",
+            label: "What best describes you?",
+        },
+        {
+            fdid: "s11",
+            label: "What best describes your personality?",
+        }
+    ]),
     ]
 };
 
@@ -397,7 +443,6 @@ export const education_occupation:FormTemp={
                     ]
                 },
                 optQuestion("Do you belong to any academic or professional societies?"),
-
             ]
         },
         {
@@ -1026,6 +1071,9 @@ const personData=(name:string,{addRelation,addDobAddr,addProp}:{addRelation:bool
     return addProp?r.map((v)=>({...v,...addProp})):r;
 }
 
+function tagOnlyAlgo(qs: AlgoMapping[]):AlgoMapping[] {
+    return qs.map((v,i,l)=>({...v, tag:true, filter:false }));
+}
 
 function favoritesX(cate: string[]):FormField[] {
     return cate.map((v,i,l)=>({

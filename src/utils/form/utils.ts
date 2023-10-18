@@ -1,4 +1,4 @@
-import { FormField, FormSection, FormTemp } from "./template";
+import { FormField, FormSection, FormTemp, HeightValue } from "./types";
 
 const makeFieldId=(id:string,prefix?:string)=>prefix==null?id:`${prefix}_${id}`;
 
@@ -19,3 +19,9 @@ export const formStatus=(data:any, f:FormTemp):{time:string,finished:number,all:
 export const secFinished=(data:any, sec:FormSection)=>sec.fields.every(v=>fieldFinished(data,v));
 
 export const formFinished=(data:any, temp:FormTemp)=>temp.content.every(v=>secFinished(data,v));
+
+
+export const inch2cm=(h:HeightValue):number=>{
+    if(h.iscm)return h.cm!;
+    return (h.inch!.feet!*12+h.inch!.inch!)*2.54;
+}
