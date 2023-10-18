@@ -1,34 +1,19 @@
 'use client';
 import React from "react";
-import {Card, Paper, Box, Container, Input, Button, Typography, LinearProgress,
-     Breadcrumbs,  InputAdornment, Link, Stack, TextField, CardMedia
-} from "@mui/material";
-import { Bg2 } from "@/components/background/bg2";
-import { useRouter } from "next/navigation";
-import { cliAuth  } from "@/utils/firebase/firebase_client";
+import {Card,  Box,  Input, Button, Typography, 
+      InputAdornment,  Stack, CardMedia} from "@mui/material";
+
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from "react";
-import {Google, Lock, Login, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
-import NextLink from "next/link";
-import {font2} from "@/components/ThemeRegistry/theme_consts";
+
 //icons
 import SourceOutlinedIcon from '@mui/icons-material/SourceOutlined';
 import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 
-//import grid
-import Grid from '@mui/material/Grid';
+//import style for image part
 import { styled } from '@mui/material/styles';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CardContent from "@mui/material/CardContent";
 
-import { getClinic } from "@/utils/clinic_check";
-import { useUrl } from 'nextjs-current-url';
-import { useSearchParams } from 'next/navigation';
-import {useSession} from "next-auth/react";
-import { getServerSession } from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 const VisuallyHiddenInput = styled('input')({
   height: 8,
@@ -60,14 +45,14 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
 
 
     return(
-        <>
- <Box  sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-<Card variant="outlined" sx={{backgroundColor:'ref', padding: 3, borderRadius: '10px', width: '600px', height: clinic === null ? '300px' : '200px',  position: 'relative',
-                                                                                                                                                       zIndex: 1, }}>
+          <>
+     <Box  sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+    <Card variant="outlined" sx={{backgroundColor:'ref', padding: 3, borderRadius: '10px', width: '600px', height: clinic === null ? '300px' : '200px',  position: 'relative',
+                                                                                                                                                           zIndex: 1, }}>
 
       <Stack direction="row" alignItems="center" spacing={2}>
         {selectedFile && (
@@ -117,7 +102,7 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
  </Box>
 
 
- <Box height={200}/>
+ <Box height={220}/>
 
         <Box
           sx={{
@@ -126,7 +111,7 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
             alignItems: 'center',
           }}
         >
-      {c1}
+         {c1}
           <Button
             fullWidth
             variant="contained"

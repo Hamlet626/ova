@@ -18,11 +18,12 @@ export default async function Home() {
     //     redirect('/signin');
     //   },
     // });
-
     const session=await getServerSession(authOptions);
 
     return (
+
         <AppBar position = "static">
+
             {/*        style={{*/}
             {/*    width: '1474px',*/}
             {/*    height: '78px',*/}

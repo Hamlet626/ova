@@ -1,28 +1,20 @@
 'use client';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { cliAuth  } from "@/utils/firebase/firebase_client";
-import {Box,  Button, Container, Input, InputAdornment, Link,  Typography} from "@mui/material";
+import {Box,  Button,  FormHelperText, Input, InputAdornment, Link,  Typography} from "@mui/material";
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import { Bg1 } from "@/components/background/bg1";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import {Google, Lock, Login, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
-import NextLink from "next/link";
 import {font2} from "@/components/ThemeRegistry/theme_consts";
-//import {flexContainerStyle, NameInputs_NotClinic,NameInputs_Clinic} from "@/components/signup/signup_page.ts";
-
+//get role
 import { getClinic } from "@/utils/clinic_check";
 import { useUrl } from 'nextjs-current-url';
 import { useSearchParams } from 'next/navigation'
-import {   InputLabel,FormControl,useFormControl, TextField, FormHelperText} from '@mui/material';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-
 import { RoleNum, roles } from "@/utils/roles";
-import {useForm, Controller, useFormState} from 'react-hook-form';
+
+import {useForm,  useFormState} from 'react-hook-form';
 import {signIn} from "next-auth/react";
-// import SigninBlock from "@/app/(unauth)/signin/signin_block";
 
 
 
@@ -60,7 +52,7 @@ function Name_Clinic({ register, errors, trigger}){
   );
 }
 
-export function Name_NotClinic({ register, control, errors, trigger }) {
+export function Name_NotClinic({ register,errors, trigger }) {
   return (
     <Box sx={flexContainerStyle}>
       <Box>
@@ -104,7 +96,6 @@ export function SignUp1(){
     const searchParams = useSearchParams();
 const role = clinic == null ? 2 : RoleNum[searchParams.get('role')];
 const router = useRouter();
-
  const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
     };
@@ -122,6 +113,7 @@ const router = useRouter();
      const passwordValue = getValues('password');
      const nameValue=clinic == null ?getValues('companyName'):getValues('lastName');
 
+
      const r = await fetch('/api/signup', {
        method: 'POST',
        mode: 'cors',
@@ -130,14 +122,12 @@ const router = useRouter();
        },
        body: JSON.stringify({
          email: emailValue,
-//          name:'Test',
          name: nameValue,
          role: role,
          password: passwordValue,
        }),
      });
 
-     console.log(await r.json());
 
      if (r.status === 200) {
        const rr = await signIn('credentials', {
@@ -147,7 +137,6 @@ const router = useRouter();
          password: passwordValue,
        });
 
-       console.log(rr);
 
       router.push('/profile');
 
@@ -165,7 +154,7 @@ const router = useRouter();
         <Box maxWidth="400px" >
 
         <Typography  sx={font2}>
-          {clinic == null ? 'Clinics Sign Up' : (role === 0 ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
+          {clinic == null ? 'Clinics Sign Up' : (role == 0 ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
         </Typography>
 
          <Box height={50} />
