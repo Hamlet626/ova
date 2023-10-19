@@ -26,7 +26,7 @@ import {
     physicalTraits,
     bodyBuilds,
     activity,
-    personalities, skills, skillTypes, medicalHistory, physicalHistory, legalHistory, countryList
+    personalities, skills, skillTypes, medicalHistory, physicalHistory, legalHistory, countryList, legalHistory_p12m, inUK3m, covidVacc, travelHistory, refusedBlood, receivedBlood, alcohol, alcoholFreq, smoke, smokeFreq, socialHabits, marijuana
 } from "@/utils/form/consts";
 import { AlgoMapping, FormField, FormTemp, HeightValue } from "./types";
 import { inch2cm } from "./utils";
@@ -534,6 +534,40 @@ export const background_history:FormTemp={
                     label:'Does any of the following apply to you?',
                     type:'checkbox',options:physicalHistory,
                     required: false,
+                    sub:[
+                        {
+                            condition:[refusedBlood],
+                            type:"text",length:'medium',
+                            label:'Why were you refused as a blood donor?',
+                            required:false
+                        },
+                        {
+                            condition:[receivedBlood],
+                            type:'date',
+                            label:'When and where did you receive a blood transfusion?',
+                            required:false
+                        }
+                    ]
+                },
+                {
+                    label:'Have you been vaccinated for COVID-19?',
+                    type:'yes/no',required:true,
+                    sub:[
+                        {
+                            condition:['no'],
+                            label:'would you consider getting vaccinated?',
+                            type:'multi-select',
+                            options:covidVacc,
+                            required:true
+                        },
+                        {
+                            condition:['yes'],
+                            label:'Which vaccine did you receive? And what were the date(s) of your vaccination?',
+                            type:'text', 
+                            length:'medium',
+                            required:false
+                        }
+                    ]
                 }
             ]
         },
@@ -542,8 +576,24 @@ export const background_history:FormTemp={
             fields:[
                 {
                     label:'Does any of the following apply to you?',
+                    type:'checkbox',options:travelHistory,
+                    required: false,
+                    sub:[
+                        {
+                            condition:[inUK3m],
+                            type:'text',
+                            label:'Where have you live in the UK, and for how long?',
+                            required:false
+                        }
+                    ]
+                },
+                {
+                    label:'Does any of the following apply to you?',
                     type:'checkbox',options:legalHistory,
                     required: false,
+                    sub:[
+
+                    ]
                 },
                 {
                     label:'Have you traveled outside of the continental U.S. in the last 6 months?',
@@ -560,7 +610,47 @@ export const background_history:FormTemp={
         {
             title:'social habits',
             fields:[
-
+                {
+                    label:'Do you drink alcohol?',
+                    type:'multi-select',
+                    options:alcohol,required:true,
+                    sub:[
+                        {
+                            type:'multi-select',
+                            options:alcoholFreq,required:true,
+                            label:'What best describes your alcohol consumption?'
+                        },
+                        {
+                            type:'text',required:true,
+                            length:'long',
+                            label:'Please explain. E.g. How many alcoholic drinks per week or per time?'
+                        },
+                        ].map(v=>({...v,condition:['Used to','Yes']} as FormField))
+                },
+                {
+                    label:'Do you smoke?',
+                    type:'checkbox',
+                    options:smoke,
+                    sub:smoke.map(v=>({
+                        condition:[v],
+                        label:'How often do you smoke it?',
+                        type:'multi-select',required:true,
+                        options:smokeFreq,
+                    }))
+                },
+                {
+                    label:'Does any of the following apply to you?',
+                    type:'checkbox',options:socialHabits,
+                    required: false,
+                    sub:[
+                        {
+                            condition:[marijuana],
+                            type:'text',length:'medium',
+                            required:true,
+                            label:'Please Explain. E.g. when is the last time you had marijuana?'
+                        }
+                    ]
+                },
             ]
         },
         {

@@ -57,9 +57,11 @@ export const languageFluency = ["Native", "Fluent", "Proficient", "Intermediate"
 export const fBaldness="Significant baldness under age 40(Female)/50(Male)";
 export const familySide=["Maternal","Paternal"];
 
-export const familyTrait=[fBaldness,];
+export const familyTrait=[fBaldness,
+	'alcoholism',
+	'drug use, abuse, or addiction'];
 
-
+export const covidVacc=['Yes','Prefer Not','Never'];
 
 export const drugs = [
     "Cocaine",
@@ -76,20 +78,38 @@ export const drugs = [
 
 
 export const medicalHistory = [
-
+	'herbal remedies/medications',
+	'any recreational drugs'
 ];
 
+export const refusedBlood='refused as a blood donor';
+export const receivedBlood='received blood transfusion';
+
 export const physicalHistory = [
-    'received blood transfusion','exposed to radiation or toxic chemicals'
+	refusedBlood,
+    receivedBlood,
+];
+
+export const inUK3m='spent 3 months or more cumulative in the United Kingdom from 1980 through 1996';
+
+export const travelHistory = [
+    inUK3m,
+	'a current or former US military member, civilian military employee, or dependent of a military member or civilian employee, who has resided at US military bases in northern Europe (Germany, Belgium, and Netherlands) for 6 months or more cumulatively from 1980 through 1990, or elsewhere in Europe (Greece, Turkey, Spain, Portugal, or Italy) for 6 months or more cumulatively from 1980 through 1996',
+	'spent 5 or more years cumulative in Europe from 1980 until present',
+	'traveled to Iraq in the past 12 months'
 ];
 
 export const legalHistory = [
-    
+	'been in trouble with the law',
+	'arrested, convicted, sentenced',
+	'having some criminal record',
+	'spent time in prison',
+    'in jail in the past 12 months',
 ];
 
-export const legalHistory_p12m = [
-    'in jail'
-];
+
+
+
 
 export const symptomHistory = [
 
@@ -108,7 +128,34 @@ export const symptomHistory_p12m_contact = [
     'had sex with a man who has had sex with another man in the past 5 years'
 ];
 
+export const alcohol=[
+	'No','Used to','Yes'
+];
+export const alcoholFreq=[
+	'Rarely drink/Drink in samll amount',
+	'Even amounts through the weeek',
+	'Drink in concentrated periods'
+];
 
+export const smoke=[
+	'Electronic Cigarette','Cigarettes','Vape Nicotine',
+];
+export const smokeFreq=[
+	'Used to but no longer','Rarely','Occasionally','Daily'
+];
+
+export const marijuana='marijuana';
+export const socialHabits = [
+	'Vegetarian',
+	'Consume caffeinated beverages',
+	marijuana,
+];
+
+export const exposedTo = [
+	'radiation',
+	'herbicides or toxic chemicals',
+	'secondhand smoke from cigarettes, marijuana or vaping'
+]
 
 
 
