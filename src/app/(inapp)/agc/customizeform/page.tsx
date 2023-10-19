@@ -36,14 +36,16 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import AddIcon from '@mui/icons-material/Add';
+import { FormTemp, FormSection, FormField } from '@/utils/form/template';
 
-// const field_element_list = ["id", "label", "type", "length", "required", "options", "sub"]
-const field_element_list = ["id", "label", "type", "length", "required",]
-const field_type_list = ["text", "number", "date", "multi-select", "yes/no", "checkbox", "address"]
+const field_type_list = ['text', 'multi-select', 'date', 'address', 'name', "yes/no", "checkbox", "number", 'populate']
+//'text'|'multi-select'|'date'|'address'|'name'|"yes/no"|"checkbox"|"number"|'populate'
 const field_length_list = ["short", "medium", "long"]
 
-type field_definition = { id: string, label: string, type: string, length: number, required: boolean, options: string[], sub: any[] }
-type section_definition = { name: string, content: [] }
+// type field_definition = { id: string, label: string, type: string, length: number, required: boolean, options: string[], sub: any[] }
+// type section_definition = { name: string, content: [] }4
+type field_definition = FormField;
+type section_definition = FormSection;
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -77,14 +79,17 @@ function a11yProps(index: number) {
     };
 }
 
-const templateList = [form_template.basic_info,
-form_template.physical_personal_trait,
-form_template.education_occupation,
-form_template.background_history,
-form_template.family_partner,
-form_template.personal_and_medical,]
+//To be deleted
+// const templateList = [form_template.basic_info,
+// form_template.physical_personal_trait,
+// form_template.education_occupation,
+// form_template.background_history,
+// form_template.family_partner,
+// form_template.personal_and_medical,]
 
-function EditFieldDialogBox({ fieldlist, index, open_status, closeDialogBox }: { fieldlist: field_definition[], index: number, open_status: boolean, closeDialogBox: () => void }) {
+const formTemplates = form_template.formTemplates;
+
+function EditFieldDialogBox({ editField, open_status, closeDialogBox, submitEditResult }: { editField: field_definition, open_status: boolean, closeDialogBox: () => void, submitEditResult: (field: FormField) => void }) {
     const { handleSubmit, register, control } = useForm(
         {
             // defaultValues:
@@ -100,6 +105,7 @@ function EditFieldDialogBox({ fieldlist, index, open_status, closeDialogBox }: {
         }
     );
 
+
     function PaperComponent(props: PaperProps) {
         return (
             <Draggable
@@ -111,10 +117,18 @@ function EditFieldDialogBox({ fieldlist, index, open_status, closeDialogBox }: {
         );
     }
 
+    //avoid change the value  inside any child.
+    const [editingField, setEditingField] = React.useState(JSON.parse(JSON.stringify(editField)));
+
     const onSubmit = (data: any) => {
-        fieldlist[index] = data;
-        closeDialogBox();
+        //avoid change the value  inside any child.
+        //fieldlist[index] = data;        
+        //closeDialogBox();
+        submitEditResult(data);
+        console.log("onSubmit", data);
+        //setOpen(false);
     };
+
 
     return (
         <Dialog open={open_status} onClose={closeDialogBox} PaperComponent={PaperComponent} aria-labelledby="draggable-dialog-title">
@@ -128,7 +142,8 @@ function EditFieldDialogBox({ fieldlist, index, open_status, closeDialogBox }: {
                         <Table>
                             <TableBody>
                                 {
-                                    Object.entries(fieldlist[index] ?? {}).map((field_name, index) => {
+                                    //Object.entries(fieldlist[index] ?? {}).map((field_name, index) => {
+                                    Object.entries(editingField ?? {}).map((field_name, index) => {
                                         return (
                                             <TableRow key={index} hover >
                                                 {/* <Controller
@@ -251,31 +266,57 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
         index: number,
         depth: number,
         deleteRow: (index: number) => void,
-        updateRow: (index: number, newValue: field_definition[]) => void,
+        updateRow: (index: number, newValue: field_definition) => void,
         reRenderParent: () => void,
     }) {
-    const row = dataset[index];
+    //avoid change the value  inside any child.
+    //const row = dataset[index];
+    const [row, setRow] = React.useState(JSON.parse(JSON.stringify(dataset[index])));
     const [openStatus, setOpenStatus] = React.useState(false);
     const [editDialogBox, setEditDialogBox] = React.useState(false);
-    const [fieldIndex, setFieldIndex] = React.useState(0);
-    function deleteField(event: React.SyntheticEvent, index: number) {
-        console.log("deleteTableField", index);
-        dataset.splice(index, 1);
-        console.log("deleteTableField", dataset);
-        reRenderParent();
-    }
-    function updateField(index: number, newValue: field_definition) {
-        console.log("updateField", index, newValue);
-        dataset[index] = newValue;
-        console.log("updateField", dataset);
-        reRenderParent();
+    const [fieldIndex, setFieldIndex] = React.useState(0);//useless
+    // function deleteField(event: React.SyntheticEvent, index: number) {
+    //     console.log("deleteTableField", index);
+    //     dataset.splice(index, 1);
+    //     console.log("deleteTableField", dataset);
+    //     reRenderParent();
+    // }    
+    // function addSubField(index: number, newValue: field_definition) {
+    //     console.log("addSubField", index, newValue);
+    //     dataset[index].sub ? dataset[index].sub.push(newValue) : dataset[index].sub = [newValue];
+    //     console.log("addSubField", dataset);
+    //     reRenderParent();
+    // }
+    function deleteSubField(event: React.SyntheticEvent, index: number) {
+        {/*use setState delete a subfield*/}
+        {/*callback update a row*/ }
+        row.sub.splice(index, 1);//or delete by id
+        setRow(row);
+        // delete row.sub.id
+        updateRow(index, row);// call back to update a row
     }
     function addSubField(index: number, newValue: field_definition) {
-        console.log("addSubField", index, newValue);
-        dataset[index].sub?dataset[index].sub.push(newValue):dataset[index].sub=[newValue];
-        console.log("addSubField", dataset);
-        reRenderParent();
+        {/*use setState add a subfield*/}
+        {/*callback update a row*/ }
+        row.sub ? row.sub.push(newValue) : row.sub = [newValue];
+        setRow(row);
+        updateRow(index, row);// call back to update a row  
     }
+    function editField(index: number, newValue: field_definition) {
+        {/*use setState edit a subfield*/}
+        {/*callback update a row*/}
+        row.sub[index] = newValue;//or update by id
+        setRow(row);
+        updateRow(index, row);// call back to update a row
+    }
+    function deleteField(event: React.SyntheticEvent, index:number ) {
+        {/*use setState delete a field by index or ID * /}
+        {/*return a index or id, callback delete a row   delete */}
+        {/*deleteRow*/ }
+        deleteRow(index);
+        console.log("deleteTableField depth ", depth, dataset);
+    }
+
     function reRenderChild() {
         reRenderParent();
     }
@@ -294,7 +335,7 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
                             {row.sub && (row.sub.length > 0) ? <IconButton
                                 aria-label="expand row"
                                 size="small"
-                                onClick={() => { setOpenStatus(!openStatus); console.log("expend/close selected field/row index", index) }}
+                                onClick={() => { setOpenStatus(!openStatus); setFieldIndex(index); console.log("expend/close selected field/row index", index) }}
                             >
                                 {openStatus ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                             </IconButton>
@@ -323,23 +364,33 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
                         </Box>
                         <Box sx={{ width: '40px' }}>
                             {/* {row.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />} */}
-                        {row.required && "*"}
+                            {row.required && "*"}
                         </Box>
                         <Box sx={{ width: '200px' }}>
                             <Button variant="solid" startIcon={<EditIcon color='primary' />}
                                 onClick={(e: React.SyntheticEvent) => {
-                                    setFieldIndex(index);
+                                    setFieldIndex(index);//useless
                                     setEditDialogBox(!editDialogBox);
                                 }}
                             >
                             </Button>
                             <Button variant="solid"
                                 startIcon={<ClearOutlinedIcon color='primary' />}
-                                onClick={(ev: React.SyntheticEvent) => { deleteField(ev, index); reRenderParent }}>
+                                onClick={(ev: React.SyntheticEvent) => {
+                                    console.log("Click to delete a field, depth", depth);
+                                    deleteField(ev, index);
+                                    reRenderParent;
+                                    {/*callback update*/ }
+                                }}>
                             </Button>
                             <Button variant="solid"
                                 startIcon={<AddIcon color='primary' />}
-                                onClick={(ev: React.SyntheticEvent) => { console.log("Click to add a subfield"); addSubField(index,{ "id": "field_id1", "label": "field_label1", "type": "text", "required": false, "length": 0, "options": [] });reRenderParent }}>
+                                onClick={(ev: React.SyntheticEvent) => {
+                                    console.log("Click to add a subfield");
+                                    addSubField(index, { "id": "field_id1", "label": "field_label1", "type": "text", "required": false, "length": 0, "options": [] });
+                                    reRenderParent;
+                                    {/*callback update*/ }
+                                }}>
                             </Button>
 
                         </Box>
@@ -353,8 +404,8 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
                                 dataset={row.sub}
                                 index={index}
                                 depth={depth + 1}
-                                deleteRow={(index) => deleteField}
-                                reRenderParent={() => {  reRenderParent; }}
+                                deleteRow={(index) => { {delete row.sub[index];updateRow(fieldIndex,row);reRenderParent} }}
+                                reRenderParent={() => { reRenderParent; }}
                             />)
                             )
                             }
@@ -364,11 +415,14 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
                 }
             </List>
             {editDialogBox && <EditFieldDialogBox
-                fieldlist={dataset}
-                index={fieldIndex}
+                //fieldlist={dataset}
+                //index={fieldIndex}
+                editField={dataset[index]}
                 // field_definition={dataset[fieldIndex]}
                 open_status={editDialogBox}
-                closeDialogBox={() => { setEditDialogBox(!editDialogBox) }} />}
+                closeDialogBox={() => { setEditDialogBox(!editDialogBox); }}
+                submitEditResult={(data) => { setEditDialogBox(!editDialogBox); dataset[index] = data;console.log('submitEditResult'); {/*callback update*/ } }}
+            />}
         </ListItem>
     )
 
@@ -376,14 +430,19 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
 
 function FormTemplateEdit({ dataset }: { dataset: field_definition[] }) {
     const [renderFlag, setRenderFlag] = React.useState(false);
+    const [editingDataset, setEditingDataset] = React.useState(JSON.parse(JSON.stringify(dataset)));
     const manuallyRender = () => {
         setRenderFlag(!renderFlag);
     }
+    console.log(editingDataset)
     return (
         <>
             <List>
                 {dataset.map((row, index) => (
-                    <Row key={index} dataset={dataset} index={index} depth={0} deleteRow={(index) => { }} updateRow={(index, newValue) => { }} reRenderParent={manuallyRender} />
+                    <Row key={index} dataset={dataset} index={index} depth={0} 
+                    deleteRow={(index) => { dataset.splice(index, 1); }} 
+                    updateRow={(index, newValue) => { dataset[index] = newValue }} 
+                    reRenderParent={manuallyRender} />
                 ))}
             </List>
         </>
@@ -413,7 +472,8 @@ export default function customize_Form() {
     const initialField = { "id": "field_id1", "label": "field_label1", "type": "text", "required": false, "length": 0, "options": [] };
 
     // Initial customized form list using deep copy
-    const [customizedformlist, setCustomizedFormList] = React.useState(JSON.parse(JSON.stringify(templateList)));//React.useState([...templateList]);
+    //const [customizedformlist, setCustomizedFormList] = React.useState(JSON.parse(JSON.stringify(templateList)));//React.useState([...templateList]);
+    const [customizedformlist, setCustomizedFormList] = React.useState(JSON.parse(JSON.stringify(formTemplates)));
     const table_name_list = customizedformlist.map((section: section_definition, index: number) => (
         { title: section.name, selected: index === templateid, icon: <HomeOutlined /> }
     ));
@@ -542,7 +602,7 @@ export default function customize_Form() {
                                     <Button variant="solid" color="primary" startIcon={<Add />}
                                         onClick={(ev: React.SyntheticEvent) => { addTableField(ev, 0, initialField); }}>Add a field
                                     </Button>
-                                    <br />                                 
+                                    <br />
                                     <FormTemplateEdit dataset={customizedformlist[templateid].content[tabId].fields} />
                                 </CustomTabPanel>
                             ))}
