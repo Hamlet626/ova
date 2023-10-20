@@ -15,6 +15,17 @@ export const font1={
     letterSpacing: '0em',
     textAlign: 'left',
 };
+//"sugnup" in signup page
+export const font2={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '45px',
+    fontWeight: 500,
+    lineHeight: '52px',
+    letterSpacing: '0em',
+     textAlign: 'center',
+     marginTop: '16px',
+};
+
 
 
 
@@ -48,6 +59,14 @@ export const font7={
     fontFamily: roboto.style.fontFamily,
     fontSize: '16px',
     fontWeight: 500,
+    lineHeight: '24px',
+    letterSpacing: '0.15px',
+};
+
+export const font8={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '14px',
+    fontWeight: 400,
     lineHeight: '24px',
     letterSpacing: '0.15px',
 };
