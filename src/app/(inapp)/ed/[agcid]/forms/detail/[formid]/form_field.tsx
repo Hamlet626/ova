@@ -19,7 +19,8 @@ export default function FormFieldUI({data,register}:{data:FormField,register:any
             {data.options!.map(v => <ToggleButton value={v}>{v}</ToggleButton>)}
         </ToggleButtonGroup>]
         :data.type==='number'?[<TextField type='number' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />]
-        :data.type==='address'?[]
+        :data.type==='address'?[<Input />,
+        <FormHelperText error>Please fill in valid value</FormHelperText>]
         :data.type==='name'?[]
         :data.type==='populate'?[]
         :[]}

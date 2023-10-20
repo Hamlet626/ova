@@ -194,7 +194,8 @@ export const physical_personal_trait:FormTemp={
                 {//todo
                     id: "s8",
                     label: "Weight (in lbs)",
-                    type: "number",
+                    type: "text",
+                    length:"short",
                     required: true
                 },
                 {

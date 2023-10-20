@@ -16,7 +16,7 @@ export default async function FormDetail({params}: {params: { agcid: string, for
     // const {data,status}=useSession({required:true});
     // if(status==='loading')return <Box/>
     const user=(await getServerSession(authOptions))!.user!;
-    
+
     const myRole=user.role;
     
     const formTemplate=await getFormTemplate(params.agcid);

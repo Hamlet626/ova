@@ -55,7 +55,7 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
             <Stack direction={'row'} alignItems={'end'}>
                     <Typography variant="h5" color={'secondary'}>{template.content[sectionNum].title}</Typography>
                     <Box flexGrow={1}/>
-                    <Breadcrumbs separator='-'>
+                     <Breadcrumbs separator='-'>
                     {template.content.map((v,i)=>{
                         if(i===sectionNum)return null;
                         const finished=secFinished(data,v);
