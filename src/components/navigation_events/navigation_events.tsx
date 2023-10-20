@@ -8,6 +8,8 @@ import { useSession } from 'next-auth/react';
 import { roles } from '@/utils/roles';
 import { algo_client } from '@/utils/algolia';
 import { AlgoTemplates } from '@/utils/form/template';
+import { EDRec } from '@/utils/algolia';
+import { FormStoredData, getNestedKeys, getStoredForm } from '@/utils/form/utils';
  
 const edFormPath: RegExp = /^\/ed\/[^/]+\/forms\/detail\/\d+$/;
 const rcpFormPath: RegExp = /^\/rcp\/forms\/detail\/\d+$/;
@@ -28,28 +30,18 @@ export function NavigationEvents() {
     if(user!=null&&(prePath.current?.match(edFormPath)||prePath.current?.match(rcpFormPath))){
       const pathseg=prePath.current.split('/');
       const formid=pathseg[pathseg.length-1];
-      const storedData=localStorage.getItem(`form${formid}`);
-      if(storedData!=null && Object.keys(storedData).length>0){
+      const storedData=getStoredForm(Number(formid));
+
+      if(storedData!=null && Object.keys(storedData.data).length>0){
         
         // console.log("form saved",roles[user.role].id,user.id,JSON.parse(storedData));
         // console.log(storedData);
         setDoc(
           doc(getFirestore(app),`user groups/${roles[user.role].id}/users/${user.id}/form data/${formid}`),
-          JSON.parse(storedData),{merge:true});
+          storedData.data,{merge:true});
           
-        const algoData={};
-        AlgoTemplates[Number(formid)].forEach((v)=>{
-          if(v.tag){
-            if(typeof v.fdid === 'string'){
-              if(JSON.parse(storedData)[v.fdid]!==undefined) algoData['_tags']
-            }
-            if(JSON.parse(storedData)[v.fdid]!==undefined) algoData[v.label??]
-          }
-          if(typeof v.fdid === 'string'){
-            if(JSON.parse(storedData)[v.fdid]!==undefined) algoData[v.label??]
-          }
-        })
-        algo_client.initIndex(roles[user.role].id).partialUpdateObject
+          updateAlgo(roles[user.role].id,formid,user.id,storedData);
+
         localStorage.removeItem(`form${formid}`);
       }
     }
@@ -59,4 +51,33 @@ export function NavigationEvents() {
   }, [pathname, searchParams]);
  
   return null;
+}
+
+const updateAlgo=async(roleID: string,formid: string,uid: string,data: FormStoredData)=>{
+  const user=await algo_client.initIndex(roleID).getObject<EDRec>(uid);
+  user.tags
+  const algoData:any={tags:new Set(user.tags)};
+  
+  data.algoRemove?.forEach(v=>{algoData.tags.delete(v);});
+  AlgoTemplates[Number(formid)].forEach((v)=>{
+    if(v.tag){
+      if(typeof v.fdid === 'string'){
+        if(data.data[v.fdid]!==undefined) algoData.tags.push(data.data[v.fdid]);
+      }else{ 
+        const value=getNestedKeys(data.data,v.fdid as string[]);
+        algoData.tags.push(value);
+      }
+    }
+    if(v.filter){
+      if(typeof v.fdid === 'string'){
+        if(data.data[v.fdid]!==undefined) algoData[v.label!]=data.data[v.fdid];
+      }else{ 
+        const value=getNestedKeys(data.data,v.fdid as string[]);
+        algoData[v.label!]=value;
+      }
+    }
+  })
+  algoData.tags=Array.from(algoData.tags);
+
+  algo_client.initIndex(roleID).partialUpdateObject(algoData);
 }

@@ -20,6 +20,33 @@ export const secFinished=(data:any, sec:FormSection)=>sec.fields.every(v=>fieldF
 
 export const formFinished=(data:any, temp:FormTemp)=>temp.content.every(v=>secFinished(data,v));
 
+export type FormStoredData={data:any,algoRemove:string[]};
+
+export const getStoredForm=(formid:number):FormStoredData|null=>{
+    const storedData=localStorage.getItem(`form${formid}`);
+    if(storedData==null)return storedData;
+    const js = JSON.parse(storedData);
+    js.data??={};
+    js.algoRemove??=[];
+    return js;
+}
+
+export const addStoredForm=(formid:number,{data,algoRemove}:{data?:any,algoRemove?:string[]})=>{
+    const storedData=getStoredForm(formid);
+    if(storedData==null)return localStorage.setItem(`form${formid}`,JSON.stringify({data,algoRemove}));
+    return localStorage.setItem(`form${formid}`,JSON.stringify(
+        {
+            data:removeUndefined({...(storedData.data??{}),...(data??{})}),
+            algoRemove:removeUndefined({...(storedData.algoRemove??{}),...(algoRemove??{})}),
+        }));
+}
+
+export const removeUndefined=(obj:any)=>Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined));
+
+export const getNestedKeys=(obj:any,keys:string[])=>{
+    keys.forEach(v=>{obj=obj[v];});
+    return obj;
+}
 
 export const inch2cm=(h:HeightValue):number=>{
     if(h.iscm)return h.cm!;

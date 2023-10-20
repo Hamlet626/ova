@@ -1,4 +1,4 @@
-import { FormField } from "@/utils/form/template";
+import { FormField } from "@/utils/form/types";
 import { Box, FormHelperText, Input, MenuItem, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { DateField } from "@mui/x-date-pickers";
 import { useForm } from "react-hook-form";

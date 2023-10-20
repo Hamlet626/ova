@@ -8,7 +8,7 @@ import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { unstable_cache } from "next/cache";
 import FormContent from "./form_content";
-import { FormTemp, basic_info, formTemplates } from "@/utils/form/template";
+import { basic_info, formTemplates } from "@/utils/form/template";
 import { app } from "@/utils/firebase/firebase_client";
 import { getFormData, getFormTemplate } from "./utils";
 
