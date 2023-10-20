@@ -26,7 +26,7 @@ import {
     physicalTraits,
     bodyBuilds,
     activity,
-    personalities, skills, skillTypes, medicalHistory, physicalHistory, legalHistory, countryList, legalHistory_p12m, inUK3m, covidVacc, travelHistory, refusedBlood, receivedBlood, alcohol, alcoholFreq, smoke, smokeFreq, socialHabits, marijuana
+    personalities, skills, skillTypes, medicalHistory, physicalHistory, legalHistory, countryList, inUK3m, covidVacc, travelHistory, refusedBlood, receivedBlood, alcohol, alcoholFreq, smoke, smokeFreq, socialHabits, marijuana, period, papSmearRes, yes, no, birthControl, DepoProvera, gynecologic, sexualPartner, pregType, sex, deliveryType
 } from "@/utils/form/consts";
 import { AlgoMapping, FormField, FormTemp, HeightValue } from "./types";
 import { inch2cm } from "./utils";
@@ -149,12 +149,6 @@ export const basic_info:FormTemp={
             ]
         }
     ],
-    algo:[
-        {fdid:'s2',label:'Birthday'},
-        {fdid:'s13',label:'Nationality'},
-        {fdid:['s13','s0'],label:'in US'},
-        {fdid:'s15',label:'Ethnicity'},
-    ]
 };
 
 export const physical_personal_trait:FormTemp={
@@ -321,73 +315,6 @@ export const physical_personal_trait:FormTemp={
             ]
         },
     ],
-    algo:[
-        {fdid:'s0',label:'Height',handler:(h:HeightValue)=>inch2cm(h)},
-        {fdid:'s1',label:'Weight'},
-        {extra:'bmi'},
-
-        ...tagOnlyAlgo([{
-            fdid: "s6",
-            label: "Body Builds",
-        },
-        {
-            fdid: "s0",
-            label: "Blood Type",
-        },
-        {
-            fdid: "s4",
-            label: "Eye Color",
-        },
-        {
-            fdid: "s5",
-            label: "Hair Color",
-        },
-        {
-            fdid: "s5",
-            label: "What is your natural hair type?"
-        },
-        {
-            fdid: "s5",
-            label: "What is your natural hair texture?"
-        },
-        {
-            fdid: "s5",
-            label: "What is your natural hair fullness? "
-        },
-        {
-            fdid: "s6",
-            label: "Skin Color",
-        },
-        {
-            fdid: "s9",
-            label: "How's your Vision?"
-        },
-        {
-            fdid: "s10",
-            label: "Does any of the following apply to you?"
-        },
-        {
-            fdid: "s11",
-            label: "Which is your dominant hand?"
-        },
-        {
-            fdid: "s",
-            label: "Please select the following options if any of which applied to you."
-        },
-        {
-            fdid: "s11",
-            label: "Sexual Orientation",
-        },
-        {
-            fdid: "s11",
-            label: "What best describes you?",
-        },
-        {
-            fdid: "s11",
-            label: "What best describes your personality?",
-        }
-    ]),
-    ]
 };
 
 export const education_occupation:FormTemp={
@@ -510,12 +437,6 @@ export const education_occupation:FormTemp={
             ]
         }
     ],
-    algo:[
-        {fdid:'s0',label:'highest level of education'},
-        ...tagOnlyAlgo([
-            {fdid:'s1'},{fdid:'s2'},
-        ])
-    ]
 };
 
 ///todo
@@ -654,9 +575,210 @@ export const background_history:FormTemp={
             ]
         },
         {
-            title:'maternal & sexual history',
+            title:'maternal',
             fields:[
+                {
+                    label:'Does any of the following apply to you?',
+                    type:'checkbox',options:gynecologic,
+                    required: false,
+                    sub:[
+                        
+                    ]
+                },
+                {
+                    label:'What was your age at the onset of menses?',
+                    type:'number', required:true,
+                },
+                {
+                    label:'When was the date of your last menstrual period?',
+                    type:'date', required:true,
+                },
+                {
+                    label:'What is the average length of time your period lasts?',
+                    type:'text',length:'short',required:true
+                },
+                {
+                    label:'What is the average length of time from the start of one period until the start of the next?',
+                    type:'text',length:'short',required:true
+                },
+                {
+                    label:'Does any of the following apply to you?',
+                    type:'checkbox',options:period,
+                    required: false,
+                    sub:[
+                        
+                    ]
+                },
+                // {
+                //     label:'Do you have both ovaries?',
+                //     type:'yes/no',required:true,
+                // },
+                {
+                    label:'Have any of your pap smears been abnormal?',
+                    type:'multi-select',options:papSmearRes,
+                    required:true,
+                    sub:[
+                        {
+                            condition:[yes],
+                            type:'text',required:true,
+                            label:'Please explain more detail about the abonormal Pap Smear? E.g. date, result,...'
+                        },
+                        {
+                            condition:[yes,no],
+                            type:'date',required:true,
+                            label:'When was your last Pap Smear?'
+                        },
+                        {
+                            condition:[yes],
+                            type:'text',required:true,
+                            label:'What was the result of your last Pap Smear?'
+                        }
+                    ]
+                },
+            
+            ]
+        },
+        {
+            title:'sexual history',
+            fields:[
+                {
+                    label:'Please list all the birth control methods currently being used or used in the past, if any.',
+                    type:'populate',required:false,
+                    group:[
+                        {
+                            label:'Birth control Type',
+                            type:'multi-select',required:true,
+                            options:birthControl,
+                            sub:[
+                                {
+                                    condition:[DepoProvera],
+                                    type:'date',required:true,
+                                    label:'When was your last injection?'
+                                }
+                            ],
+                        },
+                        {
+                            label:'Birth control start time',
+                            type:'date',required:true,
+                        },
+                        {
+                            label:'Birth control end time',
+                            type:'date',required:false,
+                        },
+                    ]
 
+                },
+                {
+                    label:'What is the total number of sexual partners you have had?',
+                    type:'number',required:false
+                },
+                {
+                    label:'How many sexual partners have you had during the last 6 months?',
+                    type:'number',required:false
+                },
+                {
+                    label:'How many current sexual partners do you have?',
+                    type:'number',required:false
+                },
+                {
+                    label:'In the last 6 months have you had unprotected sex (intercourse without a condom) with a new partner?',
+                    type:'yes/no',required:true
+                },
+                {
+                    label:'To your knowledge, have you been personally tested positive or been treated for any of the following?',
+                    type:'checkbox',required:false,
+                    options:sexualPartner,
+                    sub:sexualPartner.flatMap(v=>([
+                        {
+                            condition:[v],
+                            label:'Date of Diagnosis',
+                            type:'date',required:false
+                        },
+                        {
+                            condition:[v],
+                            label:'Additional Details',
+                            type:'text',required:false
+                        }
+                    ]))
+                },
+                {
+                    label:'To your knowledge, have you or any of your sexual partners been in contact with anyone tested positive or been treated for any of the following?',
+                    type:'checkbox',required:false,
+                    options:sexualPartner,
+                    sub:sexualPartner.flatMap(v=>([
+                        {
+                            condition:[v],
+                            label:'Date of Diagnosis',
+                            type:'date',required:false
+                        },
+                        {
+                            condition:[v],
+                            label:'Additional Details',
+                            type:'text',required:false
+                        }
+                    ]))
+                },
+                {
+                    label:'Have any of the following happened to you?',
+                    type:'multi-select',required:true,
+                    options:pregType,
+                    sub:pregType.map(v=>({
+                        condition:[v],
+                        label:'How many times did it happen to you?',
+                        type:'number',required:true,
+                    }))
+                },
+                {
+                    label:'Please provide the following information regarding each pregnancy you have had.',
+                    type:'populate',required:false,
+                    group:[
+                        {
+                            label:'Vaginal or C-section',type:'multi-select',
+                            options:deliveryType,required:true
+                        },
+                        {
+                            label:'Complication',type:'yes/no',
+                            required:false
+                        },
+                        {
+                            label:'Delivery Date',type:'date',
+                            required:true
+                        },
+                        {
+                            label:'Weeks to Delivery',type:'number',
+                            required:true
+                        },
+                        {
+                            label:'Baby',type:'populate',required:true,
+                            group:[
+                                {
+                                    label:'Sex',type:'multi-select',
+                                    options:sex,required:true
+                                },
+                                {
+                                    label:'Length/Weight',type:'text',
+                                    required:false
+                                },
+                                {
+                                    label:'Length/Weight',type:'text',
+                                    required:false
+                                },
+                                {
+                                    label: "Eye Color",
+                                    type: "multi-select",
+                                    options: eyeColors,
+                                    required: true
+                                },
+                                {
+                                    label: "Hair Color",
+                                    type: "multi-select",
+                                    options: hairColors,
+                                    required: true
+                                },
+                            ]
+                        }
+                    ]
+                }
             ]
         }
         // {
@@ -1245,3 +1367,89 @@ function optQuestion(question: string):FormField {
 export const formTemplates=[basic_info,physical_personal_trait,education_occupation,
     background_history,family_partner,other_clinic_questions]
     .map(v=>assign_IDs(v));
+
+export const AlgoTemplates:AlgoMapping[][]=[
+    [
+        {fdid:'s2',label:'Birthday'},
+        {fdid:'s13',label:'Nationality'},
+        {fdid:['s13','s0'],label:'in US'},
+        {fdid:'s15',label:'Ethnicity'},
+    ],
+    [
+        {fdid:'s0',label:'Height',handler:(h:HeightValue)=>inch2cm(h)},
+        {fdid:'s1',label:'Weight'},
+        {extra:'bmi'},
+
+        ...tagOnlyAlgo([{
+            fdid: "s6",
+            label: "Body Builds",
+        },
+        {
+            fdid: "s0",
+            label: "Blood Type",
+        },
+        {
+            fdid: "s4",
+            label: "Eye Color",
+        },
+        {
+            fdid: "s5",
+            label: "Hair Color",
+        },
+        {
+            fdid: "s5",
+            label: "What is your natural hair type?"
+        },
+        {
+            fdid: "s5",
+            label: "What is your natural hair texture?"
+        },
+        {
+            fdid: "s5",
+            label: "What is your natural hair fullness? "
+        },
+        {
+            fdid: "s6",
+            label: "Skin Color",
+        },
+        {
+            fdid: "s9",
+            label: "How's your Vision?"
+        },
+        {
+            fdid: "s10",
+            label: "Does any of the following apply to you?"
+        },
+        {
+            fdid: "s11",
+            label: "Which is your dominant hand?"
+        },
+        {
+            fdid: "s",
+            label: "Please select the following options if any of which applied to you."
+        },
+        {
+            fdid: "s11",
+            label: "Sexual Orientation",
+        },
+        {
+            fdid: "s11",
+            label: "What best describes you?",
+        },
+        {
+            fdid: "s11",
+            label: "What best describes your personality?",
+        }
+    ]),
+    ],
+    [
+        {fdid:'s0',label:'highest level of education'},
+        ...tagOnlyAlgo([
+            {fdid:'s1',label:''},{fdid:'s2'},
+        ])
+    ],
+
+    [],
+    [],
+    []
+]

@@ -2,7 +2,7 @@
 export interface FormTemp{
     name:string,
     content:FormSection[],
-    algo?:AlgoMapping[]
+    // algo?:AlgoMapping[]
 }
 export interface FormSection{
     title:string,

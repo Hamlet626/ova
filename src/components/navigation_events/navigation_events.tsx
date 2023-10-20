@@ -6,6 +6,8 @@ import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { app } from '@/utils/firebase/firebase_client';
 import { useSession } from 'next-auth/react';
 import { roles } from '@/utils/roles';
+import { algo_client } from '@/utils/algolia';
+import { AlgoTemplates } from '@/utils/form/template';
  
 const edFormPath: RegExp = /^\/ed\/[^/]+\/forms\/detail\/\d+$/;
 const rcpFormPath: RegExp = /^\/rcp\/forms\/detail\/\d+$/;
@@ -31,7 +33,23 @@ export function NavigationEvents() {
         
         // console.log("form saved",roles[user.role].id,user.id,JSON.parse(storedData));
         // console.log(storedData);
-        setDoc(doc(getFirestore(app),`user groups/${roles[user.role].id}/users/${user.id}/form data/${formid}`),JSON.parse(storedData),{merge:true});
+        setDoc(
+          doc(getFirestore(app),`user groups/${roles[user.role].id}/users/${user.id}/form data/${formid}`),
+          JSON.parse(storedData),{merge:true});
+          
+        const algoData={};
+        AlgoTemplates[Number(formid)].forEach((v)=>{
+          if(v.tag){
+            if(typeof v.fdid === 'string'){
+              if(JSON.parse(storedData)[v.fdid]!==undefined) algoData['_tags']
+            }
+            if(JSON.parse(storedData)[v.fdid]!==undefined) algoData[v.label??]
+          }
+          if(typeof v.fdid === 'string'){
+            if(JSON.parse(storedData)[v.fdid]!==undefined) algoData[v.label??]
+          }
+        })
+        algo_client.initIndex(roles[user.role].id).partialUpdateObject
         localStorage.removeItem(`form${formid}`);
       }
     }

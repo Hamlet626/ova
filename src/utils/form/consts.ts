@@ -1,4 +1,6 @@
 
+export const yes='Yes';
+export const no='No';
 
 export const languages=["English", "Spanish", "French", "German", "Italian", "Russian", "Arabic", "Chinese", "Japanese", "Portuguese", "Dutch", "Swahili", "Hindi", "Turkish", "Korean", "Greek", "Danish", "Swedish", "Norwegian", "Finnish"];
 
@@ -61,7 +63,7 @@ export const familyTrait=[fBaldness,
 	'alcoholism',
 	'drug use, abuse, or addiction'];
 
-export const covidVacc=['Yes','Prefer Not','Never'];
+export const covidVacc=[yes,'Prefer Not','Never'];
 
 export const drugs = [
     "Cocaine",
@@ -79,8 +81,18 @@ export const drugs = [
 
 export const medicalHistory = [
 	'herbal remedies/medications',
-	'any recreational drugs'
+	'any recreational drugs',
+	'any injected drugs',
+
 ];
+
+
+export const exposedTo = [
+	'radiation',
+	'herbicides or toxic chemicals',
+	'secondhand smoke from cigarettes, marijuana or vaping'
+];
+
 
 export const refusedBlood='refused as a blood donor';
 export const receivedBlood='received blood transfusion';
@@ -88,6 +100,8 @@ export const receivedBlood='received blood transfusion';
 export const physicalHistory = [
 	refusedBlood,
     receivedBlood,
+	'tattooing within 12 months',
+	'ear/body piercing within 12 months',
 ];
 
 export const inUK3m='spent 3 months or more cumulative in the United Kingdom from 1980 through 1996';
@@ -103,8 +117,8 @@ export const legalHistory = [
 	'been in trouble with the law',
 	'arrested, convicted, sentenced',
 	'having some criminal record',
-	'spent time in prison',
-    'in jail in the past 12 months',
+	'spent time in prison,jail',
+	'engaged in sex in exchange for money or drugs',
 ];
 
 
@@ -129,7 +143,7 @@ export const symptomHistory_p12m_contact = [
 ];
 
 export const alcohol=[
-	'No','Used to','Yes'
+	no,'Used to',yes
 ];
 export const alcoholFreq=[
 	'Rarely drink/Drink in samll amount',
@@ -151,12 +165,64 @@ export const socialHabits = [
 	marijuana,
 ];
 
-export const exposedTo = [
-	'radiation',
-	'herbicides or toxic chemicals',
-	'secondhand smoke from cigarettes, marijuana or vaping'
-]
+export const gynecologic = [
+	'not having both ovaries',
+	'infertile',
+	'cysts',
+	'fibroids',
+	'endometriosis',
+	'other gynecologic problems'
+];
 
+export const period = [
+	'irregular menstrual periods',
+	'bleeding in between periods',
+	'medication/medical treatment for menstrual problems',
+	'medication/medical treatment to alleviate menstrual pain',
+	'pelvic pain with your periods'
+];
+
+export const papSmearRes = [
+	'Naver had one',
+	yes,
+	no,
+];
+
+export const DepoProvera='Depo-Provera';
+export const birthControl=[
+	'IUD',
+	'Implanon',
+	'Nexplanon',
+	'Diaphragm',
+	'Condom',
+	'Birth Control Pills',
+	DepoProvera,
+	'Rhythm',
+	'Spermicide',
+	'Tubal Ligation'
+];
+
+export const sexualPartner=[
+	'HIV (AIDS)',	
+'NSU (non specific urethritis)',		
+'Syphilis',		
+'Gonorrhea',		
+'Chlamydia',		
+'Trichomonas',		
+'Venereal Warts',		
+'Herpes, Genital',		
+'Viral Hepatitis B or C',		
+'Genital Sores',		
+'Penis Discharge (Partner)',		
+'Other sexually transmitted diseases',
+];
+
+export const pregType=[
+	'ectopic pregnancy', 'abortion','miscarriage'
+];
+
+export const sex=['male','female'];
+export const deliveryType=['Virginal','C-section'];
 
 
 export const ethnicities = [
