@@ -31,8 +31,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FormTitlesUI from '@/components/form_titles_ui';
 import ListIcon from '@mui/icons-material/List';
-import { TreeView } from '@mui/x-tree-view/TreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import AddIcon from '@mui/icons-material/Add';
@@ -42,8 +40,7 @@ const field_type_list = ['text', 'multi-select', 'date', 'address', 'name', "yes
 //'text'|'multi-select'|'date'|'address'|'name'|"yes/no"|"checkbox"|"number"|'populate'
 const field_length_list = ["short", "medium", "long"]
 
-// type field_definition = { id: string, label: string, type: string, length: number, required: boolean, options: string[], sub: any[] }
-// type section_definition = { name: string, content: [] }4
+
 type field_definition = FormField;
 type section_definition = FormSection;
 
@@ -79,13 +76,7 @@ function a11yProps(index: number) {
     };
 }
 
-//To be deleted
-// const templateList = [form_template.basic_info,
-// form_template.physical_personal_trait,
-// form_template.education_occupation,
-// form_template.background_history,
-// form_template.family_partner,
-// form_template.personal_and_medical,]
+
 
 const formTemplates = form_template.formTemplates;
 
@@ -260,13 +251,13 @@ function EditFieldDialogBox({ editField, open_status, closeDialogBox, submitEdit
     );
 }
 
-function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
+function Row({ dataset, index, depth,
+    //  deleteRow, updateRow, 
+    reRenderParent }:
     {
         dataset: field_definition[],
         index: number,
         depth: number,
-        deleteRow: (index: number) => void,
-        updateRow: (index: number, newValue: field_definition) => void,
         reRenderParent: () => void,
     }) {
     //avoid change the value  inside any child.
@@ -275,18 +266,7 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
     const [openStatus, setOpenStatus] = React.useState(false);
     const [editDialogBox, setEditDialogBox] = React.useState(false);
     const [fieldIndex, setFieldIndex] = React.useState(0);//useless
-    // function deleteField(event: React.SyntheticEvent, index: number) {
-    //     console.log("deleteTableField", index);
-    //     dataset.splice(index, 1);
-    //     console.log("deleteTableField", dataset);
-    //     reRenderParent();
-    // }    
-    // function addSubField(index: number, newValue: field_definition) {
-    //     console.log("addSubField", index, newValue);
-    //     dataset[index].sub ? dataset[index].sub.push(newValue) : dataset[index].sub = [newValue];
-    //     console.log("addSubField", dataset);
-    //     reRenderParent();
-    // }
+
     function deleteSubField(event: React.SyntheticEvent, index: number) {
         {/*use setState delete a subfield*/}
         {/*callback update a row*/ }
@@ -313,12 +293,12 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
         {/*use setState delete a field by index or ID * /}
         {/*return a index or id, callback delete a row   delete */}
         {/*deleteRow*/ }
-        deleteRow(index);
+        // deleteRow(index);
         console.log("deleteTableField depth ", depth, dataset);
     }
 
     function reRenderChild() {
-        reRenderParent();
+        reRenderParent();//?
     }
 
     return (
@@ -404,7 +384,13 @@ function Row({ dataset, index, depth, deleteRow, updateRow, reRenderParent }:
                                 dataset={row.sub}
                                 index={index}
                                 depth={depth + 1}
-                                deleteRow={(index) => { {delete row.sub[index];updateRow(fieldIndex,row);reRenderParent} }}
+                            // deleteRow={(index) => {
+                            //     {
+                            //         delete row.sub[index];
+                            //         // updateRow(fieldIndex,row);
+                            //         reRenderParent
+                            //     }
+                            // }}
                                 reRenderParent={() => { reRenderParent; }}
                             />)
                             )
@@ -441,7 +427,7 @@ function FormTemplateEdit({ dataset }: { dataset: field_definition[] }) {
                 {dataset.map((row, index) => (
                     <Row key={index} dataset={dataset} index={index} depth={0} 
                     deleteRow={(index) => { dataset.splice(index, 1); }} 
-                    updateRow={(index, newValue) => { dataset[index] = newValue }} 
+                    // updateRow={(index, newValue) => { dataset[index] = newValue }} 
                     reRenderParent={manuallyRender} />
                 ))}
             </List>
@@ -463,6 +449,7 @@ export default function customize_Form() {
     const changeTemplate = (index: number) => {
         setTemplateId(index);
         changeTab(0);
+        console.log("changeTemplateID ", index);
     }
 
     // Default value of a new section
@@ -573,7 +560,7 @@ export default function customize_Form() {
                     gap: '12px',
                 }}>
                     <ListItem disablePadding>
-                        <LinearProgress sx={{
+                        <LinearProgress value={100} sx={{
                             width: '869px',
                             height: '4px',
                         }} />
