@@ -20,6 +20,7 @@ export default async function FormDetail({params}: {params: { agcid: string, for
     const myRole=user.role;
     
     const formTemplate=await getFormTemplate(params.agcid);
+    console.log(formTemplate[3]);
     const formData=await getFormData(user.id,myRole);
     const formIdex=Number(params.formid);
 

@@ -48,6 +48,8 @@ export const getNestedKeys=(obj:any,keys:string[])=>{
     return obj;
 }
 
+export const subFieldKey=(...keys:string[]):string=>keys.join('-');
+
 export const inch2cm=(h:HeightValue):number=>{
     if(h.iscm)return h.cm!;
     return (h.inch!.feet!*12+h.inch!.inch!)*2.54;

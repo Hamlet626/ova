@@ -9,7 +9,7 @@ import { roles } from '@/utils/roles';
 import { algo_client } from '@/utils/algolia';
 import { AlgoTemplates } from '@/utils/form/template';
 import { EDRec } from '@/utils/algolia';
-import { FormStoredData, getNestedKeys, getStoredForm } from '@/utils/form/utils';
+import { FormStoredData, getNestedKeys, getStoredForm, subFieldKey } from '@/utils/form/utils';
  
 const edFormPath: RegExp = /^\/ed\/[^/]+\/forms\/detail\/\d+$/;
 const rcpFormPath: RegExp = /^\/rcp\/forms\/detail\/\d+$/;
@@ -55,8 +55,8 @@ export function NavigationEvents() {
 
 const updateAlgo=async(roleID: string,formid: string,uid: string,data: FormStoredData)=>{
   const user=await algo_client.initIndex(roleID).getObject<EDRec>(uid);
-  user.tags
-  const algoData:any={tags:new Set(user.tags)};
+  //user.tags
+  const algoData:any={objectID:uid,tags:new Set(user.tags)};
   
   data.algoRemove?.forEach(v=>{algoData.tags.delete(v);});
   AlgoTemplates[Number(formid)].forEach((v)=>{
@@ -64,15 +64,15 @@ const updateAlgo=async(roleID: string,formid: string,uid: string,data: FormStore
       if(typeof v.fdid === 'string'){
         if(data.data[v.fdid]!==undefined) algoData.tags.push(data.data[v.fdid]);
       }else{ 
-        const value=getNestedKeys(data.data,v.fdid as string[]);
+        const value=data.data[subFieldKey(...v.fdid as string[])];
         algoData.tags.push(value);
       }
     }
     if(v.filter){
       if(typeof v.fdid === 'string'){
         if(data.data[v.fdid]!==undefined) algoData[v.label!]=data.data[v.fdid];
-      }else{ 
-        const value=getNestedKeys(data.data,v.fdid as string[]);
+      }else{
+        const value=data.data[subFieldKey(...v.fdid as string[])];
         algoData[v.label!]=value;
       }
     }

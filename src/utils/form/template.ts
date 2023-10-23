@@ -1371,7 +1371,7 @@ export const formTemplates=[basic_info,physical_personal_trait,education_occupat
 export const AlgoTemplates:AlgoMapping[][]=[
     [
         {fdid:'s2',label:'Birthday'},
-        {fdid:'s13',label:'Nationality'},
+        {fdid:'s13',label:'Nationality',tag:true},
         {fdid:['s13','s0'],label:'in US'},
         {fdid:'s15',label:'Ethnicity'},
     ],
