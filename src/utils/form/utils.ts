@@ -37,8 +37,14 @@ export const addStoredForm=(formid:number,{data,algoRemove}:FormStoredData)=>{
     JSON.stringify(removeUndefined({...(storedData.data??{}),...(data??{})})));
 
     localStorage.setItem(`formAlgo${formid}`,
-    JSON.stringify(removeUndefined({...(storedData.algoRemove??[]),...(algoRemove??[])})));
+    JSON.stringify([...(storedData.algoRemove??[]),...(algoRemove??[])]));
 }
+
+export const clearStoredForm=(formid:number)=>{
+    localStorage.removeItem(`form${formid}`);
+    localStorage.removeItem(`formAlgo${formid}`);
+}
+
 
 export const removeUndefined=(obj:any)=>Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined));
 

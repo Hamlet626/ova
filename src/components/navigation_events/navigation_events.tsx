@@ -9,7 +9,7 @@ import { roles } from '@/utils/roles';
 import { algo_client } from '@/utils/algolia';
 import { AlgoTemplates } from '@/utils/form/template';
 import { EDRec } from '@/utils/algolia';
-import { FormStoredData, getNestedKeys, getStoredForm, subFieldKey } from '@/utils/form/utils';
+import { FormStoredData, clearStoredForm, getStoredForm, subFieldKey } from '@/utils/form/utils';
  
 const edFormPath: RegExp = /^\/ed\/[^/]+\/forms\/detail\/\d+$/;
 const rcpFormPath: RegExp = /^\/rcp\/forms\/detail\/\d+$/;
@@ -42,7 +42,7 @@ export function NavigationEvents() {
           
           updateAlgo(roles[user.role].id,formid,user.id,storedData);
 
-        localStorage.removeItem(`form${formid}`);
+          clearStoredForm(Number(formid));
       }
     }
 
@@ -55,20 +55,19 @@ export function NavigationEvents() {
 
 const updateAlgo=async(roleID: string,formid: string,uid: string,data: FormStoredData)=>{
   const user=await algo_client.initIndex(roleID).getObject<EDRec>(uid);
-  //user.tags
-  const algoData:any={objectID:uid,tags:new Set(user.tags)};
+  const algoData:any={objectID:uid,tags:new Set(user.tags??[])};
   
   data.algoRemove?.forEach(v=>{algoData.tags.delete(v);});
   AlgoTemplates[Number(formid)].forEach((v)=>{
     if(v.tag){
       if(typeof v.fdid === 'string'){
-        if(data.data[v.fdid]!==undefined) algoData.tags.push(data.data[v.fdid]);
+        if(data.data[v.fdid]!==undefined) algoData.tags.add(data.data[v.fdid]);
       }else{ 
         const value=data.data[subFieldKey(...v.fdid as string[])];
-        algoData.tags.push(value);
+        algoData.tags.add(value);
       }
     }
-    if(v.filter){
+    if(v.filter??true){
       if(typeof v.fdid === 'string'){
         if(data.data[v.fdid]!==undefined) algoData[v.label!]=data.data[v.fdid];
       }else{
@@ -78,6 +77,6 @@ const updateAlgo=async(roleID: string,formid: string,uid: string,data: FormStore
     }
   })
   algoData.tags=Array.from(algoData.tags);
-
+  
   algo_client.initIndex(roleID).partialUpdateObject(algoData);
 }

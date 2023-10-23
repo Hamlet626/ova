@@ -36,13 +36,13 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     }
 
     return <>
-        <Button sx={{position:'absolute'}} onClick={()=>{
+        {/* <Button sx={{position:'absolute'}} onClick={()=>{
             addStoredForm(formid,{data:{'s2':'Birthday',
-            's13':'chinese',
+            's13':null,
             's13-s0':'in US',
             's15':'Ethnicity'}})
             localStorage.setItem(`test`,JSON.stringify({test:'new data'}));
-        }}>test set localStorage</Button>
+        }}>test set localStorage</Button> */}
         <Stack direction={'column'}>
             <Stack direction={'row'} alignItems={'center'}>
                     <TimelapseOutlined color="secondary"/>
