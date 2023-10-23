@@ -32,7 +32,7 @@ export function NavigationEvents() {
       const formid=pathseg[pathseg.length-1];
       const storedData=getStoredForm(Number(formid));
 
-      if(storedData!=null && Object.keys(storedData.data).length>0){
+      if(Object.keys(storedData.data).length>0){
         
         // console.log("form saved",roles[user.role].id,user.id,JSON.parse(storedData));
         // console.log(storedData);

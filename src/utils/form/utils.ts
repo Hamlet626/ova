@@ -20,25 +20,24 @@ export const secFinished=(data:any, sec:FormSection)=>sec.fields.every(v=>fieldF
 
 export const formFinished=(data:any, temp:FormTemp)=>temp.content.every(v=>secFinished(data,v));
 
-export type FormStoredData={data:any,algoRemove:string[]};
+export type FormStoredData={data?:any,algoRemove?:string[]};
 
-export const getStoredForm=(formid:number):FormStoredData|null=>{
-    const storedData=localStorage.getItem(`form${formid}`);
-    if(storedData==null)return storedData;
-    const js = JSON.parse(storedData);
-    js.data??={};
-    js.algoRemove??=[];
-    return js;
+export const getStoredForm=(formid:number):FormStoredData=>{
+    const formData=localStorage.getItem(`form${formid}`);
+    const algoData=localStorage.getItem(`formAlgo${formid}`);
+    const data=JSON.parse(formData??'{}');
+    const algoRemove=JSON.parse(algoData??'[]');
+    return {data,algoRemove};
 }
 
-export const addStoredForm=(formid:number,{data,algoRemove}:{data?:any,algoRemove?:string[]})=>{
+export const addStoredForm=(formid:number,{data,algoRemove}:FormStoredData)=>{
     const storedData=getStoredForm(formid);
-    if(storedData==null)return localStorage.setItem(`form${formid}`,JSON.stringify({data,algoRemove}));
-    return localStorage.setItem(`form${formid}`,JSON.stringify(
-        {
-            data:removeUndefined({...(storedData.data??{}),...(data??{})}),
-            algoRemove:removeUndefined({...(storedData.algoRemove??{}),...(algoRemove??{})}),
-        }));
+    
+    localStorage.setItem(`form${formid}`,
+    JSON.stringify(removeUndefined({...(storedData.data??{}),...(data??{})})));
+
+    localStorage.setItem(`formAlgo${formid}`,
+    JSON.stringify(removeUndefined({...(storedData.algoRemove??[]),...(algoRemove??[])})));
 }
 
 export const removeUndefined=(obj:any)=>Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined));
