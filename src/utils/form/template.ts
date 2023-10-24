@@ -1067,6 +1067,6 @@ function optQuestion(question: string):FormField {
 }
 
 
-export const formTemplates=[basic_info,physical_personal_trait,education_occupation,
+export const formTemplates:FormTemp[]=[basic_info,physical_personal_trait,education_occupation,
     background_history,family_partner,other_clinic_questions]
     .map(v=>assign_IDs(v));
