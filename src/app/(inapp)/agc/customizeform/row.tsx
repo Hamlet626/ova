@@ -4,7 +4,7 @@ import ListIcon from '@mui/icons-material/List';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Add, ClearOutlined, Edit } from "@mui/icons-material";
-import { FormField } from "@/utils/form/template";
+import { FormField } from "@/utils/form/types";
 import { useState } from "react";
 import { EditFieldDialogBox } from "./edit_field_dialog_box";
 

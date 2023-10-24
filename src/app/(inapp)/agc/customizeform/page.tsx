@@ -34,24 +34,33 @@ import ListIcon from '@mui/icons-material/List';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Draggable from 'react-draggable';
 import AddIcon from '@mui/icons-material/Add';
-import { FormTemp, FormSection, FormField } from '@/utils/form/template';
+import { FormTemp } from '@/utils/form/types';
 import { CustomTabPanel } from './custom_tab_panel';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 const formTemplates = form_template.formTemplates;
 
 export default function customize_Form() {
     const [templateid, setTemplateId] = React.useState(0); 
-    const saveFormRef=useRef(null);
 
-    // To do : check status
-    const [formStates, setformStates] = React.useState(Array.from({length:6},
-        (v,i)=>localStorage.getItem(`formTemp${i}`)!=null));
+    const [formStates, setformStates] = React.useState(Array.from({length:6}, (v,i)=>false));
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setformStates(Array.from({length:6},
+                (v,i)=>localStorage.getItem(`formTemp${i}`)!=null));
+        }
+    }, []);
+
     const table_name_list = formTemplates.map((section: FormTemp, index: number) => (
-        { title: section.name, selected: index === templateid, check:formStates[index], icon: <HomeOutlined /> }
+        { title: section.name, selected: index === templateid, check:formStates[index], dot: !!!formStates[index] }
     ));
 
-    const nextUnfinished=formStates.slice(templateid+1).findIndex((v,i,l)=>!v);
-    const unfinished=formStates.findIndex((v,i,l)=>!v);
+    let nextUnfinished:number|undefined=formStates.findIndex((v,i,l)=>i>templateid&&!v);
+    nextUnfinished=nextUnfinished===-1?undefined:nextUnfinished;
+
+    let unfinished:number|undefined=formStates.findIndex((v,i,l)=>i!==templateid&&!v);
+    unfinished=unfinished===-1?undefined:unfinished;
+    
     
     return (
         <Box sx={{ display: 'flex' }}>
@@ -100,9 +109,13 @@ export default function customize_Form() {
                 </Box>
             </Box>
             <CustomTabPanel index={templateid} key={templateid}
-            saveRef={saveFormRef}
-            next={nextUnfinished===-1?unfinished===-1?undefined:unfinished:nextUnfinished} 
-            setFinished={()=>{formStates[templateid]=true;setformStates([...formStates])}}/>
+            next={nextUnfinished??unfinished} 
+            setFinished={()=>{
+                formStates[templateid]=true;
+                setformStates([...formStates]);
+                if((nextUnfinished??unfinished)!=null)
+                setTemplateId(nextUnfinished??unfinished!);
+            }}/>
         </Box>
     );
 

@@ -1,18 +1,12 @@
 import {
     educationLevels,
-    eyeColors,
-    hairColors,
-    languages,
     maritalStatuses,
     relationships,
     sexualOrientations,
     skinColors,
     usStatuses,
-    race,
     languageFluency,
     drugs,
-    nationalities,
-    ethnicities,
     bloodTypes,
     dominantHands,
     eyeVisions,
@@ -66,7 +60,7 @@ export const basic_info:FormTemp={
                     id: "s13",
                     label: "Nationality",
                     type: "multi-select",
-                    options: nationalities,
+                    options: 'nationalities',
                     required: true,
                     sub: [
                         {
@@ -104,7 +98,7 @@ export const basic_info:FormTemp={
                     id: "s15",
                     label: "Ethnicity",
                     type: "checkbox",
-                    options: ethnicities,
+                    options: 'ethnicities',
                     required: true,
                     sub:[
                         {
@@ -132,7 +126,7 @@ export const basic_info:FormTemp={
                             id: "s0",
                             label: "Languages Spoken",
                             type: "multi-select",
-                            options: languages,
+                            options: 'languages',
                             required: true
                         },
                         {
@@ -188,14 +182,14 @@ export const physical_personal_trait:FormTemp={
                     id: "s4",
                     label: "Eye Color",
                     type: "multi-select",
-                    options: eyeColors,
+                    options: 'eyeColors',
                     required: true
                 },
                 {
                     id: "s5",
                     label: "Hair Color",
                     type: "multi-select",
-                    options: hairColors,
+                    options: 'hairColors',
                     required: true
                 },
                 {
@@ -536,7 +530,7 @@ export const background_history:FormTemp={
                     type:'populate',
                     required:false,
                     group:[
-                        {label:'Country',type:'multi-select',options:countryList,required:true},
+                        {label:'Country',type:'multi-select',options:'countryList',required:true},
                         {label:'Start Date',type:'date',required:false},
                         {label:'End Date',type:'date',required:false}
                     ]
@@ -781,13 +775,13 @@ export const background_history:FormTemp={
                                 {
                                     label: "Eye Color",
                                     type: "multi-select",
-                                    options: eyeColors,
+                                    options: 'eyeColors',
                                     required: true
                                 },
                                 {
                                     label: "Hair Color",
                                     type: "multi-select",
-                                    options: hairColors,
+                                    options: 'hairColors',
                                     required: true
                                 },
                             ]

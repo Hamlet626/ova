@@ -1,7 +1,7 @@
-import { FormField, FormSection, formTemplates } from "@/utils/form/template";
+import { FormField, FormSection } from "@/utils/form/types";
 import { Add, Check, Clear } from "@mui/icons-material";
 import { Box, Button, Input, LinearProgress, Link, List, ListItem, Tab, Tabs, Typography } from "@mui/material";
-import { MutableRefObject, Ref, useImperativeHandle, useState } from "react";
+import { MutableRefObject, Ref, useEffect, useImperativeHandle, useState } from "react";
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Row } from "./row";
@@ -12,6 +12,7 @@ import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
 import { useSession } from "next-auth/react";
+import { formTemplates } from "@/utils/form/template";
 
 //todo: decide remove or not
 function a11yProps(index: number) {
@@ -21,20 +22,20 @@ function a11yProps(index: number) {
     };
 }
 
-export function CustomTabPanel({ index, saveRef, next, setFinished, ...other }:
-     { index: number, saveRef:Ref<{save:()=>Promise<boolean>|null}>, next?:number, setFinished:Function }) {
+export function CustomTabPanel({ index, next, setFinished, ...other }:
+     { index: number, next?:number, setFinished:Function }) {
     const [tabId, setTabId] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [formData, setformData] = useState(JSON.parse(localStorage.getItem(`formData${index}`) ??
-        JSON.stringify(formTemplates[index].content)) as FormSection[]);
+    const [formData, setformData] = useState<FormSection[]>([]);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setformData(JSON.parse(localStorage.getItem(`formData${index}`) ??
+            JSON.stringify(formTemplates[index].content)) as FormSection[]);
+        }
+    }, [index]);
     const [editDialogBox, setEditDialogBox] = useState(false);
     const uid=useSession({required:true}).data?.user?.id!;
-    useImperativeHandle(saveRef, () => ({
-        save:async()=> {
-            localStorage.setItem(`formTemp${index}`,JSON.stringify(formData));
-            return true;
-        }
-      }));
 
     const addTableSection = (event: React.SyntheticEvent) => {
         setformData([...formData, { "title": "section_title1", "fields": [] }]);
@@ -70,7 +71,7 @@ export function CustomTabPanel({ index, saveRef, next, setFinished, ...other }:
             if(data==null)return;
             return setDoc(doc(getFirestore(app),
             `user groups/${roles[RoleNum.Agc].id}/users/${uid}/forms/${i}`),
-            JSON.parse(data));
+            {...formTemplates[index],content:JSON.parse(data)});
         }));
         setLoading(false);
     }

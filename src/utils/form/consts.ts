@@ -1,4 +1,5 @@
 
+
 export const yes='Yes';
 export const no='No';
 
@@ -691,3 +692,13 @@ export const countryList = [
 	"Zimbabwe",
 	"Åland Islands"
 ];
+
+
+
+
+
+
+
+export const typedLists={
+	languages,eyeColors,hairColors,ethnicities,nationalities,countryList
+};

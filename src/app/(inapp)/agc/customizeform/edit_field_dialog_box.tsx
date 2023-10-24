@@ -29,7 +29,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useState } from "react";
 import Draggable from "react-draggable";
-import { FormField } from "@/utils/form/template";
+import { FormField } from "@/utils/form/types";
 
 const field_type_list = ['text', 'multi-select', 'date', 'address', 'name', "yes/no", "checkbox", "number", 'populate']
 const field_length_list = ["short", "medium", "long"]
