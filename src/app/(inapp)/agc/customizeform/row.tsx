@@ -1,37 +1,27 @@
 
-import { Tabs, Tab, Typography, Button, TableContainer, TableRow, TableCell, Input, IconButton, Collapse, ListItem, Box, List } from "@mui/material";
-
+import { Typography, Button, IconButton, Collapse, ListItem, Box, List } from "@mui/material";
 import ListIcon from '@mui/icons-material/List';
-
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Add, ClearOutlined, Edit } from "@mui/icons-material";
 import { FormField } from "@/utils/form/template";
 import { useState } from "react";
 import { EditFieldDialogBox } from "./edit_field_dialog_box";
-import { set } from "react-hook-form";
+
 
 export function Row({ data, depth,
-    editRow,
+    onEditRow,
 }:
     {
         data: FormField,
         depth: number,
-        editRow: (newValue?: FormField) => void,
+        onEditRow: (newValue?: FormField) => void,
     }) {
 
     const [openStatus, setOpenStatus] = useState(false);
     const [editDialogBox, setEditDialogBox] = useState(false);
     const [editingField, setEditingField] = useState<FormField>(data);
-    const [edtiFieldType, setEditFieldType] = useState(true); // true: edit field itself, false: add subfield
-
-    function addSubField(index: number, newValue: any) {
-        // {/*use setState add a subfield*/ }
-        // {/*callback update a row*/ }
-        // data.sub ? data.sub.push(newValue) : data.sub = [newValue];
-        // setRow(row);
-        // updateRow(index, row);// call back to update a row  
-    }
+    const [edtiFieldType, setEditFieldType] = useState(true); // true: edit field itself, false: add a subfield
 
     return (
         <ListItem disablePadding sx={{ width: '600px' }}>
@@ -74,8 +64,7 @@ export function Row({ data, depth,
                                 {data.type}
                             </Typography>
                         </Box>
-                        <Box sx={{ width: '40px' }}>
-                            {/* {data.required ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon color='secondary' />} */}
+                        <Box sx={{ width: '40px' }}>                            
                             {data.required && "*"}
                         </Box>
                         <Box sx={{ width: '200px' }}>
@@ -90,7 +79,7 @@ export function Row({ data, depth,
                             <Button variant="solid"
                                 startIcon={<ClearOutlined color='primary' />}
                                 onClick={(ev: React.SyntheticEvent) => {
-                                    editRow();
+                                    onEditRow();
                                 }}>
                             </Button>
                             <Button variant="solid"
@@ -113,13 +102,13 @@ export function Row({ data, depth,
                             (< Row key={index}
                                 data={subRow}
                                 depth={depth + 1}
-                                editRow={(newValue) => {
+                                onEditRow={(newValue) => {
                                     if (newValue == null) {
                                         data.sub!.splice(index, 1);
                                     } else {
                                         data.sub![index] = newValue;
                                     }
-                                    editRow(data);
+                                    onEditRow(data);
                                 }}
                             />)
                             )
@@ -140,13 +129,13 @@ export function Row({ data, depth,
                     if (edtiFieldType) { // edit field itself
                         const result = JSON.parse(JSON.stringify(newValue));
                         result.sub = JSON.parse(JSON.stringify(data.sub || []));
-                        editRow(result);
+                        onEditRow(result);
                     }
                     else { // add subfield
                         const result=JSON.parse(JSON.stringify(data));
                         result.sub=result.sub||[];
                         result.sub.push(newValue);
-                        editRow(result);
+                        onEditRow(result);
                     }
                 }}
             />}

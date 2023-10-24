@@ -36,8 +36,6 @@ import Draggable from 'react-draggable';
 import AddIcon from '@mui/icons-material/Add';
 import { FormTemp, FormSection, FormField } from '@/utils/form/template';
 import { CustomTabPanel } from './custom_tab_panel';
-type field_definition = FormField;
-type section_definition = FormSection;
 const formTemplates = form_template.formTemplates;
 
 export default function customize_Form() {

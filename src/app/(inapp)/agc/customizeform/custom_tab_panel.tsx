@@ -16,36 +16,30 @@ function a11yProps(index: number) {
     };
 }
 
-
 export function CustomTabPanel({ index, ...other }: { index: number; }) {
     const [tabId, setTabId] = useState(0);
-    //??
     const [formData, setformData] = useState(JSON.parse(localStorage.getItem(`formData${index}`) ??
         JSON.stringify(formTemplates[index].content)) as FormSection[]);
-
     const [editDialogBox, setEditDialogBox] = useState(false);
 
     const addTableSection = (event: React.SyntheticEvent) => {
         setformData([...formData, { "title": "section_title1", "fields": [] }]);
     };
     const editTableSectionTitle = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        // Edit the title of a section
         formData[index].title = event.target.value;
-        // Set customized sectionlist and render the page
         setformData([...formData]);
-        //console.log(customizedformlist[templateid].content[tabId]);
     };
-
+    
     const deleteTableSection = (event: React.SyntheticEvent, index: number) => {
         formData.splice(index, 1);
         setformData([...formData]);
         setTabId(0);
     };
 
-    const addTableField = (newValue:FormField) => {
+    const addTableField = (newValue: FormField) => {
         //To do : initialField should be a unique field id
         //formData[tabId].fields.splice(0, 0, { "id": "table_field_id1", "label": "table_field_label1", "type": "text", "required": false, "length": 'short', "options": [] });
-        formData[tabId].fields.splice(0, 0,newValue);
+        formData[tabId].fields.splice(0, 0, newValue);
         setformData([...formData]);
     };
 
@@ -91,7 +85,6 @@ export function CustomTabPanel({ index, ...other }: { index: number; }) {
                                             <br />
                                             <Button variant="solid" color="primary" startIcon={<Add />}
                                                 onClick={(ev: React.SyntheticEvent) => {
-                                                    //addTableField(ev);
                                                     setEditDialogBox(!editDialogBox);
                                                 }}>Add a field
                                             </Button>
@@ -107,34 +100,19 @@ export function CustomTabPanel({ index, ...other }: { index: number; }) {
                                                             }
                                                             setformData([...formData]);
                                                         }}
-                                                    //deleteRow={(index) => { dataset.splice(index, 1); }}
-                                                    // updateRow={(index, newValue) => { dataset[index] = newValue }} 
                                                     />
                                                 ))}
                                             </List>
                                             {editDialogBox && <EditFieldDialogBox
                                                 editField={{ "id": "table_field_id1", "label": "table_field_label1", "type": "text", "required": false, "length": 'short', "options": [] }}
                                                 open_status={editDialogBox}
-                                                onCloseDialogBox={() => setEditDialogBox(!editDialogBox)}
-                                                //onSubmitDialogBox={(newValue) => { setEditDialogBox(!editDialogBox); editRow(newValue) }}
+                                                onCloseDialogBox={() => setEditDialogBox(!editDialogBox)}                                                
                                                 onSubmitDialogBox={(newValue) => {
                                                     setEditDialogBox(!editDialogBox);
-                                                    // if (edtiFieldType) { // edit field itself
-                                                    //     const result = JSON.parse(JSON.stringify(newValue));
-                                                    //     result.sub = JSON.parse(JSON.stringify(data.sub || []));
-                                                    //     editRow(result);
-                                                    // }
-                                                    // else { // add subfield
-                                                    //     const result = JSON.parse(JSON.stringify(data));
-                                                    //     result.sub = result.sub || [];
-                                                    //     result.sub.push(newValue);
-                                                    //     editRow(result);
-                                                    // }
                                                     addTableField(newValue);
-                                                    console.log("add a field to a section");
+
                                                 }}
                                             />}
-
                                         </Box>
                                     )}
                                 </TabPanel>
