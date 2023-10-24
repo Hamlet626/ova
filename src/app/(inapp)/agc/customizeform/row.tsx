@@ -135,22 +135,18 @@ export function Row({ data, depth,
                 open_status={editDialogBox}
                 onCloseDialogBox={() => setEditDialogBox(!editDialogBox)}
                 //onSubmitDialogBox={(newValue) => { setEditDialogBox(!editDialogBox); editRow(newValue) }}
-                onSubmitDialogBox={(newValue) => { 
-                    setEditDialogBox(!editDialogBox); 
-                    // to do 
-                    if(edtiFieldType){
-                        const subdata:any = {"sub":data.sub} || [];
-                        //data.sub ? editRow({...newValue,subdata}) : editRow(newValue);
-                        console.log("edit field itself is  ", data);
-                        console.log("edit field itself new value is  ", newValue);
-                        newValue.sub = data.sub;
-                        editRow(newValue);
+                onSubmitDialogBox={(newValue) => {
+                    setEditDialogBox(!editDialogBox);                    
+                    if (edtiFieldType) { // edit field itself
+                        const result = JSON.parse(JSON.stringify(newValue));
+                        result.sub = JSON.parse(JSON.stringify(data.sub || []));
+                        editRow(result);
                     }
-                    else {
-                        data.sub = data.sub || [];
-                        data.sub.push(newValue);
-                        editRow(data);
-                        console.log("add and edit subfield");
+                    else { // add subfield
+                        const result=JSON.parse(JSON.stringify(data));
+                        result.sub=result.sub||[];
+                        result.sub.push(newValue);
+                        editRow(result);
                     }
                 }}
             />}
