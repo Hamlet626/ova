@@ -3,14 +3,20 @@ import { Box, FormHelperText, Input, MenuItem, Select, Stack, TextField, ToggleB
 import { DateField } from "@mui/x-date-pickers";
 import { useForm } from "react-hook-form";
 
+
 export default function FormFieldUI({data,register}:{data:FormField,register:any}){
+//     if (data.type === 'text') {
+//         // Log the data object when data type is 'text'
+//         console.log(data);
+//       }
+
     return <Stack key={data.id} mb={4}>
         <Typography variant="body1">{data.label}</Typography>
         <Box height={8}/>
         {data.type==='text'?[<Input/>,
         <FormHelperText error>Please fill in valid value</FormHelperText>]
-        :data.type==='date'?[<DateField/>]
-        :data.type==='multi-select'?[<Select/>]
+        :data.type==='date'?[<DateField variant="standard" />]
+        :data.type==='multi-select'?[<Select variant="standard"/>]
         :data.type==='yes/no'?[<ToggleButtonGroup exclusive>
             <ToggleButton value={'yes'}>Yes</ToggleButton>
             <ToggleButton value={'no'}>No</ToggleButton>
@@ -24,7 +30,6 @@ export default function FormFieldUI({data,register}:{data:FormField,register:any
         :data.type==='name'?[]
         :data.type==='populate'?[]
         :[]}
-
 
         {/* <TextField select
         // inputRef={register("password")}
