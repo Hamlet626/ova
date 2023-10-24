@@ -36,17 +36,23 @@ import Draggable from 'react-draggable';
 import AddIcon from '@mui/icons-material/Add';
 import { FormTemp, FormSection, FormField } from '@/utils/form/template';
 import { CustomTabPanel } from './custom_tab_panel';
+import { useRef } from 'react';
 const formTemplates = form_template.formTemplates;
 
 export default function customize_Form() {
     const [templateid, setTemplateId] = React.useState(0); 
+    const saveFormRef=useRef(null);
 
     // To do : check status
-    const [formStates, setformStates] = React.useState(Array(formTemplates.length).fill(false));
+    const [formStates, setformStates] = React.useState(Array.from({length:6},
+        (v,i)=>localStorage.getItem(`formTemp${i}`)!=null));
     const table_name_list = formTemplates.map((section: FormTemp, index: number) => (
         { title: section.name, selected: index === templateid, check:formStates[index], icon: <HomeOutlined /> }
     ));
 
+    const nextUnfinished=formStates.slice(templateid+1).findIndex((v,i,l)=>!v);
+    const unfinished=formStates.findIndex((v,i,l)=>!v);
+    
     return (
         <Box sx={{ display: 'flex' }}>
             <Box sx={{
@@ -93,7 +99,10 @@ export default function customize_Form() {
                     } />
                 </Box>
             </Box>
-            <CustomTabPanel index={templateid} key={templateid}/>
+            <CustomTabPanel index={templateid} key={templateid}
+            saveRef={saveFormRef}
+            next={nextUnfinished===-1?unfinished===-1?undefined:unfinished:nextUnfinished} 
+            setFinished={()=>{formStates[templateid]=true;setformStates([...formStates])}}/>
         </Box>
     );
 
