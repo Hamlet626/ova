@@ -361,9 +361,24 @@ export const education_occupation:FormTemp={
                             required: true,
                             sub:[
                                 {
-                                    label:"Expected time of graduation",
+                                    id: "s4",
+                                    label:"Expected time of graduation1",
                                     type: "date",
                                     required: false,
+                                    sub:[
+                                        {   id: "s8",
+                                            label:"Expected time of graduation testing2",
+                                            type: "date",
+                                            sub:[
+                                            {
+                                                id: "s5",
+                                                label:"Expected time of graduation testing3",
+                                                type: "date",
+                                                required: false,
+                                            },
+                                            ]
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -1364,7 +1379,7 @@ function optQuestion(question: string):FormField {
 }
 
 
-export const formTemplates=[basic_info,physical_personal_trait,education_occupation,
+export const formTemplates:FormTemp[]=[basic_info,physical_personal_trait,education_occupation,
     background_history,family_partner,other_clinic_questions]
     .map(v=>assign_IDs(v));
 
