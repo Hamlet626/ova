@@ -28,6 +28,7 @@
     "eslint-config-next": "13.4.19",
     "firebase": "^10.3.1",
     "firebase-admin": "^11.10.1",
+    "framer-motion": "^10.16.4",
     "lodash": "^4.17.21",
     "next": "13.4.19",
     "next-auth": "latest",
