@@ -1,5 +1,6 @@
 import { app } from "@/utils/firebase/firebase_client";
-import { FormTemp, formTemplates } from "@/utils/form/template";
+import { formTemplates } from "@/utils/form/template";
+import { FormTemp } from "@/utils/form/types";
 import { RoleNum, roles } from "@/utils/roles";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { unstable_cache } from "next/cache";

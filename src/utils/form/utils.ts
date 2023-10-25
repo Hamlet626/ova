@@ -1,4 +1,4 @@
-import { FormField, FormSection, FormTemp } from "./template";
+import { FormField, FormSection, FormTemp, HeightValue } from "./types";
 
 const makeFieldId=(id:string,prefix?:string)=>prefix==null?id:`${prefix}_${id}`;
 
@@ -19,3 +19,43 @@ export const formStatus=(data:any, f:FormTemp):{time:string,finished:number,all:
 export const secFinished=(data:any, sec:FormSection)=>sec.fields.every(v=>fieldFinished(data,v));
 
 export const formFinished=(data:any, temp:FormTemp)=>temp.content.every(v=>secFinished(data,v));
+
+export type FormStoredData={data?:any,algoRemove?:string[]};
+
+export const getStoredForm=(formid:number):FormStoredData=>{
+    const formData=localStorage.getItem(`form${formid}`);
+    const algoData=localStorage.getItem(`formAlgo${formid}`);
+    const data=JSON.parse(formData??'{}');
+    const algoRemove=JSON.parse(algoData??'[]');
+    return {data,algoRemove};
+}
+
+export const addStoredForm=(formid:number,{data,algoRemove}:FormStoredData)=>{
+    const storedData=getStoredForm(formid);
+    
+    localStorage.setItem(`form${formid}`,
+    JSON.stringify(removeUndefined({...(storedData.data??{}),...(data??{})})));
+
+    localStorage.setItem(`formAlgo${formid}`,
+    JSON.stringify([...(storedData.algoRemove??[]),...(algoRemove??[])]));
+}
+
+export const clearStoredForm=(formid:number)=>{
+    localStorage.removeItem(`form${formid}`);
+    localStorage.removeItem(`formAlgo${formid}`);
+}
+
+
+export const removeUndefined=(obj:any)=>Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined));
+
+export const getNestedKeys=(obj:any,keys:string[])=>{
+    keys.forEach(v=>{obj=obj[v];});
+    return obj;
+}
+
+export const subFieldKey=(...keys:string[]):string=>keys.join('-');
+
+export const inch2cm=(h:HeightValue):number=>{
+    if(h.iscm)return h.cm!;
+    return (h.inch!.feet!*12+h.inch!.inch!)*2.54;
+}

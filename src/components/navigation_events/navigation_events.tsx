@@ -6,6 +6,10 @@ import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { app } from '@/utils/firebase/firebase_client';
 import { useSession } from 'next-auth/react';
 import { roles } from '@/utils/roles';
+import { algo_client } from '@/utils/algolia';
+import { AlgoTemplates } from '@/utils/form/template';
+import { EDRec } from '@/utils/algolia';
+import { FormStoredData, clearStoredForm, getStoredForm, subFieldKey } from '@/utils/form/utils';
  
 const edFormPath: RegExp = /^\/ed\/[^/]+\/forms\/detail\/\d+$/;
 const rcpFormPath: RegExp = /^\/rcp\/forms\/detail\/\d+$/;
@@ -26,13 +30,19 @@ export function NavigationEvents() {
     if(user!=null&&(prePath.current?.match(edFormPath)||prePath.current?.match(rcpFormPath))){
       const pathseg=prePath.current.split('/');
       const formid=pathseg[pathseg.length-1];
-      const storedData=localStorage.getItem(`form${formid}`);
-      if(storedData!=null && Object.keys(storedData).length>0){
+      const storedData=getStoredForm(Number(formid));
+
+      if(Object.keys(storedData.data).length>0){
         
         // console.log("form saved",roles[user.role].id,user.id,JSON.parse(storedData));
         // console.log(storedData);
-        setDoc(doc(getFirestore(app),`user groups/${roles[user.role].id}/users/${user.id}/form data/${formid}`),JSON.parse(storedData),{merge:true});
-        localStorage.removeItem(`form${formid}`);
+        setDoc(
+          doc(getFirestore(app),`user groups/${roles[user.role].id}/users/${user.id}/form data/${formid}`),
+          storedData.data,{merge:true});
+          
+          updateAlgo(roles[user.role].id,formid,user.id,storedData);
+
+          clearStoredForm(Number(formid));
       }
     }
 
@@ -41,4 +51,32 @@ export function NavigationEvents() {
   }, [pathname, searchParams]);
  
   return null;
+}
+
+const updateAlgo=async(roleID: string,formid: string,uid: string,data: FormStoredData)=>{
+  const user=await algo_client.initIndex(roleID).getObject<EDRec>(uid);
+  const algoData:any={objectID:uid,tags:new Set(user.tags??[])};
+  
+  data.algoRemove?.forEach(v=>{algoData.tags.delete(v);});
+  AlgoTemplates[Number(formid)].forEach((v)=>{
+    if(v.tag){
+      if(typeof v.fdid === 'string'){
+        if(data.data[v.fdid]!==undefined) algoData.tags.add(data.data[v.fdid]);
+      }else{ 
+        const value=data.data[subFieldKey(...v.fdid as string[])];
+        algoData.tags.add(value);
+      }
+    }
+    if(v.filter??true){
+      if(typeof v.fdid === 'string'){
+        if(data.data[v.fdid]!==undefined) algoData[v.label!]=data.data[v.fdid];
+      }else{
+        const value=data.data[subFieldKey(...v.fdid as string[])];
+        algoData[v.label!]=value;
+      }
+    }
+  })
+  algoData.tags=Array.from(algoData.tags);
+  
+  algo_client.initIndex(roleID).partialUpdateObject(algoData);
 }

@@ -1,6 +1,5 @@
 'use client'
 import { font7, font8 } from "@/components/ThemeRegistry/theme_consts";
-import { FormTemp } from "@/utils/form/template";
 import { ArrowBack, ArrowForward, Check, TimelapseOutlined, } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Chip, LinearProgress, Stack, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,7 +8,8 @@ import FormFieldUI from "./form_field";
 import { Form, useForm } from "react-hook-form";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "@/utils/firebase/firebase_client";
-import { formStatus, secFinished } from "@/utils/form/utils";
+import { addStoredForm, formStatus, getStoredForm, secFinished } from "@/utils/form/utils";
+import { FormTemp } from "@/utils/form/types";
 
 export default function FormContent({formid, agcid, template, data, uid}:{ formid:number, agcid:string, template:FormTemp, data:any, uid:string} ){
     const sectionName = decodeURIComponent(useSearchParams().get("section")??"");
@@ -26,9 +26,8 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
 
     const onSubmit = async (data:any,nextSec?: number|null) => {
         
-        const preData=JSON.parse(localStorage.getItem(`form${formid}`)??'{}');
+        addStoredForm(formid,{data});
 
-        localStorage.setItem(`form${formid}`,JSON.stringify({...preData,...data}));
         if(nextSec==null){
             //setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid}`),{...preData,data},{merge:true});
             router.push(`ed/${agcid}/forms/detail/${formid+1}`);                
@@ -38,6 +37,10 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
 
     return <>
         {/* <Button sx={{position:'absolute'}} onClick={()=>{
+            addStoredForm(formid,{data:{'s2':'Birthday',
+            's13':null,
+            's13-s0':'in US',
+            's15':'Ethnicity'}})
             localStorage.setItem(`test`,JSON.stringify({test:'new data'}));
         }}>test set localStorage</Button> */}
         <Stack direction={'column'}>
