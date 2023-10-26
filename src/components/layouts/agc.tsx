@@ -1,12 +1,12 @@
 'use client'
 import { Searcher } from "@/components/searcher";
 import { CalendarMonthOutlined, Checklist, DocumentScannerOutlined, Favorite, FavoriteBorderOutlined, FavoriteOutlined, FileOpenOutlined, FilePresentOutlined, FolderOutlined, HandshakeOutlined, Home, HomeOutlined, HouseOutlined, ListOutlined, Menu, Notifications, PeopleOutline, PowerOffOutlined, PowerOutlined, PowerSettingsNewOutlined, QuestionAnswerOutlined, SettingsOutlined, StickyNote2Outlined, ThumbUp, ThumbUpOutlined, TrendingUp, TrendingUpOutlined } from "@mui/icons-material";
-import {AppBar, AppBarProps, Avatar, Box, Button, CSSObject, Divider, Drawer, Fab, IconButton, List, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, SwipeableDrawer, Tab, Tabs, Theme, Toolbar, alpha, darken, emphasize, makeStyles, styled, useMediaQuery, useTheme} from "@mui/material";
-import { Fragment, useState } from "react";
+import {AppBar, AppBarProps, Avatar, Box, Button, CSSObject, Divider, Drawer, Fab, IconButton, List, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, SwipeableDrawer, Tab, Tabs, Theme, Toolbar, Typography, alpha, darken, emphasize, makeStyles, styled, useMediaQuery, useTheme} from "@mui/material";
+import { Fragment, ReactNode, useState } from "react";
 import { BannerAvatar } from "./avatar";
 import { RoleNum } from "@/utils/roles";
 import logo from "@/assets/ova_logo.svg";
-import { outline_variant } from "../ThemeRegistry/theme_consts";
+import { font4, outline, outline_variant } from "../ThemeRegistry/theme_consts";
 import { AppMenu, drawerMinWidth, drawerWidth } from "./app_menu";
 import Image from "next/image";
 
@@ -35,15 +35,16 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 });
 
   
-export const AGCAppBar=({children}: { children: React.ReactNode })=> {
+export const AGCAppBar=({children}: { children: ReactNode })=> {
   const theme=useTheme();
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
+  const pages = ['Home','Egg Donor','Recipients','Cases','Events'];
 
     const handleTabChange = (e, tabIndex) => {
         console.log(tabIndex);
         setCurrentTabIndex(tabIndex);
     };
-    const [anchorEl, setAnchorEl] = React.useState(null); // | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState(null); // | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -68,11 +69,12 @@ export const AGCAppBar=({children}: { children: React.ReactNode })=> {
                         <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                             <Fragment>
                                 <Tabs value={currentTabIndex} onChange={handleTabChange}>
-                                    <Tab sx={font4} label='Home' />
+                                  {pages.map(v=><Tab label={<Typography color={outline}>{v}</Typography>} />)}
+                                    {/* <Tab sx={font4} label='Home' />
                                     <Tab sx={font4} label='Egg Donor' />
                                     <Tab sx={font4} label='Recipients' />
                                     <Tab sx={font4} label='Cases' />
-                                    <Tab sx={font4} label='Events' />
+                                    <Tab sx={font4} label='Events' /> */}
                                 </Tabs>
                             </Fragment>
                         </Box>

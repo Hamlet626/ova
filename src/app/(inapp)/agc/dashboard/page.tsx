@@ -22,12 +22,12 @@ import TextField from '@mui/material/TextField';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {Box, Button, Menu, MenuItem, InputBase, Paper, Typography, Divider} from "@mui/material";
 import {
-    font2,
+    font10,
+    font11,
+    font12,
     font3,
     font4,
-    font5,
-    font6,
-    font7,
+    font9,
     neutral_white,
     search_color
 } from "@/components/ThemeRegistry/theme_consts";
@@ -114,8 +114,8 @@ export default async function Home() {
                 <Grid2 md={1.5} ml={5} display="flex">
                     <Box maxWidth="400px">
                         <Box height={21}/>
-                        <Typography sx={font2}>Hello, Jane</Typography>
-                        <Typography sx={font3}>Helios Clinic</Typography>
+                        <Typography sx={font3}>Hello, Jane</Typography>
+                        <Typography sx={font9}>Helios Clinic</Typography>
                     </Box>
                 </Grid2>
                 <Grid2>
@@ -157,27 +157,27 @@ export default async function Home() {
                     }}>
                         <Box ml='18px'>
                             <Box height='20px'/>
-                            <Typography sx={font5}>Total</Typography>
+                            <Typography sx={font10}>Total</Typography>
                         </Box>
                         <Box ml='18px'>
                             <Box height='16px'/>
                             <Box display={'flex'}>
-                                <Typography sx={font6} color={'primary'}>456</Typography>
+                                <Typography sx={font11} color={'primary'}>456</Typography>
                                 <Box width='56px'/>
                                 <IconButton type="submit" sx={{ p: '10px' }}>
                                     <ArrowForwardIcon sx={{color: search_color}}/>
                                 </IconButton>
                             </Box>
-                            <Typography sx={font7}>Egg Donors</Typography>
+                            <Typography sx={font12}>Egg Donors</Typography>
                             <Box height='16px'/>
                             <Box>
-                                <Typography sx={font6} color={'primary'}>1,436</Typography>
-                                <Typography sx={font7}>Recipients</Typography>
+                                <Typography sx={font11} color={'primary'}>1,436</Typography>
+                                <Typography sx={font12}>Recipients</Typography>
                             </Box>
                             <Box height='16px'/>
                             <Box>
-                                <Typography sx={font6} color={'primary'}>203</Typography>
-                                <Typography sx={font7}>Cases</Typography>
+                                <Typography sx={font11} color={'primary'}>203</Typography>
+                                <Typography sx={font12}>Cases</Typography>
                             </Box>
                         </Box>
                     </Box>

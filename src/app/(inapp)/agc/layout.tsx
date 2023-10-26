@@ -1,11 +1,10 @@
-import { EDRcpAppBarMenu } from "@/components/layouts/ed_rcp";
-import { RoleNum } from "@/utils/roles";
+import { AGCAppBar } from "@/components/layouts/agc";
 
 
-export default async function AGCLayout({children, params}: { children: React.ReactNode, params: { agcid: string } }) {
+export default async function AGCLayout({children}: { children: React.ReactNode}) {
     return(
-        <EDRcpAppBarMenu role={RoleNum.ED} agcid={params.agcid}>
+        <AGCAppBar>
             {children}
-        </EDRcpAppBarMenu>
+        </AGCAppBar>
     )
 }

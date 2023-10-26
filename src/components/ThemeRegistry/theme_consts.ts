@@ -38,6 +38,16 @@ export const font3={
     textAlign: 'left',
 };
 
+
+export const font4={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '16px',
+    fontWeight: 400,
+    lineHeight: '24px',
+    letterSpacing: '0em',
+    textAlign: 'left',
+};
+
 export const font5={
     fontFamily: roboto.style.fontFamily,
     fontSize: '14px',
@@ -70,15 +80,8 @@ export const font8={
     lineHeight: '24px',
     letterSpacing: '0.15px',
 };
-export const font2={
-    fontFamily: roboto.style.fontFamily,
-    fontSize: '28px',
-    fontWeight: 500,
-    lineHeight: '36px',
-    letterSpacing: '0em',
-    textAlign: 'left',
-};
-export const font3={
+
+export const font9={
     fontFamily: roboto.style.fontFamily,
     fontSize: '14px',
     fontWeight: 400,
@@ -87,16 +90,7 @@ export const font3={
     textAlign: 'left',
 };
 
-export const font4={
-    fontFamily: roboto.style.fontFamily,
-    fontSize: '16px',
-    fontWeight: 400,
-    lineHeight: '24px',
-    letterSpacing: '0em',
-    textAlign: 'left',
-};
-
-export const font5={
+export const font10={
     fontFamily: roboto.style.fontFamily,
     fontSize: '16px',
     fontWeight: 500,
@@ -105,7 +99,7 @@ export const font5={
     textAlign: 'left',
 };
 
-export const font6={
+export const font11={
     fontFamily: roboto.style.fontFamily,
     fontSize: '28px',
     fontWeight: 400,
@@ -114,7 +108,7 @@ export const font6={
     textAlign: 'left',
 };
 
-export const font7={
+export const font12={
     fontFamily: roboto.style.fontFamily,
     fontSize: '12px',
     fontWeight: 500,
@@ -125,6 +119,7 @@ export const font7={
 
 
 export const outline_variant='#D8C2BB';
+export const outline='#85736D'
 export const neutral96='#FEF1ED';
 export const OVA_very_soft_grey='#EEF0F4';
 export const primary90="#FFDBCE";
