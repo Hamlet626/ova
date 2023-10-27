@@ -700,5 +700,5 @@ export const countryList = [
 
 
 export const typedLists={
-	languages,eyeColors,hairColors,ethnicities,nationalities,countryList
+	languages,eyeColors,hairColors,ethnicities,nationalities,countryList,physicalTraits,dominantHands,
 };

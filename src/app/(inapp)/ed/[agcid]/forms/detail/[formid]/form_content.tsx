@@ -25,24 +25,29 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const stats=formStatus(data,template);
 
     const onSubmit = async (data:any,nextSec?: number|null) => {
-        
+         console.log("onSubmit called");
+  console.log("Data before storing:", data);
         addStoredForm(formid,{data});
+        localStorage.setItem(`formData_${formid}`, JSON.stringify(data));
+
 
         if(nextSec==null){
             //setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid}`),{...preData,data},{merge:true});
+            localStorage.setItem(`formData_${formid}`, JSON.stringify(data));
+
             router.push(`ed/${agcid}/forms/detail/${formid+1}`);                
         }
         else setSectionNum(nextSec);
     }
 
     return <>
-        {/* <Button sx={{position:'absolute'}} onClick={()=>{
-            addStoredForm(formid,{data:{'s2':'Birthday',
-            's13':null,
-            's13-s0':'in US',
-            's15':'Ethnicity'}})
-            localStorage.setItem(`test`,JSON.stringify({test:'new data'}));
-        }}>test set localStorage</Button> */}
+{/*         <Button sx={{position:'absolute'}} onClick={()=>{ */}
+{/*             addStoredForm(formid,{data:{'s2':'Birthday', */}
+{/*             's13':null, */}
+{/*             's13-s0':'in US', */}
+{/*             's15':'Ethnicity'}}) */}
+{/*             localStorage.setItem(`test`,JSON.stringify({test:'new data'})); */}
+{/*         }}>test set localStorage</Button> */}
         <Stack direction={'column'}>
             <Stack direction={'row'} alignItems={'center'}>
                     <TimelapseOutlined color="secondary"/>

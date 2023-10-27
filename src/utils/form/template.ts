@@ -155,7 +155,7 @@ export const physical_personal_trait:FormTemp={
                 {//todo
                     id: "s7",
                     label: "Height (in Inches)",
-                    type: "height",
+                    type: "text",
                     required: true
                 },
                 {//todo
