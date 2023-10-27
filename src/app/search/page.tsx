@@ -23,7 +23,7 @@ export default async function EDs(){
                 <Autocomplete
                 placeholder="Search products"
                 detachedMediaQuery="none"
-                // openOnFocus
+                openOnFocus
                 />
             </Stack>
         </Stack>

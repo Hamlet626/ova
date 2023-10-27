@@ -10,6 +10,7 @@ import { algo_client } from '@/utils/algolia';
 import { AlgoTemplates } from '@/utils/form/template';
 import { EDRec } from '@/utils/algolia';
 import { FormStoredData, clearStoredForm, getStoredForm, subFieldKey } from '@/utils/form/utils';
+import { FormDataDoc } from '@/utils/firebase/database_consts';
  
 const edFormPath: RegExp = /^\/ed\/[^/]+\/forms\/detail\/\d+$/;
 const rcpFormPath: RegExp = /^\/rcp\/forms\/detail\/\d+$/;
@@ -29,20 +30,20 @@ export function NavigationEvents() {
     
     if(user!=null&&(prePath.current?.match(edFormPath)||prePath.current?.match(rcpFormPath))){
       const pathseg=prePath.current.split('/');
-      const formid=pathseg[pathseg.length-1];
-      const storedData=getStoredForm(Number(formid));
+      const formid=Number(pathseg[pathseg.length-1]);
+      const storedData=getStoredForm(formid);
 
       if(Object.keys(storedData.data).length>0){
         
         // console.log("form saved",roles[user.role].id,user.id,JSON.parse(storedData));
         // console.log(storedData);
         setDoc(
-          doc(getFirestore(app),`user groups/${roles[user.role].id}/users/${user.id}/form data/${formid}`),
+          doc(getFirestore(app),FormDataDoc(user.role,user.id,formid)),
           storedData.data,{merge:true});
           
           updateAlgo(roles[user.role].id,formid,user.id,storedData);
 
-          clearStoredForm(Number(formid));
+          clearStoredForm(formid);
       }
     }
 
@@ -53,12 +54,12 @@ export function NavigationEvents() {
   return null;
 }
 
-const updateAlgo=async(roleID: string,formid: string,uid: string,data: FormStoredData)=>{
+const updateAlgo=async(roleID: string,formid: number,uid: string,data: FormStoredData)=>{
   const user=await algo_client.initIndex(roleID).getObject<EDRec>(uid);
   const algoData:any={objectID:uid,tags:new Set(user.tags??[])};
   
   data.algoRemove?.forEach(v=>{algoData.tags.delete(v);});
-  AlgoTemplates[Number(formid)].forEach((v)=>{
+  AlgoTemplates[formid].forEach((v)=>{
     if(v.tag){
       if(typeof v.fdid === 'string'){
         if(data.data[v.fdid]!==undefined) algoData.tags.add(data.data[v.fdid]);

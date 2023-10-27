@@ -22,8 +22,7 @@ export default async function EDs(){
                 <Typography sx={font3} flexGrow={2}>Egg Donor</Typography>
                 <Autocomplete
                 placeholder="Search products"
-                detachedMediaQuery="none"
-                // openOnFocus
+                openOnFocus
                 />
             </Stack>
         </Stack>

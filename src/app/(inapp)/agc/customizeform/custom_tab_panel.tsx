@@ -14,6 +14,7 @@ import { RoleNum, roles } from "@/utils/roles";
 import { useSession } from "next-auth/react";
 import { formTemplates } from "@/utils/form/template";
 import { Reorder } from "framer-motion";
+import { FormTempDoc } from "@/utils/firebase/database_consts";
 
 //todo: decide remove or not
 function a11yProps(index: number) {
@@ -73,8 +74,7 @@ export function CustomTabPanel({ index, next, setFinished, ...other }:
         await Promise.all(Array.from({length:6},(v,i)=>{
             const data=localStorage.getItem(`formTemp${i}`);
             if(data==null)return;
-            return setDoc(doc(getFirestore(app),
-            `user groups/${roles[RoleNum.Agc].id}/users/${uid}/forms/${i}`),
+            return setDoc(doc(getFirestore(app),FormTempDoc(uid,i)),
             {...formTemplates[index],content:JSON.parse(data)});
         }));
         setLoading(false);

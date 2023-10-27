@@ -5,9 +5,10 @@ import {RoleNum, roles} from "@/utils/roles";
 import { auth, firestore} from "firebase-admin";
 import { serverInitFirebase } from '@/utils/firebase/firebase_server';
 import { UserRecord } from "firebase-admin/auth";
-import { AgencyRef, UserRef, UsersAgcDataRef, withTime } from "@/utils/firebase/database_utils_server";
+import { AgencyRef, UserRef, UsersAgcDataRef, withTime } from "@/utils/firebase/firebase_server";
 import { EDStatus } from "@/utils/status";
 import { headers } from "next/headers";
+import { UserDoc } from "@/utils/firebase/database_consts";
 
 serverInitFirebase();
 
@@ -30,8 +31,7 @@ export async function POST(request: Request) {
         ///set up on firebase auth
         uRec=await auth().createUser({email,password,displayName:name,phoneNumber:phone});
 
-        const roleKey=roles[role].id;
-        await auth().setCustomUserClaims(uRec.uid,{role,fbPath:`user groups/${roleKey}/users/${uRec.uid}`,phone});
+        await auth().setCustomUserClaims(uRec.uid,{role,fbPath:UserDoc(role,uRec.uid),phone});
 
         ///set up firestore + algolia
         await Promise.all([
