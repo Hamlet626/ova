@@ -9,6 +9,23 @@ import type { Root } from 'react-dom/client';
 
 import '@algolia/autocomplete-theme-classic';
 
+import { useConnector } from 'react-instantsearch';
+import connectAutocomplete from 'instantsearch.js/es/connectors/autocomplete/connectAutocomplete';
+
+import type {
+  AutocompleteConnectorParams,
+  AutocompleteWidgetDescription,
+} from 'instantsearch.js/es/connectors/autocomplete/connectAutocomplete';
+
+export type UseAutocompleteProps = AutocompleteConnectorParams;
+
+export function useAutocomplete(props?: UseAutocompleteProps) {
+  return useConnector<AutocompleteConnectorParams, AutocompleteWidgetDescription>(
+    connectAutocomplete,
+    props
+  );
+}
+
 const appId = 'latency';
 const apiKey = '6be0576ff61c053d5f9a3225e2a90f76';
 const searchClient = algoliasearch(appId, apiKey);
@@ -30,6 +47,7 @@ export function Autocomplete() {
   const panelRootRef = useRef<Root | null>(null);
   const rootRef = useRef<HTMLElement | null>(null);
 
+  const { indices, currentRefinement, refine } = useAutocomplete(props);
   useEffect(() => {
     if (!containerRef.current) {
       return undefined;
