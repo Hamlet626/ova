@@ -1,7 +1,7 @@
 'use client'
 import { font3 } from "@/components/ThemeRegistry/theme_consts";
 import { algo_client } from "@/utils/algolia";
-import { Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import { Autocomplete } from "./searcher";
 import {
@@ -12,18 +12,27 @@ import {
     RefinementList,
     SearchBox,
   } from "react-instantsearch";
+import { Add } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 export default async function EDs(){
+  const router=useRouter();
+
     return <InstantSearchNext indexName="ed" searchClient={algo_client}
     future={{preserveSharedStateOnUnmount: true,}}
     >
         <Stack px={10}>
             <Stack direction={'row'} spacing={3}>
                 <Typography sx={font3} flexGrow={2}>Egg Donor</Typography>
-                <Autocomplete
-                placeholder="Search products"
-                openOnFocus
-                />
+                <Box flexGrow={8}>
+                  <Autocomplete
+                  placeholder="Search products"
+                  openOnFocus
+                  />
+                </Box>
+                <Button sx={{flexGrow:2}} 
+                variant="contained" onClick={()=>{router.push('agc/eds/create')}}
+                startIcon={<Add/>}>add ed</Button>
             </Stack>
         </Stack>
         <div className="container wrapper">

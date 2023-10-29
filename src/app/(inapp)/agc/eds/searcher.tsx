@@ -10,21 +10,27 @@ import {
 import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { Hit } from '@algolia/client-search';
 import { Clear, Highlight, SearchOutlined } from '@mui/icons-material';
-import { Input, InputBase, alpha, styled } from '@mui/material';
+import { Input, InputBase, Typography, alpha, styled } from '@mui/material';
 import algoliasearch from 'algoliasearch/lite';
 import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
-import React from 'react';
+import React, { useEffect } from 'react';
 import '@algolia/autocomplete-theme-classic';
+import { OVA_very_soft_grey } from '@/components/ThemeRegistry/theme_consts';
+import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
+import { createTagsPlugin } from '@algolia/autocomplete-plugin-tags';
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
+import { usePagination, useSearchBox } from "react-instantsearch";
+
 // import { ClearIcon } from './ClearIcon';
 // import { Highlight } from './Highlight';
 // import { SearchIcon } from './SearchIcon';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '28px',
+  backgroundColor: OVA_very_soft_grey,
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(OVA_very_soft_grey, 0.75),
   },
   marginLeft: 0,
   width: '100%',
@@ -53,19 +59,27 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
+      // width: '12ch',
+      // '&:focus': {
+      //   width: '20ch',
+      // },
     },
   },
 }));
+
+const querySuggestionsPlugin = createQuerySuggestionsPlugin({
+  searchClient:algo_client,
+  indexName: 'instant_search_demo_query_suggestions',
+});
+const tagsPlugin = createTagsPlugin();
 
 type AutocompleteItem = Hit<EDRec>;
 
 export function Autocomplete(
   props: Partial<AutocompleteOptions<AutocompleteItem>>
 ) {
+  const { query, refine: setQuery } = useSearchBox();
+  const { refine: setPage } = usePagination();
   const [autocompleteState, setAutocompleteState] = React.useState<
     AutocompleteState<AutocompleteItem>
   >({
@@ -76,6 +90,25 @@ export function Autocomplete(
     query: '',
     activeItemId: null,
     status: 'idle',
+  });
+  useEffect(() => {
+    setQuery(autocompleteState.query);
+    setPage(0);
+  }, [autocompleteState.query]);
+
+  const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
+    key: 'RECENT_ED_SEARCH',
+    limit: 5,
+    transformSource({ source }) {
+      return {
+        ...source,
+        onSelect({ item }) {
+          // Assuming the refine function updates the search page state.
+          console.log(item);
+          autocomplete.setQuery(item.label);
+        },
+      };
+    },
   });
   const autocomplete = React.useMemo(
     () =>
@@ -88,12 +121,17 @@ export function Autocomplete(
         onStateChange({ state }) {
           setAutocompleteState(state);
         },
-        //insights: true,
+        plugins:[
+          // querySuggestionsPlugin,
+          tagsPlugin,
+          recentSearchesPlugin
+        ],
+        // insights: true,
         getSources() {
           return [
             {
               sourceId: 'eds',
-              getItems:async({ query }) => { 
+              getItems:async({ query }) => {
                 const algoData=await algo_client.initIndex(roles[RoleNum.ED].id).search(query,{hitsPerPage:5});
                 return await Promise.all(algoData.hits.map(async v=>{
                   const fbData=await getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,v.objectID)));
@@ -142,11 +180,11 @@ export function Autocomplete(
     <Search {...autocomplete.getRootProps({})}>
       <form
         ref={formRef}
-        className="aa-Form"
+        //className="aa-Form"
         {...autocomplete.getFormProps({ inputElement: inputRef.current })}
       >
             <SearchIconWrapper>
-              <SearchOutlined />
+              <SearchOutlined color='primary'/>
             </SearchIconWrapper>
             <StyledInputBase
             ref={inputRef}
@@ -156,6 +194,9 @@ export function Autocomplete(
             />
             </form>
 
+            {/* <Typography>
+              {JSON.stringify(autocompleteState.context)}
+              </Typography> */}
             
             {autocompleteState.isOpen && (
         <div
@@ -199,7 +240,7 @@ export function Autocomplete(
                                     <Highlight hit={item} attribute="name" />
                                   </div> */}
                                   <div className="aa-ItemContentDescription">
-                                    By <strong>{item.name}</strong> in{' '}
+                                    By <strong>{JSON.stringify(item)}</strong> in{' '}
                                   </div>
                                 </div>
                               </div>
