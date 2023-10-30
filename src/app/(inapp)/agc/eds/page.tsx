@@ -22,9 +22,10 @@ export default async function EDs(){
     future={{preserveSharedStateOnUnmount: true,}}
     >
         <Stack px={10}>
+          <Box height={20}/>
             <Stack direction={'row'} spacing={3}>
                 <Typography sx={font3} flexGrow={2}>Egg Donor</Typography>
-                <Box flexGrow={8}>
+                <Box flexGrow={8} flexBasis={8}>
                   <Autocomplete
                   placeholder="Search products"
                   openOnFocus

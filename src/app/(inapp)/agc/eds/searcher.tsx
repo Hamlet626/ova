@@ -9,8 +9,8 @@ import {
 } from '@algolia/autocomplete-core';
 import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { Hit } from '@algolia/client-search';
-import { Clear, Highlight, SearchOutlined } from '@mui/icons-material';
-import { Input, InputBase, Typography, alpha, styled } from '@mui/material';
+import { Clear, Delete, Remove, SearchOutlined } from '@mui/icons-material';
+import { Box, Button, CircularProgress, IconButton, Input, InputBase, Stack, Typography, alpha, styled } from '@mui/material';
 import algoliasearch from 'algoliasearch/lite';
 import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
 import React, { useEffect } from 'react';
@@ -20,23 +20,19 @@ import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query
 import { createTagsPlugin } from '@algolia/autocomplete-plugin-tags';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
 import { usePagination, useSearchBox } from "react-instantsearch";
+import { parseAlgoliaHitHighlight } from '@algolia/autocomplete-preset-algolia';
+import { Highlight } from 'react-instantsearch';
 
 // import { ClearIcon } from './ClearIcon';
 // import { Highlight } from './Highlight';
 // import { SearchIcon } from './SearchIcon';
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
+const Search = styled('form')(({ theme }) => ({
+  display:'flex',
   borderRadius: '28px',
   backgroundColor: OVA_very_soft_grey,
   '&:hover': {
     backgroundColor: alpha(OVA_very_soft_grey, 0.75),
-  },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
   },
 }));
 
@@ -53,7 +49,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
+    padding: theme.spacing(1, 0, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
@@ -87,14 +83,14 @@ export function Autocomplete(
     completion: null,
     context: {},
     isOpen: false,
-    query: '',
+    query: '',//new URLSearchParams(window.location.search).get('search')??'',
     activeItemId: null,
     status: 'idle',
   });
-  useEffect(() => {
-    setQuery(autocompleteState.query);
-    setPage(0);
-  }, [autocompleteState.query]);
+  // useEffect(() => {
+  //   setQuery(autocompleteState.query);
+  //   setPage(0);
+  // }, [autocompleteState.query]);
 
   const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
     key: 'RECENT_ED_SEARCH',
@@ -110,6 +106,7 @@ export function Autocomplete(
       };
     },
   });
+  
   const autocomplete = React.useMemo(
     () =>
       createAutocomplete<
@@ -136,7 +133,7 @@ export function Autocomplete(
                 return await Promise.all(algoData.hits.map(async v=>{
                   const fbData=await getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,v.objectID)));
                   //return {...v,...fbData.data};
-                  return v as AutocompleteItem;
+                  return {...v,...fbData.data} as AutocompleteItem;
                 }));
               },
               // getItemUrl({ item }) {
@@ -177,26 +174,46 @@ export function Autocomplete(
   }, [getEnvironmentProps, autocompleteState.isOpen]);
 
   return (
-    <Search {...autocomplete.getRootProps({})}>
-      <form
-        ref={formRef}
-        //className="aa-Form"
+    <div {...autocomplete.getRootProps({})} style={{position:'relative'}}>
+      <Search ref={formRef}
         {...autocomplete.getFormProps({ inputElement: inputRef.current })}
       >
             <SearchIconWrapper>
               <SearchOutlined color='primary'/>
             </SearchIconWrapper>
-            <StyledInputBase
+            <InputBase fullWidth
+            sx={(theme)=>({
+              '& .MuiInputBase-input': {
+                padding: theme.spacing(1, 0, 1, 0),
+                paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+              }
+            })}
             ref={inputRef}
             {...autocomplete.getInputProps({ inputElement: inputRef.current })}
               placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+              type='text'
+              endAdornment={
+                <Stack direction={'row'}>
+                  {
+                    //autocompleteState.status==='loading'&&
+                    // <CircularProgress size={20}
+                    // sx={(theme)=>({mr:1,
+                    //   color:alpha(theme.palette.primary.main,0.2)})} />
+                  }
+                  {autocompleteState.query&&
+                  <IconButton title="Clear" type="reset">
+                    <Clear />
+                    </IconButton>}
+                </Stack>
+              }
             />
-            </form>
-
-            {/* <Typography>
-              {JSON.stringify(autocompleteState.context)}
-              </Typography> */}
+            <Button variant='contained' type="submit"
+            sx={{borderTopLeftRadius:0,borderBottomLeftRadius:0,
+              m:'2px'
+            }}>
+            <SearchOutlined/>
+            </Button>
+            </Search>
             
             {autocompleteState.isOpen && (
         <div
@@ -216,47 +233,23 @@ export function Autocomplete(
 
               return (
                 <section key={`source-${index}`} className="aa-Source">
+                  {source.sourceId}
                   {items.length > 0 && (
                     <ul className="aa-List" {...autocomplete.getListProps()}>
                       {items.map((item) => {
+                        const itemUI=source.sourceId==='eds'?Eds({item}):
+                        source.sourceId==='tagsPlugin'?Eds({item}):
+                        source.sourceId==='recentSearchesPlugin'?RecentSearch({item,onRemove:()=>{
+                          recentSearchesPlugin.data?.removeItem(item.id);
+                        }}):null;
+
                         return (
                           <li
                             key={item.objectID}
                             className="aa-Item"
                             {...autocomplete.getItemProps({ item, source })}
                           >
-                            <div className="aa-ItemWrapper">
-                              <div className="aa-ItemContent">
-                                <div className="aa-ItemIcon aa-ItemIcon--picture aa-ItemIcon--alignTop">
-                                  <img
-                                    src={item.avatar}
-                                    alt={item.name}
-                                    width="40"
-                                    height="40"
-                                  />
-                                </div>
-                                <div className="aa-ItemContentBody">
-                                  {/* <div className="aa-ItemContentTitle">
-                                    <Highlight hit={item} attribute="name" />
-                                  </div> */}
-                                  <div className="aa-ItemContentDescription">
-                                    By <strong>{JSON.stringify(item)}</strong> in{' '}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="aa-ItemActions">
-                                <button
-                                  className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
-                                  type="button"
-                                  title="Select"
-                                  style={{ pointerEvents: 'none' }}
-                                >
-                                  <svg fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
-                                  </svg>
-                                </button>
-                              </div>
-                            </div>
+                            {itemUI}
                           </li>
                         );
                       })}
@@ -268,7 +261,7 @@ export function Autocomplete(
           </div>
         </div>
       )}
-          </Search>
+      </div>
   )
   return (
     <div className="aa-Autocomplete" {...autocomplete.getRootProps({})}>
@@ -369,5 +362,74 @@ export function Autocomplete(
         </div>
       )}
     </div>
+  );
+}
+
+const RecentSearch=({item,onRemove}:{item:AutocompleteItem,onRemove:Function})=>{
+  const labelHighlights=parseAlgoliaHitHighlight({hit:item,attribute:'label'});
+  
+  return (
+                            <div className="aa-ItemWrapper">
+                              <div className="aa-ItemContent">
+                                <Box className="aa-ItemContentBody" display='inline'>
+                                  {labelHighlights.map(v=>(<Typography variant='body2' display='inline' fontWeight={v.isHighlighted?'bold':undefined}>
+                                    {v.value}
+                                    </Typography>))}
+                                    {/* </Typography> */}
+                                </Box>
+                              </div>
+                              <div className="aa-ItemActions">
+                                <IconButton onClick={ev=>onRemove()}>
+                                  <Delete/>
+                                </IconButton>
+                                <button
+                                  className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
+                                  type="button"
+                                  title="Select"
+                                  style={{ pointerEvents: 'none' }}
+                                >
+                                  <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+  );
+}
+
+const Eds=({item}:{item:AutocompleteItem})=>{
+  return (
+                            <div className="aa-ItemWrapper">
+                              <div className="aa-ItemContent">
+                                <div className="aa-ItemIcon aa-ItemIcon--picture aa-ItemIcon--alignTop">
+                                  <img
+                                    src={item.avatar}
+                                    alt={item.name}
+                                    width="40"
+                                    height="40"
+                                  />
+                                </div>
+                                <div className="aa-ItemContentBody">
+                                  {/* <div className="aa-ItemContentTitle">
+                                    <Highlight hit={item} attribute="name" />
+                                  </div> */}
+                                  <Typography className="aa-ItemContentDescription">
+                                    By <strong>{JSON.stringify(item)}</strong> in{' '}
+                                  </Typography>
+                                </div>
+                              </div>
+                              <div className="aa-ItemActions">
+                                <button
+                                  className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
+                                  type="button"
+                                  title="Select"
+                                  style={{ pointerEvents: 'none' }}
+                                >
+                                  <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
   );
 }
