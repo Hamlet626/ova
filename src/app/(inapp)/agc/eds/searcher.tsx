@@ -9,7 +9,7 @@ import {
 } from '@algolia/autocomplete-core';
 import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { Hit } from '@algolia/client-search';
-import { Clear, Delete, Remove, SearchOutlined } from '@mui/icons-material';
+import { Clear, Delete, History, HistoryOutlined, Remove, SearchOutlined } from '@mui/icons-material';
 import { Box, Button, CircularProgress, IconButton, Input, InputBase, Stack, Typography, alpha, styled } from '@mui/material';
 import algoliasearch from 'algoliasearch/lite';
 import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
@@ -65,7 +65,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const querySuggestionsPlugin = createQuerySuggestionsPlugin({
   searchClient:algo_client,
-  indexName: 'instant_search_demo_query_suggestions',
+  indexName: 'ed_query_suggestions',
 });
 const tagsPlugin = createTagsPlugin();
 
@@ -103,6 +103,11 @@ export function Autocomplete(
           console.log(item);
           autocomplete.setQuery(item.label);
         },
+        templates:{
+          item(params) {
+            params.components.Highlight
+          },
+        }
       };
     },
   });
@@ -174,8 +179,9 @@ export function Autocomplete(
   }, [getEnvironmentProps, autocompleteState.isOpen]);
 
   return (
-    <div {...autocomplete.getRootProps({})} style={{position:'relative'}}>
-      <Search ref={formRef}
+    <div className="aa-Autocomplete" 
+    {...autocomplete.getRootProps({})} style={{position:'relative'}}>
+      <Search ref={formRef} //className="aa-Form"
         {...autocomplete.getFormProps({ inputElement: inputRef.current })}
       >
             <SearchIconWrapper>
@@ -193,19 +199,10 @@ export function Autocomplete(
               placeholder="Search…"
               type='text'
               endAdornment={
-                <Stack direction={'row'}>
-                  {
-                    //autocompleteState.status==='loading'&&
-                    // <CircularProgress size={20}
-                    // sx={(theme)=>({mr:1,
-                    //   color:alpha(theme.palette.primary.main,0.2)})} />
-                  }
-                  {autocompleteState.query&&
+                autocompleteState.query?
                   <IconButton title="Clear" type="reset">
                     <Clear />
-                    </IconButton>}
-                </Stack>
-              }
+                    </IconButton>:undefined}
             />
             <Button variant='contained' type="submit"
             sx={{borderTopLeftRadius:0,borderBottomLeftRadius:0,
@@ -249,7 +246,9 @@ export function Autocomplete(
                             className="aa-Item"
                             {...autocomplete.getItemProps({ item, source })}
                           >
-                            {itemUI}
+                            <div className="aa-ItemWrapper">
+                              {itemUI}
+                            </div>
                           </li>
                         );
                       })}
@@ -368,32 +367,28 @@ export function Autocomplete(
 const RecentSearch=({item,onRemove}:{item:AutocompleteItem,onRemove:Function})=>{
   const labelHighlights=parseAlgoliaHitHighlight({hit:item,attribute:'label'});
   
-  return (
-                            <div className="aa-ItemWrapper">
+  return (<>
                               <div className="aa-ItemContent">
+  <div className="aa-ItemIcon aa-ItemIcon--noBorder">
+              <History/>
+            </div>
                                 <Box className="aa-ItemContentBody" display='inline'>
                                   {labelHighlights.map(v=>(<Typography variant='body2' display='inline' fontWeight={v.isHighlighted?'bold':undefined}>
                                     {v.value}
                                     </Typography>))}
-                                    {/* </Typography> */}
                                 </Box>
                               </div>
                               <div className="aa-ItemActions">
-                                <IconButton onClick={ev=>onRemove()}>
+                                <IconButton className="aa-ItemActionButton"
+                                disableRipple title="Remove this search"
+                                onClick={event=>{
+                                  event.preventDefault();
+                                  event.stopPropagation();
+                                  onRemove()}}>
                                   <Delete/>
                                 </IconButton>
-                                <button
-                                  className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
-                                  type="button"
-                                  title="Select"
-                                  style={{ pointerEvents: 'none' }}
-                                >
-                                  <svg fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
-                                  </svg>
-                                </button>
                               </div>
-                            </div>
+                              </>
   );
 }
 
