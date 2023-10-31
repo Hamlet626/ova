@@ -13,7 +13,7 @@ import { Clear, Delete, History, HistoryOutlined, Remove, SearchOutlined } from 
 import { Box, Button, CircularProgress, IconButton, Input, InputBase, Stack, Typography, alpha, styled } from '@mui/material';
 import algoliasearch from 'algoliasearch/lite';
 import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import '@algolia/autocomplete-theme-classic';
 import { OVA_very_soft_grey } from '@/components/ThemeRegistry/theme_consts';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
@@ -21,7 +21,9 @@ import { createTagsPlugin } from '@algolia/autocomplete-plugin-tags';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
 import { usePagination, useSearchBox } from "react-instantsearch";
 import { parseAlgoliaHitHighlight } from '@algolia/autocomplete-preset-algolia';
-import { Highlight } from 'react-instantsearch';
+import { Highlight, useInstantSearch } from 'react-instantsearch';
+import {GetEnvironmentProps} from '@algolia/autocomplete-shared/dist/esm/core'
+import { AutocompleteSource } from '@algolia/autocomplete-js';
 
 // import { ClearIcon } from './ClearIcon';
 // import { Highlight } from './Highlight';
@@ -63,10 +65,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const querySuggestionsPlugin = createQuerySuggestionsPlugin({
-  searchClient:algo_client,
-  indexName: 'ed_query_suggestions',
-});
+
 const tagsPlugin = createTagsPlugin();
 
 type AutocompleteItem = Hit<EDRec>;
@@ -76,6 +75,8 @@ export function Autocomplete(
 ) {
   const { query, refine: setQuery } = useSearchBox();
   const { refine: setPage } = usePagination();
+  const { indexUiState, setIndexUiState } = useInstantSearch();
+
   const [autocompleteState, setAutocompleteState] = React.useState<
     AutocompleteState<AutocompleteItem>
   >({
@@ -103,16 +104,144 @@ export function Autocomplete(
           console.log(item);
           autocomplete.setQuery(item.label);
         },
-        templates:{
-          item(params) {
-            params.components.Highlight
-          },
-        }
+        // templates:{
+        //   item(params) {
+        //     params.components.Highlight
+        //   },
+        // }
       };
     },
   });
+
+
+  const plugins = useMemo(() => {
+
+    const params=refineListToQrParam(indexUiState.refinementList as any);
+    const querySuggestionsInCategoryPlugin = createQuerySuggestionsPlugin({
+      searchClient:algo_client,
+      indexName: 'ed_query_suggestions',
+      ...(recentSearchesPlugin.data==null?{}:{getSearchParams(){
+
+        return recentSearchesPlugin.data!.getAlgoliaSearchParams({
+          hitsPerPage: 3,
+          //facetFilters: params,
+            // `${INSTANT_SEARCH_INDEX_NAME}.facets.analytics.${INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]}.value:${currentCategory}`,
+        });
+      }}),
+      // transformSource({ source }) {
+      //   return {
+      //     ...source,
+      //     sourceId: 'querySuggestionsInCategoryPlugin',
+      //     onSelect({ item }) {
+      //       setSearchState((searchState) => ({
+      //         ...searchState,
+      //         query: item.query,
+      //         hierarchicalMenu: {
+      //           [INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]]:
+      //             item.__autocomplete_qsCategory || '',
+      //         },
+      //       }));
+      //     },
+      //     getItems(params) {
+      //       if (currentCategory.length === 0) {
+      //         return [];
+      //       }
+
+      //       return source.getItems(params);
+      //     },
+      //     templates: {
+      //       ...source.templates,
+      //       header({ items }) {
+      //         if (items.length === 0) {
+      //           return <></>;
+      //         }
+
+      //         return (
+      //           <>
+      //             <span className="aa-SourceHeaderTitle">
+      //               In {currentCategory}
+      //             </span>
+      //             <span className="aa-SourceHeaderLine" />
+      //           </>
+      //         );
+      //       },
+      //     },
+      //   };
+      // },
+    });
+
+    const querySuggestionsPlugin = createQuerySuggestionsPlugin({
+      searchClient:algo_client,
+      indexName: 'ed_query_suggestions',
+      // getSearchParams() {
+      //   if (currentCategory.length === 0) {
+      //     return recentSearchesPlugin.data.getAlgoliaSearchParams({
+      //       hitsPerPage: 6,
+      //     });
+      //   }
+
+      //   return recentSearchesPlugin.data.getAlgoliaSearchParams({
+      //     hitsPerPage: 3,
+      //     facetFilters: [
+      //       `${INSTANT_SEARCH_INDEX_NAME}.facets.exact_matches.${INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]}.value:-${currentCategory}`,
+      //     ],
+      //   });
+      // },
+      // categoryAttribute: [
+      //   INSTANT_SEARCH_INDEX_NAME,
+      //   'facets',
+      //   'exact_matches',
+      //   INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0],
+      // ],
+      // transformSource({ source }) {
+      //   return {
+      //     ...source,
+      //     sourceId: 'querySuggestionsPlugin',
+      //     onSelect({ item }) {
+      //       setSearchState((searchState) => ({
+      //         ...searchState,
+      //         query: item.query,
+      //         hierarchicalMenu: {
+      //           [INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]]:
+      //             item.__autocomplete_qsCategory || '',
+      //         },
+      //       }));
+      //     },
+      //     getItems(params) {
+      //       if (!params.state.query) {
+      //         return [];
+      //       }
+
+      //       return source.getItems(params);
+      //     },
+      //     templates: {
+      //       ...source.templates,
+      //       header({ items }) {
+      //         if (currentCategory.length === 0 || items.length === 0) {
+      //           return <></>;
+      //         }
+
+      //         return (
+      //           <>
+      //             <span className="aa-SourceHeaderTitle">
+      //               In other categories
+      //             </span>
+      //             <span className="aa-SourceHeaderLine" />
+      //           </>
+      //         );
+      //       },
+      //     },
+      //   };
+      // },
+    });
+
+    return [
+      querySuggestionsInCategoryPlugin,
+      // querySuggestionsPlugin,
+    ];
+  }, [indexUiState.refinementList]);
   
-  const autocomplete = React.useMemo(
+  const autocomplete = useMemo(
     () =>
       createAutocomplete<
         AutocompleteItem,
@@ -126,7 +255,8 @@ export function Autocomplete(
         plugins:[
           // querySuggestionsPlugin,
           tagsPlugin,
-          recentSearchesPlugin
+          recentSearchesPlugin,
+          ...plugins
         ],
         // insights: true,
         getSources() {
@@ -151,32 +281,9 @@ export function Autocomplete(
       }),
     [props]
   );
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const formRef = React.useRef<HTMLFormElement>(null);
-  const panelRef = React.useRef<HTMLDivElement>(null);
+
   const { getEnvironmentProps } = autocomplete;
-
-  React.useEffect(() => {
-    if (!formRef.current || !panelRef.current || !inputRef.current) {
-      return undefined;
-    }
-
-    const { onTouchStart, onTouchMove, onMouseDown } = getEnvironmentProps({
-      formElement: formRef.current,
-      inputElement: inputRef.current,
-      panelElement: panelRef.current,
-    });
-
-    window.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('touchstart', onTouchStart);
-    window.addEventListener('touchmove', onTouchMove);
-
-    return () => {
-      window.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-    };
-  }, [getEnvironmentProps, autocompleteState.isOpen]);
+  const {inputRef,formRef,panelRef}= useRefHook(autocompleteState.isOpen,getEnvironmentProps);
 
   return (
     <div className="aa-Autocomplete" 
@@ -238,7 +345,10 @@ export function Autocomplete(
                         source.sourceId==='tagsPlugin'?Eds({item}):
                         source.sourceId==='recentSearchesPlugin'?RecentSearch({item,onRemove:()=>{
                           recentSearchesPlugin.data?.removeItem(item.id);
-                        }}):null;
+                          //todo:test
+                          // const r=(await recentSearchesPlugin.getSources()) as AutocompleteSource<AutocompleteItem>[];
+                          // r[0].templates
+                        }}):Eds({item});
 
                         return (
                           <li
@@ -362,6 +472,41 @@ export function Autocomplete(
       )}
     </div>
   );
+}
+
+const refineListToQrParam=(refineList:{
+  [attribute: string]: string[];
+}):any=>{
+
+}
+const useRefHook=(isOpen:boolean,getEnvironmentProps:GetEnvironmentProps)=>{
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const panelRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!formRef.current || !panelRef.current || !inputRef.current) {
+      return undefined;
+    }
+
+    const { onTouchStart, onTouchMove, onMouseDown } = getEnvironmentProps({
+      formElement: formRef.current,
+      inputElement: inputRef.current,
+      panelElement: panelRef.current,
+    });
+
+    window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('touchstart', onTouchStart);
+    window.addEventListener('touchmove', onTouchMove);
+
+    return () => {
+      window.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+    };
+  }, [getEnvironmentProps, isOpen]);
+
+  return {inputRef,formRef,panelRef}
 }
 
 const RecentSearch=({item,onRemove}:{item:AutocompleteItem,onRemove:Function})=>{
