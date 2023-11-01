@@ -25,6 +25,7 @@ import { Highlight, useInstantSearch } from 'react-instantsearch';
 import {GetEnvironmentProps} from '@algolia/autocomplete-shared/dist/esm/core'
 import { AutocompleteSource } from '@algolia/autocomplete-js';
 import { ParsedAttribute } from '@algolia/autocomplete-preset-algolia/dist/esm/highlight/ParsedAttribute';
+import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 
 // import { ClearIcon } from './ClearIcon';
 // import { Highlight } from './Highlight';
@@ -74,8 +75,6 @@ type AutocompleteItem = Hit<EDRec>;
 export function Autocomplete(
   props: Partial<AutocompleteOptions<AutocompleteItem>>
 ) {
-  const { query, refine: setQuery } = useSearchBox();
-  const { refine: setPage } = usePagination();
   const { indexUiState, setIndexUiState } = useInstantSearch();
 
   const [autocompleteState, setAutocompleteState] = React.useState<
@@ -134,90 +133,77 @@ export function Autocomplete(
         return {
           ...source,
           onSelect({ item }) {
-            item
             setIndexUiState((state)=>({...state,
-              query:item.query,
-              refinementList:{
-                ...state.refinementList,
-
-              }}));
-            setSearchState((searchState) => ({
-              ...searchState,
-              query: item.query,
-              hierarchicalMenu: {
-                [INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]]:
-                  item.__autocomplete_qsCategory || '',
-              },
-            }));
+              query:item.query,page:0}));
           },
         };
       },
     });
 
-    const querySuggestionsPlugin = createQuerySuggestionsPlugin({
-      searchClient:algo_client,
-      indexName: 'ed_query_suggestions',
-      // getSearchParams() {
-      //   if (currentCategory.length === 0) {
-      //     return recentSearchesPlugin.data.getAlgoliaSearchParams({
-      //       hitsPerPage: 6,
-      //     });
-      //   }
+    // const querySuggestionsPlugin = createQuerySuggestionsPlugin({
+    //   searchClient:algo_client,
+    //   indexName: 'ed_query_suggestions',
+    //   // getSearchParams() {
+    //   //   if (currentCategory.length === 0) {
+    //   //     return recentSearchesPlugin.data.getAlgoliaSearchParams({
+    //   //       hitsPerPage: 6,
+    //   //     });
+    //   //   }
 
-      //   return recentSearchesPlugin.data.getAlgoliaSearchParams({
-      //     hitsPerPage: 3,
-      //     facetFilters: [
-      //       `${INSTANT_SEARCH_INDEX_NAME}.facets.exact_matches.${INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]}.value:-${currentCategory}`,
-      //     ],
-      //   });
-      // },
-      // categoryAttribute: [
-      //   INSTANT_SEARCH_INDEX_NAME,
-      //   'facets',
-      //   'exact_matches',
-      //   INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0],
-      // ],
-      // transformSource({ source }) {
-      //   return {
-      //     ...source,
-      //     sourceId: 'querySuggestionsPlugin',
-      //     onSelect({ item }) {
-      //       setSearchState((searchState) => ({
-      //         ...searchState,
-      //         query: item.query,
-      //         hierarchicalMenu: {
-      //           [INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]]:
-      //             item.__autocomplete_qsCategory || '',
-      //         },
-      //       }));
-      //     },
-      //     getItems(params) {
-      //       if (!params.state.query) {
-      //         return [];
-      //       }
+    //   //   return recentSearchesPlugin.data.getAlgoliaSearchParams({
+    //   //     hitsPerPage: 3,
+    //   //     facetFilters: [
+    //   //       `${INSTANT_SEARCH_INDEX_NAME}.facets.exact_matches.${INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]}.value:-${currentCategory}`,
+    //   //     ],
+    //   //   });
+    //   // },
+    //   // categoryAttribute: [
+    //   //   INSTANT_SEARCH_INDEX_NAME,
+    //   //   'facets',
+    //   //   'exact_matches',
+    //   //   INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0],
+    //   // ],
+    //   // transformSource({ source }) {
+    //   //   return {
+    //   //     ...source,
+    //   //     sourceId: 'querySuggestionsPlugin',
+    //   //     onSelect({ item }) {
+    //   //       setSearchState((searchState) => ({
+    //   //         ...searchState,
+    //   //         query: item.query,
+    //   //         hierarchicalMenu: {
+    //   //           [INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]]:
+    //   //             item.__autocomplete_qsCategory || '',
+    //   //         },
+    //   //       }));
+    //   //     },
+    //   //     getItems(params) {
+    //   //       if (!params.state.query) {
+    //   //         return [];
+    //   //       }
 
-      //       return source.getItems(params);
-      //     },
-      //     templates: {
-      //       ...source.templates,
-      //       header({ items }) {
-      //         if (currentCategory.length === 0 || items.length === 0) {
-      //           return <></>;
-      //         }
+    //   //       return source.getItems(params);
+    //   //     },
+    //   //     templates: {
+    //   //       ...source.templates,
+    //   //       header({ items }) {
+    //   //         if (currentCategory.length === 0 || items.length === 0) {
+    //   //           return <></>;
+    //   //         }
 
-      //         return (
-      //           <>
-      //             <span className="aa-SourceHeaderTitle">
-      //               In other categories
-      //             </span>
-      //             <span className="aa-SourceHeaderLine" />
-      //           </>
-      //         );
-      //       },
-      //     },
-      //   };
-      // },
-    });
+    //   //         return (
+    //   //           <>
+    //   //             <span className="aa-SourceHeaderTitle">
+    //   //               In other categories
+    //   //             </span>
+    //   //             <span className="aa-SourceHeaderLine" />
+    //   //           </>
+    //   //         );
+    //   //       },
+    //   //     },
+    //   //   };
+    //   // },
+    // });
 
     return [
       querySuggestionsInCategoryPlugin,
@@ -319,38 +305,43 @@ export function Autocomplete(
           <div className="aa-PanelLayout aa-Panel--scrollable">
             {autocompleteState.collections.map((collection, index) => {
               const { source, items } = collection;
+              if(items.length===0)return null;
 
+              const children = items.map((item) => {
+                  const itemUI=source.sourceId==='eds'?Eds({item}):
+                  source.sourceId==='tagsPlugin'?Eds({item}):
+                  source.sourceId==='querySuggestionsPlugin'?QSuggest({item,setQuery:autocomplete.setQuery}):
+                  source.sourceId==='recentSearchesPlugin'?RecentSearch({item,onRemove:()=>{
+                    recentSearchesPlugin.data?.removeItem(item.id);
+                    autocomplete.refresh();
+                    //todo:test
+                    // const r=(await recentSearchesPlugin.getSources()) as AutocompleteSource<AutocompleteItem>[];
+                    // r[0].templates
+                  }}):null;
+
+                  return (
+                    <li
+                      key={item.objectID}
+                      className="aa-Item"
+                      {...autocomplete.getItemProps({ item, source })}
+                    >
+                      <div className="aa-ItemWrapper">
+                        {itemUI}
+                      </div>
+                    </li>
+                  );
+                });
+              
               return (
                 <section key={`source-${index}`} className="aa-Source">
                   {source.sourceId}
-                  {items.length > 0 && (
-                    <ul className="aa-List" {...autocomplete.getListProps()}>
-                      {items.map((item) => {
-                        const itemUI=source.sourceId==='eds'?Eds({item}):
-                        source.sourceId==='tagsPlugin'?Eds({item}):
-                        source.sourceId==='querySuggestionsPlugin'?QSuggest({item}):
-                        source.sourceId==='recentSearchesPlugin'?RecentSearch({item,onRemove:()=>{
-                          recentSearchesPlugin.data?.removeItem(item.id);
-                          autocomplete.refresh();
-                          //todo:test
-                          // const r=(await recentSearchesPlugin.getSources()) as AutocompleteSource<AutocompleteItem>[];
-                          // r[0].templates
-                        }}):null;
-
-                        return (
-                          <li
-                            key={item.objectID}
-                            className="aa-Item"
-                            {...autocomplete.getItemProps({ item, source })}
-                          >
-                            <div className="aa-ItemWrapper">
-                              {itemUI}
-                            </div>
-                          </li>
-                        );
-                      })}
+                  {source.sourceId==='eds'?<Grid2>
+                    {children}
+                  </Grid2>:
+                  <ul className="aa-List" {...autocomplete.getListProps()}>
+                      {children}
                     </ul>
-                  )}
+                  }
                 </section>
               );
             })}
@@ -557,7 +548,7 @@ const Eds=({item}:{item:AutocompleteItem})=>{
   );
 }
 
-const QSuggest=({item}:{item:AutocompleteItem})=>{
+const QSuggest=({item,setQuery}:{item:AutocompleteItem,setQuery:Function})=>{
   if (item.__autocomplete_qsCategory)
     return (
         <div className="aa-ItemContent aa-ItemContent--indented">
@@ -580,13 +571,13 @@ const QSuggest=({item}:{item:AutocompleteItem})=>{
         <AlgoHighlightText item={item} attribute='query'/>
       </div>
       <div className="aa-ItemActions">
-        <IconButton
-          className="aa-ItemActionButton"
+        <IconButton className="aa-ItemActionButton"
+        disableRipple 
           title={`Fill query with "${item.query}"`}
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
-            // onTapAhead(item);
+            setQuery(item.query);
           }}
         >
           <NorthWest/>
