@@ -9,7 +9,7 @@ import {
 } from '@algolia/autocomplete-core';
 import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { Hit } from '@algolia/client-search';
-import { Clear, Delete, History, HistoryOutlined, Remove, SearchOutlined } from '@mui/icons-material';
+import { Clear, Delete, History, HistoryOutlined, NorthWest, Remove, SearchOutlined } from '@mui/icons-material';
 import { Box, Button, CircularProgress, IconButton, Input, InputBase, Stack, Typography, alpha, styled } from '@mui/material';
 import algoliasearch from 'algoliasearch/lite';
 import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
@@ -24,6 +24,7 @@ import { parseAlgoliaHitHighlight } from '@algolia/autocomplete-preset-algolia';
 import { Highlight, useInstantSearch } from 'react-instantsearch';
 import {GetEnvironmentProps} from '@algolia/autocomplete-shared/dist/esm/core'
 import { AutocompleteSource } from '@algolia/autocomplete-js';
+import { ParsedAttribute } from '@algolia/autocomplete-preset-algolia/dist/esm/highlight/ParsedAttribute';
 
 // import { ClearIcon } from './ClearIcon';
 // import { Highlight } from './Highlight';
@@ -120,7 +121,8 @@ export function Autocomplete(
     const querySuggestionsInCategoryPlugin = createQuerySuggestionsPlugin({
       searchClient:algo_client,
       indexName: 'ed_query_suggestions',
-      ...(recentSearchesPlugin.data==null?{}:{getSearchParams(){
+      ...(//recentSearchesPlugin.data==null?{}:
+        {getSearchParams(){
 
         return recentSearchesPlugin.data!.getAlgoliaSearchParams({
           hitsPerPage: 3,
@@ -128,46 +130,28 @@ export function Autocomplete(
             // `${INSTANT_SEARCH_INDEX_NAME}.facets.analytics.${INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]}.value:${currentCategory}`,
         });
       }}),
-      // transformSource({ source }) {
-      //   return {
-      //     ...source,
-      //     sourceId: 'querySuggestionsInCategoryPlugin',
-      //     onSelect({ item }) {
-      //       setSearchState((searchState) => ({
-      //         ...searchState,
-      //         query: item.query,
-      //         hierarchicalMenu: {
-      //           [INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]]:
-      //             item.__autocomplete_qsCategory || '',
-      //         },
-      //       }));
-      //     },
-      //     getItems(params) {
-      //       if (currentCategory.length === 0) {
-      //         return [];
-      //       }
+      transformSource({ source }) {
+        return {
+          ...source,
+          onSelect({ item }) {
+            item
+            setIndexUiState((state)=>({...state,
+              query:item.query,
+              refinementList:{
+                ...state.refinementList,
 
-      //       return source.getItems(params);
-      //     },
-      //     templates: {
-      //       ...source.templates,
-      //       header({ items }) {
-      //         if (items.length === 0) {
-      //           return <></>;
-      //         }
-
-      //         return (
-      //           <>
-      //             <span className="aa-SourceHeaderTitle">
-      //               In {currentCategory}
-      //             </span>
-      //             <span className="aa-SourceHeaderLine" />
-      //           </>
-      //         );
-      //       },
-      //     },
-      //   };
-      // },
+              }}));
+            setSearchState((searchState) => ({
+              ...searchState,
+              query: item.query,
+              hierarchicalMenu: {
+                [INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]]:
+                  item.__autocomplete_qsCategory || '',
+              },
+            }));
+          },
+        };
+      },
     });
 
     const querySuggestionsPlugin = createQuerySuggestionsPlugin({
@@ -252,6 +236,7 @@ export function Autocomplete(
         onStateChange({ state }) {
           setAutocompleteState(state);
         },
+        initialState:autocompleteState,
         plugins:[
           // querySuggestionsPlugin,
           tagsPlugin,
@@ -343,12 +328,14 @@ export function Autocomplete(
                       {items.map((item) => {
                         const itemUI=source.sourceId==='eds'?Eds({item}):
                         source.sourceId==='tagsPlugin'?Eds({item}):
+                        source.sourceId==='querySuggestionsPlugin'?QSuggest({item}):
                         source.sourceId==='recentSearchesPlugin'?RecentSearch({item,onRemove:()=>{
                           recentSearchesPlugin.data?.removeItem(item.id);
+                          autocomplete.refresh();
                           //todo:test
                           // const r=(await recentSearchesPlugin.getSources()) as AutocompleteSource<AutocompleteItem>[];
                           // r[0].templates
-                        }}):Eds({item});
+                        }}):null;
 
                         return (
                           <li
@@ -479,6 +466,7 @@ const refineListToQrParam=(refineList:{
 }):any=>{
 
 }
+
 const useRefHook=(isOpen:boolean,getEnvironmentProps:GetEnvironmentProps)=>{
   const inputRef = React.useRef<HTMLInputElement>(null);
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -510,30 +498,25 @@ const useRefHook=(isOpen:boolean,getEnvironmentProps:GetEnvironmentProps)=>{
 }
 
 const RecentSearch=({item,onRemove}:{item:AutocompleteItem,onRemove:Function})=>{
-  const labelHighlights=parseAlgoliaHitHighlight({hit:item,attribute:'label'});
   
   return (<>
-                              <div className="aa-ItemContent">
-  <div className="aa-ItemIcon aa-ItemIcon--noBorder">
-              <History/>
-            </div>
-                                <Box className="aa-ItemContentBody" display='inline'>
-                                  {labelHighlights.map(v=>(<Typography variant='body2' display='inline' fontWeight={v.isHighlighted?'bold':undefined}>
-                                    {v.value}
-                                    </Typography>))}
-                                </Box>
-                              </div>
-                              <div className="aa-ItemActions">
-                                <IconButton className="aa-ItemActionButton"
-                                disableRipple title="Remove this search"
-                                onClick={event=>{
-                                  event.preventDefault();
-                                  event.stopPropagation();
-                                  onRemove()}}>
-                                  <Delete/>
-                                </IconButton>
-                              </div>
-                              </>
+  <div className="aa-ItemContent">
+    <div className="aa-ItemIcon aa-ItemIcon--noBorder">
+      <History/>
+    </div>
+    <AlgoHighlightText item={item} attribute='label'/>
+  </div>
+  <div className="aa-ItemActions">
+    <IconButton className="aa-ItemActionButton"
+    disableRipple title="Remove this search"
+    onClick={event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      onRemove()}}>
+      <Delete/>
+    </IconButton>
+  </div>
+  </>
   );
 }
 
@@ -573,3 +556,52 @@ const Eds=({item}:{item:AutocompleteItem})=>{
                             </div>
   );
 }
+
+const QSuggest=({item}:{item:AutocompleteItem})=>{
+  if (item.__autocomplete_qsCategory)
+    return (
+        <div className="aa-ItemContent aa-ItemContent--indented">
+          <div className="aa-ItemContentSubtitle aa-ItemContentSubtitle--standalone">
+            <span className="aa-ItemContentSubtitleIcon" />
+            <span>
+              in{' '}
+              <span className="aa-ItemContentSubtitleCategory">
+                {item.__autocomplete_qsCategory}
+              </span>
+            </span>
+          </div>
+        </div>
+    );
+  
+
+  return (
+    <>
+      <div className="aa-ItemContent aa-ItemContent--indented">
+        <AlgoHighlightText item={item} attribute='query'/>
+      </div>
+      <div className="aa-ItemActions">
+        <IconButton
+          className="aa-ItemActionButton"
+          title={`Fill query with "${item.query}"`}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            // onTapAhead(item);
+          }}
+        >
+          <NorthWest/>
+        </IconButton>
+          </div>
+        </>
+      );
+}
+
+const AlgoHighlightText=({className,variant='body2',item,attribute}:
+  {className?:string,variant?:string,item:AutocompleteItem,attribute:string})=>{
+  const labelHighlights=parseAlgoliaHitHighlight({hit:item,attribute});
+  return <Box className="aa-ItemContentBody" display='inline'>
+    {labelHighlights.map(v=>(<Typography variant={variant as any} display='inline' fontWeight={v.isHighlighted?'bold':undefined}>
+                                    {v.value}
+                                    </Typography>))}
+                                </Box>
+  };
