@@ -1,5 +1,5 @@
 import { EDRec, algo_client } from '@/utils/algolia';
-import { UserDoc } from '@/utils/firebase/database_consts';
+import { UserDoc, UsersAgcDataDoc } from '@/utils/firebase/database_consts';
 import { app, cliAuth } from '@/utils/firebase/firebase_client';
 import { RoleNum, roles } from '@/utils/roles';
 import {
@@ -10,12 +10,12 @@ import {
 import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { Hit } from '@algolia/client-search';
 import { Clear, Delete, History, HistoryOutlined, NorthWest, Remove, SearchOutlined } from '@mui/icons-material';
-import { Box, Button, CircularProgress, IconButton, Input, InputBase, Stack, Typography, alpha, styled } from '@mui/material';
+import { Box, Button, Chip, CircularProgress, IconButton, Input, InputBase, Stack, Typography, alpha, styled } from '@mui/material';
 import algoliasearch from 'algoliasearch/lite';
 import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
 import React, { useEffect, useMemo } from 'react';
 import '@algolia/autocomplete-theme-classic';
-import { OVA_very_soft_grey } from '@/components/ThemeRegistry/theme_consts';
+import { OVA_very_soft_grey, font7 } from '@/components/ThemeRegistry/theme_consts';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
 import { createTagsPlugin } from '@algolia/autocomplete-plugin-tags';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
@@ -26,6 +26,9 @@ import {GetEnvironmentProps} from '@algolia/autocomplete-shared/dist/esm/core'
 import { AutocompleteSource } from '@algolia/autocomplete-js';
 import { ParsedAttribute } from '@algolia/autocomplete-preset-algolia/dist/esm/highlight/ParsedAttribute';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { getCliId_Client } from '@/utils/clinic_id/client';
 
 // import { ClearIcon } from './ClearIcon';
 // import { Highlight } from './Highlight';
@@ -49,24 +52,6 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
 }));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 0, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      // width: '12ch',
-      // '&:focus': {
-      //   width: '20ch',
-      // },
-    },
-  },
-}));
-
 
 const tagsPlugin = createTagsPlugin();
 
@@ -236,11 +221,12 @@ export function Autocomplete(
               sourceId: 'eds',
               getItems:async({ query }) => {
                 const algoData=await algo_client.initIndex(roles[RoleNum.ED].id).search(query,{hitsPerPage:5});
-                return await Promise.all(algoData.hits.map(async v=>{
-                  const fbData=await getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,v.objectID)));
-                  //return {...v,...fbData.data};
-                  return {...v,...fbData.data} as AutocompleteItem;
-                }));
+                return algoData.hits;
+                // return await Promise.all(algoData.hits.map(async v=>{
+                //   const fbData=await getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,v.objectID)));
+                //   //return {...v,...fbData.data};
+                //   return {...v,...fbData.data} as AutocompleteItem;
+                // }));
               },
               // getItemUrl({ item }) {
               //   return item.avatar??null;
@@ -512,39 +498,26 @@ const RecentSearch=({item,onRemove}:{item:AutocompleteItem,onRemove:Function})=>
 }
 
 const Eds=({item}:{item:AutocompleteItem})=>{
+  const user=useSession({required:true}).data?.user;
+  const agcId=getCliId_Client(user?.role,user?.id)!;
+  const fbData=await getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,item.objectID)));
+  const fbAgcData=await getDoc(doc(getFirestore(app),UsersAgcDataDoc(RoleNum.ED,item.objectID,agcId)));
   return (
-                            <div className="aa-ItemWrapper">
-                              <div className="aa-ItemContent">
-                                <div className="aa-ItemIcon aa-ItemIcon--picture aa-ItemIcon--alignTop">
-                                  <img
-                                    src={item.avatar}
-                                    alt={item.name}
-                                    width="40"
-                                    height="40"
-                                  />
-                                </div>
-                                <div className="aa-ItemContentBody">
-                                  {/* <div className="aa-ItemContentTitle">
-                                    <Highlight hit={item} attribute="name" />
-                                  </div> */}
-                                  <Typography className="aa-ItemContentDescription">
-                                    By <strong>{JSON.stringify(item)}</strong> in{' '}
-                                  </Typography>
-                                </div>
-                              </div>
-                              <div className="aa-ItemActions">
-                                <button
-                                  className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
-                                  type="button"
-                                  title="Select"
-                                  style={{ pointerEvents: 'none' }}
-                                >
-                                  <svg fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
-                                  </svg>
-                                </button>
-                              </div>
-                            </div>
+  <Stack className="aa-ItemContent" spacing={8}>
+    <div style={{ position: 'relative', width: '160px', height: '90px' }}>
+      <Image src={item.avatar} alt={item.name} sizes='160px' fill
+        style={{ objectFit: 'cover', }}/>
+    </div>
+    <Stack direction={'row'} justifyContent={'space-between'}>
+      <Typography sx={font7}>
+        {item.name}
+      </Typography>
+    </Stack>
+    <Stack direction={'row'} justifyContent={'space-between'}>
+      {item.tags.slice(0,2).map(v=>(<Chip key={v} label={v} color='secondary'/>))}
+      {item.tags.length>2 && <Chip label='...' color='secondary'/>}
+    </Stack>
+    </Stack>
   );
 }
 

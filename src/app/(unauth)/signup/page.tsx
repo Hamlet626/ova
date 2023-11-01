@@ -8,13 +8,12 @@ import { Bg1 } from "@/components/background/bg1";
 import {Google, Lock, Login, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
 import {font2} from "@/components/ThemeRegistry/theme_consts";
 //get role
-import { getClinic } from "@/utils/clinic_check";
-import { useUrl } from 'nextjs-current-url';
 import { useSearchParams } from 'next/navigation'
 import { RoleNum, roles } from "@/utils/roles";
 
 import {useForm,  useFormState} from 'react-hook-form';
 import {signIn} from "next-auth/react";
+import { getCliId_Client } from "@/utils/clinic_id/client";
 
 
 
@@ -91,8 +90,7 @@ export function Name_NotClinic({ register,errors, trigger }) {
 }
 
 export function SignUp1(){
-    const hostName=useUrl()?.host;
-    const clinic = getClinic(hostName);
+    const clinic = getCliId_Client();
     const searchParams = useSearchParams();
 const role = clinic == null ? 2 : RoleNum[searchParams.get('role')];
 const router = useRouter();

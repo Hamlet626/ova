@@ -7,9 +7,8 @@ import {auth} from "firebase-admin";
 import {cliAuth} from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
 import { EDRec, RcpRec, algo_client } from "@/utils/algolia";
-import { getClinic } from "@/utils/clinic_check";
 import { EDStatus } from "@/utils/status";
-import { headers } from "next/headers";
+import { getCliId_Server } from "@/utils/clinic_id/server";
 
 
 serverInitFirebase();
@@ -63,7 +62,7 @@ const getUserSessionInfo=async (id:string):Promise<User>=>{
         return basicInfo;
     }
     
-    const clinicID=getClinic(headers().get("host"));
+    const clinicID=getCliId_Server();
     if(basicInfo.role===RoleNum.ED){
         const algoRecord=await algo_client.initIndex(`${roleKey}`).getObject<EDRec>(id);
         let agencies=Object.keys((algoRecord).agencies);
