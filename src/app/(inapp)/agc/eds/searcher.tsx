@@ -1,6 +1,6 @@
 import { EDRec, algo_client } from '@/utils/algolia';
 import { UserDoc, UsersAgcDataDoc } from '@/utils/firebase/database_consts';
-import { app, cliAuth } from '@/utils/firebase/firebase_client';
+import { app } from '@/utils/firebase/firebase_client';
 import { RoleNum, roles } from '@/utils/roles';
 import {
   AutocompleteOptions,

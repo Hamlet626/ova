@@ -4,8 +4,6 @@ import {Card, Paper, Box, Container, Input, Button, Typography, LinearProgress,
      Breadcrumbs,  InputAdornment, Link, Stack, TextField
 } from "@mui/material";
 import { Bg2 } from "@/components/background/bg2";
-import { useRouter } from "next/navigation";
-import { cliAuth  } from "@/utils/firebase/firebase_client";
 
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import { createUserWithEmailAndPassword } from 'firebase/auth';

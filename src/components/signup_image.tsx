@@ -13,6 +13,10 @@ import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 
 //import style for image part
 import { styled } from '@mui/material/styles';
+import { app, cliAuth } from "@/utils/firebase/firebase_client";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { UserDoc } from "@/utils/firebase/database_consts";
+import { useSession } from "next-auth/react";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -26,9 +30,10 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function Uploadprofile( { clinic,role,c1 } ) {
+  const {update,data}=useSession({required:true});
+  const user=data?.user!;
 
-
-    const [selectedFile,setSelectedFile]=useState(null);
+    const [selectedFile,setSelectedFile]=useState<File|null>(null);
 
     const handleFileChange=(event)=>{
     const file =event.target.files[0];
@@ -42,7 +47,24 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
       const i = Math.floor(Math.log(bytes) / Math.log(1024));
       return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
     };
-
+    console.log(user);
+    const saveAvatar=async(url:string)=>{
+        const r = await fetch('/api/update_fireauth', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            avatar: url,
+          }),
+        });
+        
+        if(r.status===200){
+          await update({image:url}).then(v=>{console.log(v);});
+          console.log(user.image);
+        }
+    }
 
     return(
           <>
@@ -121,6 +143,7 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
               color: 'white',
               width: '193px',
             }}
+            onClick={()=>saveAvatar('https://res.cloudinary.com/hamlet78/image/upload/v1698949663/gcPortal/Hope%20Ilolo/signature/ra0y9838z8y7fjrx6hbu.png')}
           >
             Next
           </Button>

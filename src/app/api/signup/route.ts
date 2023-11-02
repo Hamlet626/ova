@@ -1,5 +1,5 @@
 
-import {getClinic} from "@/utils/clinic_check";
+import {getClinic} from "@/utils/clinic_id/clinic_check";
 import {algo_client} from "@/utils/algolia";
 import {RoleNum, roles} from "@/utils/roles";
 import { auth, firestore} from "firebase-admin";

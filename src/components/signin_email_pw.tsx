@@ -13,7 +13,8 @@ import { useRouter } from "next/navigation";
 import {useForm} from "react-hook-form";
 import NextLink from "next/link";
 import { RoleNum, roles } from "@/utils/roles";
-import { getCliId_Client } from "@/utils/clinic_id/client";
+import { getClinic } from "@/utils/clinic_id/clinic_check";
+import { useUrl } from "nextjs-current-url";
 
 
 
@@ -23,6 +24,7 @@ export default function SigninEmailPwBlock() {
     const {register, handleSubmit, formState: { errors }}=useForm();
     const router = useRouter();
     const clickPwIcon = () => setShowPw((show) => !show);
+    const hostName=useUrl()?.host;
 
     const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -34,7 +36,7 @@ export default function SigninEmailPwBlock() {
         if(r?.ok){
             const user=(await getSession())?.user!;
 
-            router.push(`/${roles[user.role!].path}${user?.role===RoleNum.ED?`/${getCliId_Client()??user.agencies![0]}`:''}/dashboard`);
+            router.push(`/${roles[user.role!].path}${user?.role===RoleNum.ED?`/${getClinic(hostName)??user.agencies![0]}`:''}/dashboard`);
             return;
         }
         setSigningIn(false);
