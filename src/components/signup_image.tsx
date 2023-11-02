@@ -47,7 +47,7 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
       const i = Math.floor(Math.log(bytes) / Math.log(1024));
       return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
     };
-    console.log(user);
+    
     const saveAvatar=async(url:string)=>{
         const r = await fetch('/api/update_fireauth', {
           method: 'POST',
@@ -62,7 +62,9 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
         
         if(r.status===200){
           await update({image:url}).then(v=>{console.log(v);});
-          console.log(user.image);
+          //console.log(user.image);
+
+          //todo:redirect to filling form/template page
         }
     }
 
@@ -143,7 +145,9 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
               color: 'white',
               width: '193px',
             }}
-            onClick={()=>saveAvatar('https://res.cloudinary.com/hamlet78/image/upload/v1698949663/gcPortal/Hope%20Ilolo/signature/ra0y9838z8y7fjrx6hbu.png')}
+            onClick={()=>{
+              //todo: saveAvatar('imageLink');
+            }}
           >
             Next
           </Button>
