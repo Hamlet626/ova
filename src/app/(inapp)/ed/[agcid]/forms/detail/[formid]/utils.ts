@@ -13,7 +13,7 @@ export const getFormTemplate=(agcid:string)=>unstable_cache(
             (v,i)=>(r.docs.find(v=>Number(v.id)===i)?.data()??formTemplates[i]) as FormTemp);
     },
     [agcid],
-    {tags:['form_template'],revalidate:false}
+    {tags:['form_template'],revalidate:6}
 )();
 
 export const getFormData=(uid:string,role:RoleNum)=>unstable_cache(

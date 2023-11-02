@@ -155,13 +155,14 @@ export const physical_personal_trait:FormTemp={
                 {//todo
                     id: "s7",
                     label: "Height (in Inches)",
-                    type: "height",
+                    type: "text",
                     required: true
                 },
                 {//todo
                     id: "s8",
                     label: "Weight (in lbs)",
-                    type: "number",
+                    type: "text",
+                    length:"short",
                     required: true
                 },
                 {

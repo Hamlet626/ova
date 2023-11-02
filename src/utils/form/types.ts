@@ -17,7 +17,7 @@ export interface FormField{
     default?:any,
     length?:'long'|'medium'|'short',
     group?:FormField[],
-    options?:string[]|'languages'|'eyeColors'|'hairColors'|'ethnicities'|'nationalities'|'countryList',
+    options?: string[] | 'languages' | 'eyeColors' | 'hairColors' | 'ethnicities' | 'nationalities' | 'countryList';
     sub?:FormField[],
     condition?:any[],
     exCondition?:any[],
