@@ -23,8 +23,9 @@ import { usePagination, useSearchBox } from "react-instantsearch";
 import { parseAlgoliaHitHighlight } from '@algolia/autocomplete-preset-algolia';
 import { Highlight, useInstantSearch } from 'react-instantsearch';
 import {GetEnvironmentProps} from '@algolia/autocomplete-shared/dist/esm/core'
-import { AutocompleteSource } from '@algolia/autocomplete-js';
+import { AutocompleteSource, AutocompletePlugin } from '@algolia/autocomplete-js';
 import { ParsedAttribute } from '@algolia/autocomplete-preset-algolia/dist/esm/highlight/ParsedAttribute';
+import usePromise from 'react-use-promise';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -73,14 +74,11 @@ export function Autocomplete(
     activeItemId: null,
     status: 'idle',
   });
-  // useEffect(() => {
-  //   setQuery(autocompleteState.query);
-  //   setPage(0);
-  // }, [autocompleteState.query]);
+  
 
   const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
     key: 'RECENT_ED_SEARCH',
-    limit: 5,
+    limit: 5,getSource:,
     transformSource({ source }) {
       return {
         ...source,
@@ -89,11 +87,6 @@ export function Autocomplete(
           console.log(item);
           autocomplete.setQuery(item.label);
         },
-        // templates:{
-        //   item(params) {
-        //     params.components.Highlight
-        //   },
-        // }
       };
     },
   });
@@ -125,71 +118,6 @@ export function Autocomplete(
       },
     });
 
-    // const querySuggestionsPlugin = createQuerySuggestionsPlugin({
-    //   searchClient:algo_client,
-    //   indexName: 'ed_query_suggestions',
-    //   // getSearchParams() {
-    //   //   if (currentCategory.length === 0) {
-    //   //     return recentSearchesPlugin.data.getAlgoliaSearchParams({
-    //   //       hitsPerPage: 6,
-    //   //     });
-    //   //   }
-
-    //   //   return recentSearchesPlugin.data.getAlgoliaSearchParams({
-    //   //     hitsPerPage: 3,
-    //   //     facetFilters: [
-    //   //       `${INSTANT_SEARCH_INDEX_NAME}.facets.exact_matches.${INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]}.value:-${currentCategory}`,
-    //   //     ],
-    //   //   });
-    //   // },
-    //   // categoryAttribute: [
-    //   //   INSTANT_SEARCH_INDEX_NAME,
-    //   //   'facets',
-    //   //   'exact_matches',
-    //   //   INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0],
-    //   // ],
-    //   // transformSource({ source }) {
-    //   //   return {
-    //   //     ...source,
-    //   //     sourceId: 'querySuggestionsPlugin',
-    //   //     onSelect({ item }) {
-    //   //       setSearchState((searchState) => ({
-    //   //         ...searchState,
-    //   //         query: item.query,
-    //   //         hierarchicalMenu: {
-    //   //           [INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]]:
-    //   //             item.__autocomplete_qsCategory || '',
-    //   //         },
-    //   //       }));
-    //   //     },
-    //   //     getItems(params) {
-    //   //       if (!params.state.query) {
-    //   //         return [];
-    //   //       }
-
-    //   //       return source.getItems(params);
-    //   //     },
-    //   //     templates: {
-    //   //       ...source.templates,
-    //   //       header({ items }) {
-    //   //         if (currentCategory.length === 0 || items.length === 0) {
-    //   //           return <></>;
-    //   //         }
-
-    //   //         return (
-    //   //           <>
-    //   //             <span className="aa-SourceHeaderTitle">
-    //   //               In other categories
-    //   //             </span>
-    //   //             <span className="aa-SourceHeaderLine" />
-    //   //           </>
-    //   //         );
-    //   //       },
-    //   //     },
-    //   //   };
-    //   // },
-    // });
-
     return [
       querySuggestionsInCategoryPlugin,
       // querySuggestionsPlugin,
@@ -209,8 +137,6 @@ export function Autocomplete(
         },
         initialState:autocompleteState,
         plugins:[
-          // querySuggestionsPlugin,
-          tagsPlugin,
           recentSearchesPlugin,
           ...plugins
         ],
@@ -221,16 +147,13 @@ export function Autocomplete(
               sourceId: 'eds',
               getItems:async({ query }) => {
                 const algoData=await algo_client.initIndex(roles[RoleNum.ED].id).search(query,{hitsPerPage:5});
-                return algoData.hits;
+                return algoData.hits as any[];
                 // return await Promise.all(algoData.hits.map(async v=>{
                 //   const fbData=await getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,v.objectID)));
                 //   //return {...v,...fbData.data};
                 //   return {...v,...fbData.data} as AutocompleteItem;
                 // }));
               },
-              // getItemUrl({ item }) {
-              //   return item.avatar??null;
-              // },
             },
           ];
         },
@@ -294,16 +217,15 @@ export function Autocomplete(
               if(items.length===0)return null;
 
               const children = items.map((item) => {
-                  const itemUI=source.sourceId==='eds'?Eds({item}):
-                  source.sourceId==='tagsPlugin'?Eds({item}):
-                  source.sourceId==='querySuggestionsPlugin'?QSuggest({item,setQuery:autocomplete.setQuery}):
-                  source.sourceId==='recentSearchesPlugin'?RecentSearch({item,onRemove:()=>{
-                    recentSearchesPlugin.data?.removeItem(item.id);
-                    autocomplete.refresh();
-                    //todo:test
-                    // const r=(await recentSearchesPlugin.getSources()) as AutocompleteSource<AutocompleteItem>[];
-                    // r[0].templates
-                  }}):null;
+                if(source.sourceId==='eds')return  <Grid2
+                key={item.objectID}
+                className="aa-Item"
+                {...autocomplete.getItemProps({ item, source })}
+              >
+                <div className="aa-ItemWrapper">
+                <Eds item={item}/>
+                </div>
+              </Grid2>;
 
                   return (
                     <li
@@ -312,7 +234,14 @@ export function Autocomplete(
                       {...autocomplete.getItemProps({ item, source })}
                     >
                       <div className="aa-ItemWrapper">
-                        {itemUI}
+                        {
+                        source.sourceId==='tagsPlugin'?Eds({item}):
+                  source.sourceId==='querySuggestionsPlugin'?<QSuggest item={item} setQuery={autocomplete.setQuery}/>:
+                  source.sourceId==='recentSearchesPlugin'?<RecentSearch item={item} onRemove={()=>{
+                    recentSearchesPlugin.data?.removeItem(item.id);
+                    autocomplete.refresh();
+                  }}/>:null
+                  }
                       </div>
                     </li>
                   );
@@ -320,8 +249,8 @@ export function Autocomplete(
               
               return (
                 <section key={`source-${index}`} className="aa-Source">
-                  {source.sourceId}
-                  {source.sourceId==='eds'?<Grid2>
+                  {/* {source.sourceId} */}
+                  {source.sourceId==='eds'?<Grid2 container spacing={2}>
                     {children}
                   </Grid2>:
                   <ul className="aa-List" {...autocomplete.getListProps()}>
@@ -335,106 +264,6 @@ export function Autocomplete(
         </div>
       )}
       </div>
-  )
-  return (
-    <div className="aa-Autocomplete" {...autocomplete.getRootProps({})}>
-      <form
-        ref={formRef}
-        className="aa-Form"
-        {...autocomplete.getFormProps({ inputElement: inputRef.current })}
-      >
-        <div className="aa-InputWrapperPrefix">
-          <label className="aa-Label" {...autocomplete.getLabelProps({})}>
-            <button className="aa-SubmitButton" type="submit" title="Submit">
-              <Search />
-            </button>
-          </label>
-        </div>
-        <div className="aa-InputWrapper">
-          <Input
-            className="aa-Input"
-            ref={inputRef}
-            {...autocomplete.getInputProps({ inputElement: inputRef.current })}
-          />
-        </div>
-        <div className="aa-InputWrapperSuffix">
-          <button className="aa-ClearButton" title="Clear" type="reset">
-            <Clear />
-          </button>
-        </div>
-      </form>
-
-      {autocompleteState.isOpen && (
-        <div
-          ref={panelRef}
-          className={[
-            'aa-Panel',
-            'aa-Panel--desktop',
-            autocompleteState.status === 'stalled' && 'aa-Panel--stalled',
-          ]
-            .filter(Boolean)
-            .join(' ')}
-          {...autocomplete.getPanelProps({})}
-        >
-          <div className="aa-PanelLayout aa-Panel--scrollable">
-            {autocompleteState.collections.map((collection, index) => {
-              const { source, items } = collection;
-
-              return (
-                <section key={`source-${index}`} className="aa-Source">
-                  {items.length > 0 && (
-                    <ul className="aa-List" {...autocomplete.getListProps()}>
-                      {items.map((item) => {
-                        return (
-                          <li
-                            key={item.objectID}
-                            className="aa-Item"
-                            {...autocomplete.getItemProps({ item, source })}
-                          >
-                            <div className="aa-ItemWrapper">
-                              <div className="aa-ItemContent">
-                                <div className="aa-ItemIcon aa-ItemIcon--picture aa-ItemIcon--alignTop">
-                                  <img
-                                    src={item.avatar}
-                                    alt={item.name}
-                                    width="40"
-                                    height="40"
-                                  />
-                                </div>
-                                <div className="aa-ItemContentBody">
-                                  {/* <div className="aa-ItemContentTitle">
-                                    <Highlight hit={item} attribute="name" />
-                                  </div> */}
-                                  <div className="aa-ItemContentDescription">
-                                    By <strong>{item.name}</strong> in{' '}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="aa-ItemActions">
-                                <button
-                                  className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
-                                  type="button"
-                                  title="Select"
-                                  style={{ pointerEvents: 'none' }}
-                                >
-                                  <svg fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
-                                  </svg>
-                                </button>
-                              </div>
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
-                </section>
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -500,22 +329,32 @@ const RecentSearch=({item,onRemove}:{item:AutocompleteItem,onRemove:Function})=>
 const Eds=({item}:{item:AutocompleteItem})=>{
   const user=useSession({required:true}).data?.user;
   const agcId=getCliId_Client(user?.role,user?.id)!;
-  const fbData=await getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,item.objectID)));
-  const fbAgcData=await getDoc(doc(getFirestore(app),UsersAgcDataDoc(RoleNum.ED,item.objectID,agcId)));
+  const [basicInfo,infoError,infoState]=usePromise(
+    ()=>getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,item.objectID))),
+    [item.objectID]);
+  const [agcData,agcError,agcState]=usePromise(
+    ()=> getDoc(doc(getFirestore(app),UsersAgcDataDoc(RoleNum.ED,item.objectID,agcId))),
+    [item.objectID,agcId]);
+
   return (
-  <Stack className="aa-ItemContent" spacing={8}>
-    <div style={{ position: 'relative', width: '160px', height: '90px' }}>
-      <Image src={item.avatar} alt={item.name} sizes='160px' fill
+  <Stack className="aa-ItemContent" spacing={1}>
+    <div style={{ position: 'relative', width: '160px', height: '90px', borderRadius:'12px'}}>
+      {infoState==='pending'?<center><CircularProgress size={60}/></center>:
+      <Image src={basicInfo?.data()?.avatar} alt={item.name} sizes='160px' fill
         style={{ objectFit: 'cover', }}/>
+        }
     </div>
     <Stack direction={'row'} justifyContent={'space-between'}>
       <Typography sx={font7}>
         {item.name}
       </Typography>
+      <Typography variant='subtitle3' color='secondary'>
+        {agcData?.data()?.['price']??''}
+      </Typography>
     </Stack>
     <Stack direction={'row'} justifyContent={'space-between'}>
-      {item.tags.slice(0,2).map(v=>(<Chip key={v} label={v} color='secondary'/>))}
-      {item.tags.length>2 && <Chip label='...' color='secondary'/>}
+      {item.tags?.slice(0,2).map(v=>(<Chip key={v} label={v} color='secondary'/>))}
+      {item.tags!=null&& item.tags?.length>2 && <Chip label='...' color='secondary'/>}
     </Stack>
     </Stack>
   );
