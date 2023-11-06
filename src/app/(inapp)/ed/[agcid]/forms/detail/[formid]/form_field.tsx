@@ -9,7 +9,8 @@ import React, { useState } from 'react';
 
 export default function FormFieldUI({data,register}:{data:FormField,register:any}){
 
-const fieldWidth = data.length == 'medium' ? 200 : data.length == 'short' ? 100 : 'auto';
+const fieldHeight = data.length === 'long' ? '3' : 'auto';
+
 
 
         console.log(data.length);
@@ -40,11 +41,13 @@ const handleChange = (index, field, value) => {
 
 
 
-    return <Stack key={data.id} mb={4} sx={{ maxWidth: fieldWidth }}>
+    return <Stack key={data.id} mb={4} sx={{   }}>
         <Typography variant="body1">{data.label}</Typography>
         <Box height={8}/>
-        {data.type==='text'?[<Input/>,
-        <FormHelperText error>Please fill in valid value</FormHelperText>]
+        {data.type==='text'?[<TextField variant="outlined"   style={{ borderRadius: '50%',width: '100px',  height: '100px', padding: '16px',
+                                                             }}/>
+//         <FormHelperText error>Please fill in valid values</FormHelperText>
+        ]
         :data.type==='date'?[<DateField variant="standard" />]
         :data.type==='multi-select'?[<Select>
            {Array.isArray(typedLists[data.options]) ? typedLists[data.options].map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>) : null }
@@ -57,7 +60,7 @@ const handleChange = (index, field, value) => {
             <ToggleButton value={'yes'}>Yes</ToggleButton>
             <ToggleButton value={'no'}>No</ToggleButton>
         </ToggleButtonGroup>]
-        :data.type==='checkbox'?[<ToggleButtonGroup>
+        :data.type==='checkbox'?[<ToggleButtonGroup style={{ width: '500px', overflow: 'auto' }}>
    {Array.isArray(typedLists[data.options]) ? typedLists[data.options].map((v) => <ToggleButton key={v} value={v}>{v}</ToggleButton>) : null }
    {Array.isArray(data.options) ? data.options.map((v) => <ToggleButton key={v} value={v}>{v}</ToggleButton>) : null }
 
@@ -69,15 +72,19 @@ const handleChange = (index, field, value) => {
         :data.type==='name'?[]
         :data.type==='populate'?[
 
-//         <Select
-//                                   >
-//                                     {Array.isArray(typedLists[data.group[0].options]) &&
-//                                       typedLists[data.group[0].options].map((v) => (
-//                                         <MenuItem key={v} value={v}>
-//                                           {v}
-//                                         </MenuItem>
-//                                       ))}
-//                                   </Select>
+//        {data.group.map((groupData, i) => (
+//        <Select key={groupData.id}>
+//        {Array.isArray(typedLists[data.group[i].options]) &&
+//          typedLists[data.group[i].options].map((v) => (ç
+//           <MenuItem key={v} value={v}>
+//             {v}
+//           </MenuItem>
+//         )}
+//       </Select>
+//   )}
+
+
+
 ]
         :[]
 

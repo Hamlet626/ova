@@ -42,7 +42,7 @@ export const basic_info:FormTemp={
                     id: "s5",
                     label: "Phone",
                     type: "text",
-                    length: "short",
+                    length: "long",
                     required: true
                 },
                 {
