@@ -31,6 +31,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { getCliId_Client } from '@/utils/clinic_id/client';
 
+import aa from "search-insights";
 // import { ClearIcon } from './ClearIcon';
 // import { Highlight } from './Highlight';
 // import { SearchIcon } from './SearchIcon';
@@ -61,6 +62,10 @@ type AutocompleteItem = Hit<EDRec>;
 export function Autocomplete(
   props: Partial<AutocompleteOptions<AutocompleteItem>>
 ) {
+
+  // aa('init', { appId:'4WJ9FHOG84', apiKey:'92bb7bfcde71a02e96721c077a0b491c', 
+  //               useCookie:true, partial: true,anonymousUserToken:true});
+  const enableInsight=false;
   const { indexUiState, setIndexUiState } = useInstantSearch();
 
   const [autocompleteState, setAutocompleteState] = React.useState<
@@ -78,7 +83,7 @@ export function Autocomplete(
 
   const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
     key: 'RECENT_ED_SEARCH',
-    limit: 5,getSource:,
+    limit: 5,
     transformSource({ source }) {
       return {
         ...source,
@@ -103,6 +108,7 @@ export function Autocomplete(
 
         return recentSearchesPlugin.data!.getAlgoliaSearchParams({
           hitsPerPage: 3,
+          ...(enableInsight?{clickAnalytics:true}:{})
           //facetFilters: params,
             // `${INSTANT_SEARCH_INDEX_NAME}.facets.analytics.${INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]}.value:${currentCategory}`,
         });
@@ -140,14 +146,27 @@ export function Autocomplete(
           recentSearchesPlugin,
           ...plugins
         ],
-        // insights: true,
+        insights: enableInsight,
         getSources() {
           return [
             {
               sourceId: 'eds',
               getItems:async({ query }) => {
-                const algoData=await algo_client.initIndex(roles[RoleNum.ED].id).search(query,{hitsPerPage:5});
-                return algoData.hits as any[];
+                return getAlgoliaResults({
+                  searchClient:algo_client,
+                  queries: [
+                    {
+                      indexName: roles[RoleNum.ED].id,
+                      query,
+                      params: {
+                        hitsPerPage:5,
+                        clickAnalytics: enableInsight,
+                      },
+                    },
+                  ],
+                });
+                // const algoData=await algo_client.initIndex(roles[RoleNum.ED].id).search(query,{hitsPerPage:5});
+                // return algoData.hits as any[];
                 // return await Promise.all(algoData.hits.map(async v=>{
                 //   const fbData=await getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,v.objectID)));
                 //   //return {...v,...fbData.data};
@@ -156,7 +175,7 @@ export function Autocomplete(
               },
             },
           ];
-        },
+        }, 
         ...props,
       }),
     [props]

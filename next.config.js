@@ -5,6 +5,16 @@ const nextConfig = {
             transform: '@mui/icons-material/{{member}}',
         },
     },
+    images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'files.slack.com',
+          port: '',
+          pathname: '/**',
+        },
+      ],
+    },
 }
 module.exports = {
   // Other configuration settings

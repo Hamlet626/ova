@@ -49,7 +49,7 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
     };
     
     const saveAvatar=async(url:string)=>{
-        const r = await fetch('/api/update_fireauth', {
+        const r = await fetch('/api/update_profile', {
           method: 'POST',
           mode: 'cors',
           headers: {

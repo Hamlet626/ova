@@ -96,7 +96,7 @@ export const AGCAppBar=({children}: { children: ReactNode })=> {
           <BannerAvatar/>
                 </Toolbar>
             </AppBar>
-            <Box component={'main'}>
+            <Box component={'main'} minWidth={'100%'}>
               <Toolbar />
               {children}
               </Box>
