@@ -15,15 +15,11 @@ import {
 import { Add, PeopleOutline } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
-import aa from "search-insights";
 import Link from "next/link";
 import { EDsHits, EdTile } from "./ed_tile";
 
 export default async function EDs(){
   const router=useRouter();
-
-  // aa('init', { appId:'4WJ9FHOG84', apiKey:'92bb7bfcde71a02e96721c077a0b491c', 
-  //               useCookie:true, partial: true,anonymousUserToken:true});
 
     return <InstantSearchNext indexName="ed" searchClient={algo_client}
     insights={true}

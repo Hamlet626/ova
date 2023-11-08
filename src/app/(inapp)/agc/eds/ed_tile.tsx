@@ -4,7 +4,7 @@ import { getCliId_Client } from "@/utils/clinic_id/client";
 import { UserDoc, UsersAgcDataDoc } from "@/utils/firebase/database_consts";
 import { app } from "@/utils/firebase/firebase_client";
 import { RoleNum } from "@/utils/roles";
-import { Stack, CircularProgress, Typography, Chip, Avatar, Box, IconButton, Divider, Card, CardMedia, CardContent, CardActionArea } from "@mui/material";
+import { Stack, CircularProgress, Typography, Chip, Avatar, Box, IconButton, Divider, Card, CardMedia, CardContent, CardActionArea, CardActions } from "@mui/material";
 import { getDoc, doc, getFirestore } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -14,8 +14,10 @@ import { useHits, useInfiniteHits } from 'react-instantsearch';
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { Face, PlaylistAdd } from "@mui/icons-material";
 import { useRef, useEffect } from "react";
+import { SendEventForHits } from "instantsearch.js/es/lib/utils";
+import aa from "search-insights";
 
-export const EdTile=({hit}:{hit:Hit})=>{
+export const EdTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
     // console.log(hit);
     const user=useSession({required:true}).data?.user;
     const agcId=getCliId_Client(user?.role,user?.id)!;
@@ -30,10 +32,14 @@ export const EdTile=({hit}:{hit:Hit})=>{
       [hit.objectID,agcId]);
   
     return (
-        <Card sx={{bgcolor:OVA_very_soft_grey}} raised>
-            <CardActionArea>
+        <Card sx={{bgcolor:OVA_very_soft_grey, aspectRatio:1}} elevation={0}>
+            <CardActionArea onClick={()=>{
+              if (user?.role!==RoleNum.Agc) {
+                aa('clickedObjectIDs')
+              }
+            }}>
     {/* <Stack className="aa-ItemContent" alignItems={'stretch'}> */}
-      <CardMedia sx={{ position: 'relative', width: '100%', height: '156px', borderTopLeftRadius:'12px', borderTopRightRadius:'12px'}}>
+      <CardMedia sx={{aspectRatio: 1.7, borderTopLeftRadius:'12px', borderTopRightRadius:'12px'}}>
         {/* <Avatar style={{ position: 'relative', width: '100%', height: '156px', borderTopLeftRadius:'12px', borderTopRightRadius:'12px'}} variant="square"> */}
         {infoState==='pending'?<center><CircularProgress size={60}/></center>:
         basicInfo?.data()?.avatar==null?<center><Face/></center>:
@@ -57,9 +63,11 @@ export const EdTile=({hit}:{hit:Hit})=>{
         <Typography variant='subtitle3' color='secondary'>
           {agcData?.data()?.['price']??' '}
         </Typography>
+        <CardActions>
         {/* <IconButton disableRipple color="secondary"> */}
             <PlaylistAdd color='secondary'/>
         {/* </IconButton> */}
+        </CardActions>
       </Stack>
 <Box height={8}/>
       </Stack>
@@ -99,8 +107,8 @@ export const EDsHits=()=>{
 
     return <Grid2 container rowSpacing={'20px'} columnSpacing={3}>
         {hits.map((v,i)=>
-        <Grid2 key={i} xs={2}>
-            <EdTile hit={v}/>
+        <Grid2 key={i} xs maxWidth={300} minWidth={250}>
+            <EdTile hit={v} sendEvent={sendEvent}/>
             </Grid2>)}
             <li
           className="ais-InfiniteHits-sentinel"
