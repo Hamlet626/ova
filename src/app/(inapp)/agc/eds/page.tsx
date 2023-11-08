@@ -1,7 +1,7 @@
 'use client'
 import { font3 } from "@/components/ThemeRegistry/theme_consts";
 import { EDRec, algo_client } from "@/utils/algolia";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, ButtonGroup, Stack, Typography } from "@mui/material";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import { Autocomplete } from "./searcher";
 import {
@@ -17,6 +17,9 @@ import { useRouter } from "next/navigation";
 
 import Link from "next/link";
 import { EDsHits, EdTile } from "./ed_tile";
+import { SortBy } from "./sorter";
+import { LOStack } from "@/components/layouts/layout_stack";
+import { EDStatus, EDStatusLabel } from "@/utils/status";
 
 export default async function EDs(){
   const router=useRouter();
@@ -28,7 +31,7 @@ export default async function EDs(){
       <Configure hitsPerPage={10}/>
         <Stack px={10}>
           <Box height={20}/>
-          <Stack direction={'row'} spacing={3} alignItems={'center'}>
+          <LOStack>
                 <Typography sx={font3} flexGrow={2}>Egg Donor</Typography>
                 <Box flexGrow={8} flexBasis={8}>
                   <Autocomplete
@@ -42,7 +45,18 @@ export default async function EDs(){
                   variant="contained" onClick={()=>{router.push('agc/eds/create')}}
                   startIcon={<Add/>}>add ed</Button>
                 </Stack>
-            </Stack>
+            </LOStack>
+
+            <Box height={12}/>
+            <LOStack>
+              <SortBy items={[
+                {label:'Most Relevant',value:'ed'},
+                {label:'Create Date',value:'ed_createtime_desc'}]}/>
+                <ButtonGroup variant="outlined">
+                  {[<Button></Button>,
+                    ...(Object.entries(EDStatusLabel).map(v=><Button></Button>))]}
+                </ButtonGroup>
+            </LOStack>
 
             <Box height={32}/>
             <Stack direction={'row'} alignItems={'center'}>
@@ -56,7 +70,7 @@ export default async function EDs(){
         </Stack>
 
         <Box height={12}/>
-        <EDsHits/>
+        {/* <EDsHits/> */}
         
         </Stack>
  

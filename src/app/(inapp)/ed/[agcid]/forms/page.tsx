@@ -101,7 +101,7 @@ const SubfieldsBlock=({section,finished,agcid,formIndex,sx}:{section:any[],finis
     return(<Box display={'flex'} flexDirection={'column'} flex={1} {...sx}>
         <Typography sx={font6}>{finished?'Finished Question Group':'Remained Question Group'}</Typography>
         <Box height={8}/>
-        <Stack spacing='8px' direction={'row'}>
+        <Stack spacing={1} direction={'row'}>
             {...section.map(v=>(
                 <Link href={`/ed/${agcid}/forms/detail/${formIndex}?section=${encodeURIComponent(v)}`}>
             <Chip key={v} label={v} color={finished?'secondary':'primary'} clickable />

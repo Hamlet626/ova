@@ -11,3 +11,11 @@ export enum EDStatus {
 }
 
 
+export const EDStatusLabel={
+  [EDStatus.filling_Form] : 'filling_Form',
+  [EDStatus.onReviewing] : 'onReviewing',
+  [EDStatus.matching]:'matching',  
+  [EDStatus.matchedDQ]:'matchedDQ', 
+  [EDStatus.matched]:'matched', 
+  [EDStatus.free]:'free'
+}

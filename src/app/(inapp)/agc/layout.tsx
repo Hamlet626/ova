@@ -1,4 +1,4 @@
-import { AGCAppBar } from "@/components/layouts/agc";
+import { AGCAppBar } from "@/components/banner_menu/agc";
 
 
 export default async function AGCLayout({children}: { children: React.ReactNode}) {

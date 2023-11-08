@@ -33,9 +33,10 @@ export const EdTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
   
     return (
         <Card sx={{bgcolor:OVA_very_soft_grey, aspectRatio:1}} elevation={0}>
-            <CardActionArea onClick={()=>{
-              if (user?.role!==RoleNum.Agc) {
-                aa('clickedObjectIDs')
+            <CardActionArea onClick={(event)=>{
+              event.stopPropagation();
+              if (user?.role!==RoleNum.Agc&&sendEvent!=null) {
+                sendEvent('click',hit,'ED Clicked');
               }
             }}>
     {/* <Stack className="aa-ItemContent" alignItems={'stretch'}> */}
