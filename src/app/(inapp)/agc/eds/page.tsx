@@ -20,6 +20,7 @@ import { EDsHits, EdTile } from "./ed_tile";
 import { SortBy } from "./sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
 import { EDStatus, EDStatusLabel } from "@/utils/status";
+import { StateFilter } from "./state_filter";
 
 export default async function EDs(){
   const router=useRouter();
@@ -52,10 +53,7 @@ export default async function EDs(){
               <SortBy items={[
                 {label:'Most Relevant',value:'ed'},
                 {label:'Create Date',value:'ed_createtime_desc'}]}/>
-                <ButtonGroup variant="outlined">
-                  {[<Button></Button>,
-                    ...(Object.entries(EDStatusLabel).map(v=><Button></Button>))]}
-                </ButtonGroup>
+                <StateFilter/>
             </LOStack>
 
             <Box height={32}/>
