@@ -21,7 +21,7 @@ export function StateFilter() {
   });
 
   return (
-    <ButtonGroup variant="outlined">
+    <ButtonGroup variant="outlined" sx={{flexGrow:6}}>
       ...{(items.map(v=>{
         return <Button sx={buttonSx(v.isRefined)}
         onClick={(ev)=>{

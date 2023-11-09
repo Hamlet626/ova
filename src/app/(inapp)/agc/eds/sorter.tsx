@@ -12,7 +12,7 @@ export function SortBy(props: UseSortByProps) {
     <TextField select label='Sort By'
       onChange={(event) => refine(event.target.value)}
       value={currentRefinement}
-      sx={{flexGrow:2}}
+      sx={{flexGrow:2,flexBasis:2}}
     >
       {options.map((option) => (
         <MenuItem key={option.value} value={option.value}>

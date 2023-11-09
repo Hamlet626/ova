@@ -8,8 +8,9 @@ import FormFieldUI from "./form_field";
 import { Form, useForm } from "react-hook-form";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { app } from "@/utils/firebase/firebase_client";
-import { addStoredForm, formStatus, getStoredForm, secFinished } from "@/utils/form/utils";
+import { formStatus, secFinished } from "@/utils/form/form_utils/status";
 import { FormTemp } from "@/utils/form/types";
+import { addStoredForm } from "@/utils/form/form_utils/storage";
 
 export default function FormContent({formid, agcid, template, data, uid}:{ formid:number, agcid:string, template:FormTemp, data:any, uid:string} ){
     const sectionName = decodeURIComponent(useSearchParams().get("section")??"");

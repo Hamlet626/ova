@@ -9,7 +9,7 @@ import { roles } from '@/utils/roles';
 import { algo_client } from '@/utils/algolia';
 import { AlgoTemplates } from '@/utils/form/template';
 import { EDRec } from '@/utils/algolia';
-import { FormStoredData, clearStoredForm, getStoredForm, subFieldKey } from '@/utils/form/utils';
+import { FormStoredData, clearStoredForm, getFormKey, getStoredForm } from '@/utils/form/form_utils/storage';
 import { FormDataDoc } from '@/utils/firebase/database_consts';
  
 const edFormPath: RegExp = /^\/ed\/[^/]+\/forms\/detail\/\d+$/;
@@ -60,21 +60,17 @@ const updateAlgo=async(roleID: string,formid: number,uid: string,data: FormStore
   
   data.algoRemove?.forEach(v=>{algoData.tags.delete(v);});
   AlgoTemplates[formid].forEach((v)=>{
+    ///todo:handle special attributes, e.g. bmi, age,...
+    if(v.fdid==null)return;
+
+    const value=data.data[getFormKey(v.fdid)!];
     if(v.tag){
-      if(typeof v.fdid === 'string'){
-        if(data.data[v.fdid]!==undefined) algoData.tags.add(data.data[v.fdid]);
-      }else{ 
-        const value=data.data[subFieldKey(...v.fdid as string[])];
-        algoData.tags.add(value);
-      }
+      if(value!=null) algoData.tags.add(value);
     }
     if(v.filter??true){
-      if(typeof v.fdid === 'string'){
-        if(data.data[v.fdid]!==undefined) algoData[v.label!]=data.data[v.fdid];
-      }else{
-        const value=data.data[subFieldKey(...v.fdid as string[])];
-        algoData[v.label!]=value;
-      }
+      //todo:check how to remove fields in algolia
+      if(value==null) algoData[v.label!]=null;
+      else algoData[v.label!]=value;
     }
   })
   algoData.tags=Array.from(algoData.tags);

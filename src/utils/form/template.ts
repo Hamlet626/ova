@@ -23,7 +23,7 @@ import {
     personalities, skills, skillTypes, medicalHistory, physicalHistory, legalHistory, countryList, inUK3m, covidVacc, travelHistory, refusedBlood, receivedBlood, alcohol, alcoholFreq, smoke, smokeFreq, socialHabits, marijuana, period, papSmearRes, yes, no, birthControl, DepoProvera, gynecologic, sexualPartner, pregType, sex, deliveryType
 } from "@/utils/form/consts";
 import { AlgoMapping, FormField, FormTemp, HeightValue } from "./types";
-import { inch2cm } from "./utils";
+import { inch2cm } from "./form_utils/internal";
 
 export const basic_info:FormTemp={
     name:"basic info",

@@ -4,18 +4,13 @@ import { ArrowForward, QuestionAnswerOutlined, Timeline } from "@mui/icons-mater
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Chip, Divider, Fab, IconButton, LinearProgress, Stack, Typography } from "@mui/material";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Mousewheel, Keyboard, FreeMode, Scrollbar } from 'swiper/modules';
 import { RemainedSlider } from "./remained_slider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Link from "next/link";
-import { unstable_cache } from "next/cache";
-import { app } from "@/utils/firebase/firebase_client";
-import { FormTemp, formTemplates } from "@/utils/form/template";
-import { formStatus, secFinished } from "@/utils/form/utils";
+import { formStatus, secFinished } from "@/utils/form/form_utils/status";
 import { getFormData, getFormTemplate } from "./detail/[formid]/utils";
+import { FormTemp } from "@/utils/form/types";
 
 export default async function Forms({params}:{params: { agcid: string }}) {
     // const {user}=useSession({required:true}).data!;

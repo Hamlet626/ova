@@ -21,6 +21,7 @@ import { SortBy } from "./sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
 import { EDStatus, EDStatusLabel } from "@/utils/status";
 import { StateFilter } from "./state_filter";
+import { OtherFilters } from "./other_filters";
 
 export default async function EDs(){
   const router=useRouter();
@@ -55,6 +56,8 @@ export default async function EDs(){
                 {label:'Create Date',value:'ed_createtime_desc'}]}/>
                 <StateFilter/>
             </LOStack>
+            <Box height={12}/>
+            <OtherFilters/>
 
             <Box height={32}/>
             <Stack direction={'row'} alignItems={'center'}>

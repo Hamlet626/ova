@@ -26,11 +26,14 @@ export interface FormField{
 export interface AlgoMapping{
     fdid?:string|string[],
     label?:string,
+    uiLabel?:string,
     handler?:any,
     extra?:string,
     tag?:boolean, //default:false
     filter?:boolean, //default:true
+    // type:AlgoAttrType,
 };
+
 
 export interface HeightValue{
     iscm:boolean,
