@@ -6,6 +6,7 @@ import { Check, Clear, Search } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Checkbox, Chip, FormControlLabel, IconButton, Input, InputBase, Menu, Stack, TextField, Typography, styled } from "@mui/material";
 import { useState } from "react";
 import { useRefinementList, UseRefinementListProps, useClearRefinements, useRange } from 'react-instantsearch';
+import { RangeInput } from "./test";
 
 export const OtherFilters=()=>{
     
@@ -128,7 +129,7 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
     const [minText,setMinText]=useState(0);
     const [maxText,setMaxText]=useState(100);
     const {
-        refine,start,range,format,can
+        refine,start,range,format,canRefine
       } = useRange({
           attribute: attribute,
         //   min:minText,max:maxText
@@ -156,6 +157,8 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
             <Stack px={2} py={3}>
             <Typography sx={dialogHeader}>{attribute}</Typography>
             <Box height={16}/>
+
+<RangeInput attribute={attribute}/>
             <Stack direction={'row'}>
                 <TextField type='number' onChange={(event)=>setMinText(Number.parseFloat(event.target.value))}/>
                 <Box width={8}/>
@@ -169,6 +172,7 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
                 event.stopPropagation();
                 console.log([minText,maxText]);
                 refine([1,160]);}}>Apply</Button>}
+                <text>{JSON.stringify(canRefine)}</text>
                 <Button variant="contained" sx={{alignSelf:'end'}} 
             onClick={(event)=>{
                 event.stopPropagation();
