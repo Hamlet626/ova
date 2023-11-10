@@ -71,7 +71,7 @@ export default async function EDs(){
         </Stack>
 
         <Box height={12}/>
-        {/* <EDsHits/> */}
+        <EDsHits/>
         
         </Stack>
  

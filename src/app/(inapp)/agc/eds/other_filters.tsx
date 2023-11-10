@@ -2,10 +2,10 @@ import { dialogHeader, neutral96 } from "@/components/ThemeRegistry/theme_consts
 import { getField } from "@/utils/form/form_utils/algo";
 import { AlgoTemplates, formTemplates } from "@/utils/form/template";
 import { AlgoMapping } from "@/utils/form/types";
-import { Clear, Search } from "@mui/icons-material";
+import { Check, Clear, Search } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Checkbox, Chip, FormControlLabel, IconButton, Input, InputBase, Menu, Stack, TextField, Typography, styled } from "@mui/material";
 import { useState } from "react";
-import { useRefinementList, UseRefinementListProps } from 'react-instantsearch';
+import { useRefinementList, UseRefinementListProps, useClearRefinements, useRange } from 'react-instantsearch';
 
 export const OtherFilters=()=>{
     
@@ -56,22 +56,28 @@ const FacetFilter=({temp,searchable}:{temp:AlgoMapping,searchable?:boolean})=>{
         canToggleShowMore,
         isShowingMore,
         toggleShowMore,
-        canRefine
+        // canRefine
       } = useRefinementList({
           attribute: attribute,
           operator:'or',
+          sortBy:['isRefined','count:desc']
       });
-    //   const [checked, setChecked] = useState(new Set(items.filter(v=>v.isRefined).map(v=>v.value)));
-      const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+      const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
       const [searchText,setText]=useState('');
 
+
     return <div>
-        <Chip clickable variant={canRefine?'outlined':'filled'}
-        label={attribute}
+        <Chip clickable variant={canClear?'filled':'outlined'}
+        color={'secondary'}
+        // label={attribute}
         onClick={(event)=>{
             event.stopPropagation();
             setAnchorEl(event.currentTarget);
-        }}/>
+        }}
+        icon={canClear?<Check/>:undefined}
+        onDelete={canClear?clearRefine:undefined}
+        />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={()=>{setAnchorEl(null);}}>
             <Stack px={2} py={3}>
             <Typography sx={dialogHeader}>{attribute}</Typography>
@@ -117,13 +123,59 @@ const FacetFilter=({temp,searchable}:{temp:AlgoMapping,searchable?:boolean})=>{
 }
 
 const NumFilter=({temp}:{temp:AlgoMapping})=>{
+    if(temp.uiLabel??temp.label==null)return <text>{JSON.stringify(temp)}</text>
     const attribute=temp.uiLabel??temp.label!;
+    const [minText,setMinText]=useState(0);
+    const [maxText,setMaxText]=useState(100);
+    const {
+        refine,start,range,format,can
+      } = useRange({
+          attribute: attribute,
+        //   min:minText,max:maxText
+      });
+      console.log(start);
+      const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    //   const [minText,setMinText]=useState(start[0]);
+    //   const [maxText,setMaxText]=useState(start[1]);
 
-    return <Chip clickable 
-    // variant={canRefine?'outlined':'filled'}
-    //label={attribute}
-    // onClick={}
-    />;
+
+
+    return <div>
+        <Chip clickable variant={canClear?'filled':'outlined'}
+        color={'secondary'}
+        label={attribute}
+        onClick={(event)=>{
+            event.stopPropagation();
+            setAnchorEl(event.currentTarget);
+        }}
+        icon={canClear?<Check/>:undefined}
+        onDelete={canClear?clearRefine:undefined}
+        />
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={()=>{setAnchorEl(null);}}>
+            <Stack px={2} py={3}>
+            <Typography sx={dialogHeader}>{attribute}</Typography>
+            <Box height={16}/>
+            <Stack direction={'row'}>
+                <TextField type='number' onChange={(event)=>setMinText(Number.parseFloat(event.target.value))}/>
+                <Box width={8}/>
+                <Typography>To</Typography>
+                <Box width={8}/>
+                <TextField type='number' onChange={(event)=>setMaxText(Number.parseFloat(event.target.value))}/>
+            </Stack>
+            { (minText!==start[0]||maxText!==start[1]) && 
+            <Button variant="contained" sx={{alignSelf:'end'}} 
+            onClick={(event)=>{
+                event.stopPropagation();
+                console.log([minText,maxText]);
+                refine([1,160]);}}>Apply</Button>}
+                <Button variant="contained" sx={{alignSelf:'end'}} 
+            onClick={(event)=>{
+                event.stopPropagation();
+                refine([1,260]);}}>test</Button>
+            </Stack>
+        </Menu>
+    </div>;
 }
 
 const DateFilter=({temp}:{temp:AlgoMapping})=>{
