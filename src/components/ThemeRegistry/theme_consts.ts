@@ -117,6 +117,14 @@ export const font12={
     textAlign: 'left',
 };
 
+export const dialogHeader={
+    fontFamily: roboto.style.fontFamily,
+fontSize: '24px',
+fontWeight: 500,
+lineHeight: '32px',
+letterSpacing: '0em',
+textAlign: 'left',
+}
 
 export const outline_variant='#D8C2BB';
 export const outline='#85736D'
