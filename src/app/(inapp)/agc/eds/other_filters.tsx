@@ -127,11 +127,7 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
     if(temp.uiLabel??temp.label==null)return <text>{JSON.stringify(temp)}</text>
     const attribute=temp.uiLabel??temp.label!;
 
-    const {
-        refine,start,range,format,canRefine
-      } = useRange({
-          attribute: attribute,
-      });
+    const { refine,start,range } = useRange({ attribute: attribute });
       
       const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -141,11 +137,13 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
       const lowerBond=range.min??-Infinity;
       const upperBond=range.max??Infinity;
       
-      const processMin=minText==null||Number.isNaN(minText)||!Number.isFinite(minText)
-      ||minText<=lowerBond?undefined:minText;
+      const processMin=//minText==null||Number.isNaN(minText)||
+      !Number.isFinite(minText)
+      ||minText!<=lowerBond?undefined:minText;
       
-      const processMax=maxText==null||Number.isNaN(maxText)||!Number.isFinite(maxText)
-      ||maxText>=upperBond?undefined:maxText;
+      const processMax=//maxText==null||Number.isNaN(maxText)||
+      !Number.isFinite(maxText)
+      ||maxText!>=upperBond?undefined:maxText;
       
       
 
@@ -168,29 +166,33 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
 
             <Stack direction={'row'}>
                 <TextField type='number' value={minText}
-                onChange={(event)=>setMinText(Number.parseFloat(event.target.value))}/>
+                onChange={(event)=>setMinText(Number.parseFloat(event.target.value))}
+                placeholder={`> ${range.min}`}
+                helperText={Number.isFinite(minText)&&minText!==processMin?
+                    `Lowest value among dataset is ${range.min}`:undefined}
+                />
                 <Box width={8}/>
-                <Typography>To</Typography>
+                <Typography variant="body1" mt={2}>To</Typography>
                 <Box width={8}/>
                 <TextField type='number' value={maxText}
-                onChange={(event)=>setMaxText(Number.parseFloat(event.target.value))}/>
+                onChange={(event)=>setMaxText(Number.parseFloat(event.target.value))}
+                placeholder={`< ${range.max}`}
+                helperText={Number.isFinite(maxText)&&maxText!==processMax?
+                `Highest value among dataset is ${range.max}`:undefined}/>
             </Stack>
             { ( (processMin??-Infinity)!=start[0]||(processMax??Infinity)!=start[1]) && 
-            <Button variant="contained" sx={{alignSelf:'end'}} 
+            <>
+            <Box height={16}/>
+            <Button variant="contained" sx={{alignSelf:'end'}}
             onClick={(event)=>{
                 event.stopPropagation();
                 
                 refine([processMin,processMax]);
-            }}>Apply</Button>}
-            <text>{JSON.stringify(range)}</text>
-            <text>{start}</text>
-            <text>{[processMin,processMax,0]}</text>
-            <text>{JSON.stringify([processMin!=start[0],processMax!=start[1]])}</text>
-                {/* <text>{JSON.stringify(canRefine)}</text>
-                <Button variant="contained" sx={{alignSelf:'end'}} 
-            onClick={(event)=>{
-                event.stopPropagation();
-                refine([21,undefined]);}}>test</Button> */}
+            }}>
+                Apply
+            </Button>
+            </>
+            }
             </Stack>
         </Menu>
     </div>;
@@ -207,10 +209,21 @@ const DateFilter=({temp}:{temp:AlgoMapping})=>{
 }
 
 const BoolFilter=({temp}:{temp:AlgoMapping})=>{
+    const attribute=temp.uiLabel??temp.label!;
 
-    return <Chip clickable 
-    // variant={canRefine?'outlined':'filled'}
-    // label={attribute}
-    // onClick={}
+    const { refine,start,range } = useConfigure({ });
+      
+      const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
+
+
+    return <Chip clickable variant={canClear?'filled':'outlined'}
+    color={'secondary'}
+    label={attribute}
+    onClick={(event)=>{
+        event.stopPropagation();
+        setAnchorEl(event.currentTarget);
+    }}
+    icon={canClear?<Check/>:undefined}
+    onDelete={canClear?clearRefine:undefined}
     />;
 }
