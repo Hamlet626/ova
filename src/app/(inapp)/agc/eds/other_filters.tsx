@@ -5,7 +5,7 @@ import { AlgoMapping } from "@/utils/form/types";
 import { Check, Clear, Search } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Checkbox, Chip, FormControlLabel, IconButton, Input, InputBase, Menu, Stack, TextField, Typography, styled } from "@mui/material";
 import { useState } from "react";
-import { useRefinementList, UseRefinementListProps, useClearRefinements, useRange } from 'react-instantsearch';
+import { useRefinementList, UseRefinementListProps, useConfigure, useClearRefinements, useRange, useInstantSearch } from 'react-instantsearch';
 import { RangeInput } from "./test";
 
 export const OtherFilters=()=>{
@@ -126,20 +126,28 @@ const FacetFilter=({temp,searchable}:{temp:AlgoMapping,searchable?:boolean})=>{
 const NumFilter=({temp}:{temp:AlgoMapping})=>{
     if(temp.uiLabel??temp.label==null)return <text>{JSON.stringify(temp)}</text>
     const attribute=temp.uiLabel??temp.label!;
-    const [minText,setMinText]=useState(0);
-    const [maxText,setMaxText]=useState(100);
+
     const {
         refine,start,range,format,canRefine
       } = useRange({
           attribute: attribute,
-        //   min:minText,max:maxText
       });
-      console.log(start);
+      
       const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    //   const [minText,setMinText]=useState(start[0]);
-    //   const [maxText,setMaxText]=useState(start[1]);
+      const [minText,setMinText]=useState(start[0]);
+      const [maxText,setMaxText]=useState(start[1]);
 
+      const lowerBond=range.min??-Infinity;
+      const upperBond=range.max??Infinity;
+      
+      const processMin=minText==null||Number.isNaN(minText)||!Number.isFinite(minText)
+      ||minText<=lowerBond?undefined:minText;
+      
+      const processMax=maxText==null||Number.isNaN(maxText)||!Number.isFinite(maxText)
+      ||maxText>=upperBond?undefined:maxText;
+      
+      
 
 
     return <div>
@@ -158,25 +166,31 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
             <Typography sx={dialogHeader}>{attribute}</Typography>
             <Box height={16}/>
 
-<RangeInput attribute={attribute}/>
             <Stack direction={'row'}>
-                <TextField type='number' onChange={(event)=>setMinText(Number.parseFloat(event.target.value))}/>
+                <TextField type='number' value={minText}
+                onChange={(event)=>setMinText(Number.parseFloat(event.target.value))}/>
                 <Box width={8}/>
                 <Typography>To</Typography>
                 <Box width={8}/>
-                <TextField type='number' onChange={(event)=>setMaxText(Number.parseFloat(event.target.value))}/>
+                <TextField type='number' value={maxText}
+                onChange={(event)=>setMaxText(Number.parseFloat(event.target.value))}/>
             </Stack>
-            { (minText!==start[0]||maxText!==start[1]) && 
+            { ( (processMin??-Infinity)!=start[0]||(processMax??Infinity)!=start[1]) && 
             <Button variant="contained" sx={{alignSelf:'end'}} 
             onClick={(event)=>{
                 event.stopPropagation();
-                console.log([minText,maxText]);
-                refine([1,160]);}}>Apply</Button>}
-                <text>{JSON.stringify(canRefine)}</text>
+                
+                refine([processMin,processMax]);
+            }}>Apply</Button>}
+            <text>{JSON.stringify(range)}</text>
+            <text>{start}</text>
+            <text>{[processMin,processMax,0]}</text>
+            <text>{JSON.stringify([processMin!=start[0],processMax!=start[1]])}</text>
+                {/* <text>{JSON.stringify(canRefine)}</text>
                 <Button variant="contained" sx={{alignSelf:'end'}} 
             onClick={(event)=>{
                 event.stopPropagation();
-                refine([1,260]);}}>test</Button>
+                refine([21,undefined]);}}>test</Button> */}
             </Stack>
         </Menu>
     </div>;

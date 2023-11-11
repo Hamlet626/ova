@@ -5,7 +5,7 @@ const unsetNumberInputValue = '';
 
 export function RangeInput(props: UseRangeProps) {
   const { start, range, canRefine, refine } = useRange(props);
-  const step = 1 / Math.pow(10, 0);
+  const step = 1 / Math.pow(10,  0);
   const values = {
     min:
       start[0] !== -Infinity && start[0] !== range.min
@@ -16,17 +16,17 @@ export function RangeInput(props: UseRangeProps) {
         ? start[1]
         : unsetNumberInputValue,
   };
-  const [prevValues, setPrevValues] = useState(values);
+  // const [prevValues, setPrevValues] = useState(values);
 
   const [{ from, to }, setRange] = useState({
     from: values.min?.toString(),
     to: values.max?.toString(),
   });
 
-  if (values.min !== prevValues.min || values.max !== prevValues.max) {
-    setRange({ from: values.min?.toString(), to: values.max?.toString() });
-    setPrevValues(values);
-  }
+  // if (values.min !== prevValues.min || values.max !== prevValues.max) {
+  //   setRange({ from: values.min?.toString(), to: values.max?.toString() });
+  //   setPrevValues(values);
+  // }
 
   return (
     <form
@@ -69,7 +69,14 @@ export function RangeInput(props: UseRangeProps) {
           }}
         />
       </label>
-      <button type="submit">Go</button>
+      <button 
+      // type="submit"
+      onClick={(event) => {
+        event.preventDefault();
+
+        refine([from ? Number(from) : undefined, to ? Number(to) : undefined]);
+      }}
+      >Go</button>
     </form>
   );
 }

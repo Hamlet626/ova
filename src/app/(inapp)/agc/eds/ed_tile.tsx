@@ -90,7 +90,6 @@ export const EDsHits=()=>{
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !isLastPage) {
-            console.log(typeof showMore);
             if(showMore!=null)
               showMore();
           }
@@ -111,10 +110,17 @@ export const EDsHits=()=>{
         <Grid2 key={i} xs maxWidth={300} minWidth={250}>
             <EdTile hit={v} sendEvent={sendEvent}/>
             </Grid2>)}
-            <li
+            {Array.from({length:9}).map((v,i)=>
+            <Grid2 key={i} xs maxWidth={300} minWidth={250}>
+            </Grid2>)}
+
+            <Grid2 key={'last'} ref={sentinelRef} 
+            xs maxWidth={300} minWidth={250}>
+            </Grid2>
+            {/* <li
           className="ais-InfiniteHits-sentinel"
           ref={sentinelRef}
           aria-hidden="true"
-        />
+        /> */}
     </Grid2>;
 }
