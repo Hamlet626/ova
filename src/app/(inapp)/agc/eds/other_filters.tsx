@@ -6,7 +6,7 @@ import { Check, Clear, Search } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Checkbox, Chip, FormControlLabel, IconButton, Input, InputBase, Menu, Stack, TextField, Typography, styled } from "@mui/material";
 import { useState } from "react";
 import { useRefinementList, UseRefinementListProps, useConfigure, useClearRefinements, useRange, useInstantSearch } from 'react-instantsearch';
-import { RangeInput } from "./test";
+
 
 export const OtherFilters=()=>{
     
@@ -18,6 +18,8 @@ export const OtherFilters=()=>{
             try{
             const field=getField(formTemplates[i].content.flatMap(sec=>sec.fields),...(typeof v.fdid==='string'?[v.fdid]:v.fdid!));
             
+            if(v.convertFilter==='age')return <AgeFilter temp={v}/>;
+
             return field.type==='checkbox'||field.type==='multi-select'||field.type==='text'?<FacetFilter temp={v} searchable/>:
                 field.type==='number'?<NumFilter temp={v}/>:
                 field.type==='date'?<DateFilter temp={v}/>:
@@ -71,7 +73,7 @@ const FacetFilter=({temp,searchable}:{temp:AlgoMapping,searchable?:boolean})=>{
     return <div>
         <Chip clickable variant={canClear?'filled':'outlined'}
         color={'secondary'}
-        // label={attribute}
+        label={attribute}
         onClick={(event)=>{
             event.stopPropagation();
             setAnchorEl(event.currentTarget);
@@ -198,6 +200,95 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
     </div>;
 }
 
+const AgeFilter=({temp}:{temp:AlgoMapping})=>{
+    const attribute=temp.uiLabel??temp.label!;
+
+    const { refine,start,range } = useRange({ attribute: attribute });
+      
+    const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [minText,setMinText]=useState(start[0]);
+    const [maxText,setMaxText]=useState(start[1]);
+
+    const age2sec=(age:number,ageMin:boolean)=>{
+        const now=new Date(Date.now());
+        now.setUTCFullYear(now.getUTCFullYear()-(ageMin?age:age+1));
+        return now.getTime()/1000;
+    }
+
+    const sec2age=(sec:number)=>{
+        const birth=new Date(sec*1000);
+        const now=new Date(Date.now());
+        const dyear=now.getUTCFullYear()-birth.getUTCFullYear()-
+        (now.getUTCMonth()*100+now.getUTCDate()<birth.getUTCMonth()*100+birth.getUTCDate()?1:0);
+        return dyear;
+    }
+
+    ///notice:lowerBond for age should be max birthday, vice versa
+      const lowerBond=range.max==null?Infinity:sec2age(range.max);
+      const upperBond=range.min==null?-Infinity:sec2age(range.min);
+      
+      const minNA=!Number.isFinite(minText)||minText!<=lowerBond;
+      const maxNA=!Number.isFinite(maxText)||maxText!>=upperBond;
+
+      const processMin=minNA?undefined:age2sec(minText!,true);
+      const processMax=maxNA?undefined:age2sec(maxText!,false);
+      
+      const canFilter=(minNA?-Infinity:minText)!=(Number.isFinite(start[1])?sec2age(start[1]!):-Infinity)
+      ||(maxNA?Infinity:maxText)!=(Number.isFinite(start[0])?sec2age(start[0]!):Infinity);
+      
+
+
+    return <div>
+        <Chip clickable variant={canClear?'filled':'outlined'}
+        color={'secondary'}
+        label={attribute}
+        onClick={(event)=>{
+            event.stopPropagation();
+            setAnchorEl(event.currentTarget);
+        }}
+        icon={canClear?<Check/>:undefined}
+        onDelete={canClear?clearRefine:undefined}
+        />
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={()=>{setAnchorEl(null);}}>
+            <Stack px={2} py={3}>
+            <Typography sx={dialogHeader}>{attribute}</Typography>
+            <Box height={16}/>
+
+            <Stack direction={'row'}>
+                <TextField type='number' value={minText}
+                onChange={(event)=>setMinText(Number.parseFloat(event.target.value))}
+                placeholder={`> ${lowerBond}`}
+                helperText={Number.isFinite(minText)&&minText!<=lowerBond?
+                    `Lowest value among dataset is ${lowerBond}`:undefined}
+                />
+                <Box width={8}/>
+                <Typography variant="body1" mt={2}>To</Typography>
+                <Box width={8}/>
+                <TextField type='number' value={maxText}
+                onChange={(event)=>setMaxText(Number.parseFloat(event.target.value))}
+                placeholder={`< ${upperBond}`}
+                helperText={Number.isFinite(maxText)&&maxText!>=upperBond?
+                `Highest value among dataset is ${upperBond}`:undefined}/>
+            </Stack>
+            { canFilter && <>
+            <Box height={16}/>
+            <Button variant="contained" sx={{alignSelf:'end'}}
+            onClick={(event)=>{
+                event.stopPropagation();
+                
+                console.log([processMax,processMin]);
+                refine([processMax,processMin]);
+            }}>
+                Apply
+            </Button>
+            </>
+            }
+            </Stack>
+        </Menu>
+    </div>;
+}
+
 const DateFilter=({temp}:{temp:AlgoMapping})=>{
     const attribute=temp.uiLabel??temp.label!;
 
@@ -211,7 +302,7 @@ const DateFilter=({temp}:{temp:AlgoMapping})=>{
 const BoolFilter=({temp}:{temp:AlgoMapping})=>{
     const attribute=temp.uiLabel??temp.label!;
 
-    const { refine,start,range } = useConfigure({ });
+    // const { refine,start,range } = useConfigure({ });
       
       const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
 
@@ -219,11 +310,33 @@ const BoolFilter=({temp}:{temp:AlgoMapping})=>{
     return <Chip clickable variant={canClear?'filled':'outlined'}
     color={'secondary'}
     label={attribute}
-    onClick={(event)=>{
-        event.stopPropagation();
-        setAnchorEl(event.currentTarget);
-    }}
+    // onClick={(event)=>{
+    //     event.stopPropagation();
+    //     setAnchorEl(event.currentTarget);
+    // }}
     icon={canClear?<Check/>:undefined}
     onDelete={canClear?clearRefine:undefined}
     />;
+}
+
+
+
+// export const Config1=()=>{
+//     const [hpp,seth]=useState(5);
+//     const { refine } = useConfigure({ hitsPerPage:5 });
+    
+//     return <>
+//     <Button onClick={()=>seth(hpp===5?10:5)}>hpp:{hpp}</Button>
+//     </>
+// }
+
+export const Config2=()=>{
+    // const [hpp,seth]=useState(5);
+    const { refine } = useConfigure({ filters:'Weight > 10' });
+    const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:['Weight']});
+    
+    return <Stack>
+    <Button onClick={()=>refine({ filters:'test:true' })}>hpp</Button>
+    <text>{`${canClear}`}</text>
+    </Stack>
 }

@@ -23,7 +23,7 @@ import { EDStatus, EDStatusLabel } from "@/utils/status";
 import { StateFilter } from "./state_filter";
 import { OtherFilters } from "./other_filters";
 
-export default async function EDs(){
+export default function EDs(){
   const router=useRouter();
 
     return <InstantSearchNext indexName="ed" searchClient={algo_client}

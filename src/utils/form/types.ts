@@ -31,6 +31,7 @@ export interface AlgoMapping{
     extra?:string,
     tag?:boolean, //default:false
     filter?:boolean, //default:true
+    convertFilter?:'age'
     // type:AlgoAttrType,
 };
 

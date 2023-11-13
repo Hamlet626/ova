@@ -9,7 +9,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Link from "next/link";
 import { formStatus, secFinished } from "@/utils/form/form_utils/status";
-import { getFormData, getFormTemplate } from "./detail/[formid]/utils";
+import { getFormData, getFormTemplate } from "../../../../../utils/server_data_getter/utils";
 import { FormTemp } from "@/utils/form/types";
 
 export default async function Forms({params}:{params: { agcid: string }}) {

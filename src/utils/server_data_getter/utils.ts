@@ -24,3 +24,15 @@ export const getFormData=(uid:string,role:RoleNum)=>unstable_cache(
     [uid],
     {tags:['form_data'],revalidate:6}
 )();
+
+
+
+
+export const getFormData=(uid:string,role:RoleNum)=>unstable_cache(
+    async()=>{
+        const r = await getDocs(collection(getFirestore(app),FormDataCol(role,uid)));
+        return Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i)?.data());
+    },
+    [uid],
+    {tags:['form_data'],revalidate:6}
+)();

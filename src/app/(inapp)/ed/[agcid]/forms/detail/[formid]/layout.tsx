@@ -10,7 +10,7 @@ import { getServerSession } from "next-auth";
 import { unstable_cache } from "next/cache";
 import { app } from "@/utils/firebase/firebase_client";
 import { formTemplates } from "@/utils/form/template";
-import { getFormData, getFormTemplate } from "./utils";
+import { getFormData, getFormTemplate } from "../../../../../../../utils/server_data_getter/utils";
 
 export default async function FormIndex({children, params}: { children: React.ReactNode, params: { agcid: string, formid:string } }) {
     
