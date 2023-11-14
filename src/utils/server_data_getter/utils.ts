@@ -32,7 +32,6 @@ export const getBasicFbData=(uid:string,role:RoleNum)=>unstable_cache(
     async()=>{
         const r = await getDoc(doc(getFirestore(app),UserDoc(role,uid)));
         return r.data();
-        // Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i)?.data());
     },
     [uid,`${role}`],
     {tags:['basic_data'],revalidate:6}

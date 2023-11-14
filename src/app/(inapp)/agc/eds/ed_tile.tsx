@@ -4,7 +4,7 @@ import { getCliId_Client } from "@/utils/clinic_id/client";
 import { UserDoc, UsersAgcDataDoc } from "@/utils/firebase/database_consts";
 import { app } from "@/utils/firebase/firebase_client";
 import { RoleNum } from "@/utils/roles";
-import { Stack, CircularProgress, Typography, Chip, Avatar, Box, IconButton, Divider, Card, CardMedia, CardContent, CardActionArea, CardActions } from "@mui/material";
+import { Stack, CircularProgress, Typography, Chip, Box, IconButton, Divider, Card, CardMedia, CardContent, CardActionArea, CardActions } from "@mui/material";
 import { getDoc, doc, getFirestore } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";

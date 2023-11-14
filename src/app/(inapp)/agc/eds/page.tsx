@@ -1,7 +1,7 @@
 'use client'
 import { font3 } from "@/components/ThemeRegistry/theme_consts";
 import { EDRec, algo_client } from "@/utils/algolia";
-import { Box, Button, ButtonGroup, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import { Autocomplete } from "./searcher";
 import {
