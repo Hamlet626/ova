@@ -1,9 +1,9 @@
-import { FormDataCol, FormTempCol } from "@/utils/firebase/database_consts";
+import { FormDataCol, FormTempCol, UserDoc } from "@/utils/firebase/database_consts";
 import { app } from "@/utils/firebase/firebase_client";
 import { formTemplates } from "@/utils/form/template";
 import { FormTemp } from "@/utils/form/types";
 import { RoleNum, roles } from "@/utils/roles";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
 import { unstable_cache } from "next/cache";
 
 export const getFormTemplate=(agcid:string)=>unstable_cache(
@@ -28,11 +28,12 @@ export const getFormData=(uid:string,role:RoleNum)=>unstable_cache(
 
 
 
-export const getFormData=(uid:string,role:RoleNum)=>unstable_cache(
+export const getBasicFbData=(uid:string,role:RoleNum)=>unstable_cache(
     async()=>{
-        const r = await getDocs(collection(getFirestore(app),FormDataCol(role,uid)));
-        return Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i)?.data());
+        const r = await getDoc(doc(getFirestore(app),UserDoc(role,uid)));
+        return r.data();
+        // Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i)?.data());
     },
-    [uid],
-    {tags:['form_data'],revalidate:6}
+    [uid,`${role}`],
+    {tags:['basic_data'],revalidate:6}
 )();

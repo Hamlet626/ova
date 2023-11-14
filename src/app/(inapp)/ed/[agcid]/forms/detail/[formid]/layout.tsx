@@ -11,6 +11,7 @@ import { unstable_cache } from "next/cache";
 import { app } from "@/utils/firebase/firebase_client";
 import { formTemplates } from "@/utils/form/template";
 import { getFormData, getFormTemplate } from "../../../../../../../utils/server_data_getter/utils";
+import { BackButton } from "@/components/back_button";
 
 export default async function FormIndex({children, params}: { children: React.ReactNode, params: { agcid: string, formid:string } }) {
     
@@ -24,12 +25,7 @@ export default async function FormIndex({children, params}: { children: React.Re
     return <Box display={'flex'} height='100%'>
         <Paper elevation={24} 
         sx={{width:'326px',minWidth:'326px', height:'100%', alignSelf:'stretch',px:4,pt:4, borderRadius:0, overflowY:'auto'}}>
-            <Link href={`/ed/${params.agcid}/forms`} passHref>
-                <Stack direction={'row'} spacing={'10px'}>
-                    <ArrowBackIos/>
-                    <Typography sx={font7}>Form Dashboard</Typography>
-                </Stack>
-            </Link>
+            <BackButton text="Form Dashboard" link={`/ed/${params.agcid}/forms`}/>
             <Box height={32}/>
             <Typography sx={font3}>Form</Typography>
             <Box height={60}/>
