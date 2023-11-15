@@ -14,7 +14,7 @@ import { RoleNum, roles } from "@/utils/roles";
 import { useSession } from "next-auth/react";
 import { formTemplates } from "@/utils/form/template";
 import { Reorder } from "framer-motion";
-import { FormTempDoc } from "@/utils/firebase/database_consts";
+import { FormTempDoc } from "@/utils/firebase/path";
 
 //todo: decide remove or not
 function a11yProps(index: number) {

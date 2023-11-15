@@ -16,6 +16,15 @@ export const EDStatusLabel={
   [EDStatus.onReviewing] : 'onReviewing',
   [EDStatus.matching]:'matching',  
   [EDStatus.matchedDQ]:'matchedDQ', 
-  [EDStatus.matched]:'matched', 
+  [EDStatus.matched]:'matched',
   [EDStatus.free]:'free'
+}
+
+export const EDStatusColors={
+  [EDStatus.filling_Form] : 'grey.300',
+  [EDStatus.onReviewing] : 'F1E3A8',
+  [EDStatus.matching]: 'info.main',  
+  [EDStatus.matchedDQ]: 'warning.main', 
+  [EDStatus.matched]: 'success,main',
+  [EDStatus.free]: 'grey.700'
 }

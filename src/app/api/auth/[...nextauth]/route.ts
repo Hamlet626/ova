@@ -7,7 +7,7 @@ import {auth} from "firebase-admin";
 import {cliAuth} from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
 import { EDRec, RcpRec, algo_client } from "@/utils/algolia";
-import { EDStatus } from "@/utils/status";
+import { EDStatus } from "@/utils/types/status";
 import { getCliId_Server } from "@/utils/clinic_id/server";
 
 

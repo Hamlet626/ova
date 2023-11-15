@@ -15,7 +15,7 @@ import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 import { styled } from '@mui/material/styles';
 import { app, cliAuth } from "@/utils/firebase/firebase_client";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { UserDoc } from "@/utils/firebase/database_consts";
+import { UserDoc } from "@/utils/firebase/path";
 import { useSession } from "next-auth/react";
 
 

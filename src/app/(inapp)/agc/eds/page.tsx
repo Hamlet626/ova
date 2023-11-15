@@ -19,7 +19,7 @@ import Link from "next/link";
 import { EDsHits, EdTile } from "./ed_tile";
 import { SortBy } from "./sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { EDStatus, EDStatusLabel } from "@/utils/status";
+import { EDStatus, EDStatusLabel } from "@/utils/types/status";
 import { StateFilter } from "./state_filter";
 import { OtherFilters } from "./other_filters";
 

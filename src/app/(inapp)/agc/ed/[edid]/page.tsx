@@ -1,8 +1,10 @@
 import { neutral96, outline } from "@/components/ThemeRegistry/theme_consts";
 import { BackButton } from "@/components/back_button";
 import { LOStack } from "@/components/layouts/layout_stack";
+import { BasicInfoDoc, GCAgcInfoDoc } from "@/utils/firebase/types";
 import { RoleNum } from "@/utils/roles";
 import { getBasicFbData, getFormData } from "@/utils/server_data_getter/utils";
+import { EDStatusColors, EDStatusLabel } from "@/utils/types/status";
 import { BorderColor, HistoryToggleOff, Remove } from "@mui/icons-material";
 import { Avatar, Box, Button, ButtonGroup, Chip, Divider, List, ListItem, Paper, Stack, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
@@ -43,11 +45,11 @@ export default async function EDProfile({params}:{params: { edid: string }}){
         </Stack>
 }
 
-const BasicInfoBloc=({info}:any)=>{
+const BasicInfoBloc=<T extends BasicInfoDoc & GCAgcInfoDoc>({info}:{info:T})=>{
     return <Stack direction={'row'}>
-        <Avatar sx={{height:'193px',width:'193px'}}>
-            <Image src={info.avatar} alt={`${info.name}'s avatar`}
-            width={193} height={193} objectFit='cover'/>
+        <Avatar sx={{height:'193px',width:'193px'}} alt={`${info.name}'s avatar`}>
+            {info.avatar==null?undefined:<Image src={info.avatar} alt={`${info.name}'s avatar`}
+            width={193} height={193} objectFit='cover'/>}
         </Avatar>
         <Box width={24}/>
         <Grid2 container rowSpacing={24} columnSpacing={16}>
@@ -55,8 +57,9 @@ const BasicInfoBloc=({info}:any)=>{
                 <Stack direction={'row'} alignItems={'center'}>
                     <Typography>{info.name}</Typography>
                     <Box width={21}/>
-                    <Chip/>
+                    <Chip label={EDStatusLabel[info.status]} sx={{color:EDStatusColors[info.status]}}/>
                 </Stack>
+                <Grid2/>
             </Grid2>
         </Grid2>
     </Stack>

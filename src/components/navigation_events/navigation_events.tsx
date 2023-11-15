@@ -10,7 +10,7 @@ import { algo_client } from '@/utils/algolia';
 import { AlgoTemplates } from '@/utils/form/template';
 import { EDRec } from '@/utils/algolia';
 import { FormStoredData, clearStoredForm, getFormKey, getStoredForm } from '@/utils/form/form_utils/storage';
-import { FormDataDoc } from '@/utils/firebase/database_consts';
+import { FormDataDoc } from '@/utils/firebase/path';
  
 const edFormPath: RegExp = /^\/ed\/[^/]+\/forms\/detail\/\d+$/;
 const rcpFormPath: RegExp = /^\/rcp\/forms\/detail\/\d+$/;

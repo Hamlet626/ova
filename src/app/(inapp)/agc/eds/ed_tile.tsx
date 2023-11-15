@@ -1,7 +1,7 @@
 'use client'
 import { OVA_very_soft_grey, font7 } from "@/components/ThemeRegistry/theme_consts";
 import { getCliId_Client } from "@/utils/clinic_id/client";
-import { UserDoc, UsersAgcDataDoc } from "@/utils/firebase/database_consts";
+import { UserDoc, UsersAgcDataDoc } from "@/utils/firebase/path";
 import { app } from "@/utils/firebase/firebase_client";
 import { RoleNum } from "@/utils/roles";
 import { Stack, CircularProgress, Typography, Chip, Box, IconButton, Divider, Card, CardMedia, CardContent, CardActionArea, CardActions } from "@mui/material";

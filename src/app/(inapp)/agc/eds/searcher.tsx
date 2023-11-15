@@ -1,5 +1,5 @@
 import { EDRec, algo_client } from '@/utils/algolia';
-import { UserDoc, UsersAgcDataDoc } from '@/utils/firebase/database_consts';
+import { UserDoc, UsersAgcDataDoc } from '@/utils/firebase/path';
 import { app } from '@/utils/firebase/firebase_client';
 import { RoleNum, roles } from '@/utils/roles';
 import {
