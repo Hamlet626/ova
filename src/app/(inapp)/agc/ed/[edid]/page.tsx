@@ -43,7 +43,7 @@ export default async function EDProfile({params}:{params: { edid: string }}){
         </Stack>
 }
 
-const BasicInfoBloc=({info}:any)=>{
+const BasicInfoBloc=({info,formData}:any)=>{
     return <Stack direction={'row'}>
         <Avatar sx={{height:'193px',width:'193px'}}>
             <Image src={info.avatar} alt={`${info.name}'s avatar`}
@@ -53,11 +53,30 @@ const BasicInfoBloc=({info}:any)=>{
         <Grid2 container rowSpacing={24} columnSpacing={16}>
             <Grid2 xs>
                 <Stack direction={'row'} alignItems={'center'}>
-                    <Typography>{info.name}</Typography>
+                    <Typography variant="h4">{info.name}</Typography>
                     <Box width={21}/>
                     <Chip/>
                 </Stack>
             </Grid2>
+            <Grid2 xs width={140}>
+                <InfoTile title="Location" content={info.location}/>
+            </Grid2>
+            <Grid2 xs width={140}>
+                <InfoTile title="Phone Number" content={formData[0].phone}/>
+            </Grid2>
+            <Grid2 xs width={140}>
+                <InfoTile title="Email" content={info.email}/>
+            </Grid2>
+            <Grid2 xs width={140}>
+                <InfoTile title="Price" content={info.price}/>
+            </Grid2>
         </Grid2>
+    </Stack>
+}
+
+const InfoTile=({title,content}:{title:string,content:string})=>{
+    return <Stack>
+        <Typography variant="body2" color={'secondary'}>{title}</Typography>
+        <Typography variant="body1">{content}</Typography>
     </Stack>
 }
