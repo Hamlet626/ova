@@ -1,7 +1,7 @@
 import { FormField } from "@/utils/form/types";
 import { Box, FormHelperText, Input, MenuItem, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { DateField } from "@mui/x-date-pickers";
-import { useForm } from "react-hook-form";
+import { useForm,Controller  } from "react-hook-form";
 import {typedLists} from "@/utils/form/consts";
 // import { languages,eyeColors,hairColors,ethnicities,nationalities,countryList,physicalTraits,dominantHands,} from "@/utils/form/consts";
 import React, { useState } from 'react';
@@ -9,13 +9,17 @@ import React, { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import {primary} from  "@/components/ThemeRegistry/theme";
+import {OVA_very_soft_grey,primary90} from "@/components/ThemeRegistry/theme_consts.ts";
+
 
 
 
 export default function FormFieldUI({data,register}:{data:FormField,register:any}){
 
-const fieldHeight = data.length === 'long' ? '3' : '1';
+// const fieldLength =fieldHeight data.length == 'long' ? '3' : '1';
+
+const { control, handleSubmit } = useForm();
+
    const [cardStates, setCardStates] = useState({});
 
    const handleCardClick = (value) => {
@@ -58,7 +62,7 @@ const handleChange = (index, field, value) => {
     return <Stack key={data.id} mb={4} >
         <Typography variant="body1">{data.label}</Typography>
         <Box height={8}/>
-        {data.type==='text'?[<TextField multiline minRows={5}  variant="outlined"   />
+        {data.type==='text'?[<TextField multiline minRows={3}  variant="outlined"   />
 //         <FormHelperText error>Please fill in valid values</FormHelperText>
         ]
         :data.type==='date'?[<DateField variant="standard" />]
@@ -73,29 +77,42 @@ const handleChange = (index, field, value) => {
             <ToggleButton value={'yes'}>Yes</ToggleButton>
             <ToggleButton value={'no'}>No</ToggleButton>
         </ToggleButtonGroup>]
-        :data.type==='checkbox'?[<Box
-                                 display="flex"
-                                 flexWrap="wrap"
-                                     >
-                                       {Array.isArray(typedLists[data.options])
-                                         ? typedLists[data.options].map((v) => (
-                                             <Card variant='filled" ' key={v} value={v} sx={{ margin: 1,backgroundColor: cardStates[v] ? '#FFA07A' : 'grey',
-                                            cursor: 'pointer',
-=                                            }}
-                                           onClick={() => handleCardClick(v)}
-                                             >
-                                                 {v}
-                                             </Card>
-                                           ))
-                                         : null}
-                                       {Array.isArray(data.options)
-                                         ? data.options.map((v) => (
-                                             <Card key={v} value={v} sx={{ margin: 1 }}>
-                                                 {v}
-                                             </Card>
-                                           ))
-                                         : null}
-                                     </Box>]
+        :data.type==='checkbox'?[ 
+        <form>
+          <Controller
+            name="checkboxOptions"
+            control={control}
+            defaultValue={[]}
+            render={({ field }) => (
+              <Box display="flex" flexWrap="wrap">
+                {(Array.isArray(typedLists[data.options]) ? typedLists[data.options] : []).map((v) => (
+                  <CardContent
+                    key={v}
+                    value={v}
+                    sx={{
+                      margin: 1,
+                      backgroundColor: field.value.includes(v) ? primary90: OVA_very_soft_grey,
+                      cursor: 'pointer',
+                      borderRadius: 1,
+                      height: 'auto',
+                       width: 'auto',
+                    }}
+                    onClick={() => {
+                      const updatedValues = field.value.includes(v)
+                        ? field.value.filter((value) => value !== v)
+                        : [...field.value, v];
+                      field.onChange(updatedValues);
+                    }}
+                  >
+                    {v}
+                  </CardContent>
+                ))}
+              </Box>
+            )}
+          />
+    
+        </form>
+        ]
 
         :data.type==='number'?[<TextField type='number' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />]
         :data.type==='address'?[<Input />,
