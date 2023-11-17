@@ -26,31 +26,42 @@ import { AlgoMapping, FormField, FormTemp, HeightValue } from "./types";
 import { inch2cm } from "./form_utils/internal";
 
 export const basic_info:FormTemp={
-    name:"basic info",
+    name:"Basic info",
     content:[
         {
-            title:"basic info",
+            title:"Basic info",
             fields:[
                 //{label:"Name",type:"name",required:true},
                 {
-                    id: "s3",
-                    label: "Address",
-                    type: "address",
-                    required: true
-                },
-                {
-                    id: "s5",
-                    label: "Phone",
-                    type: "text",
-                    length: "short",
+                    id: "s0",
+                    label: "Full Legal Name",
+                    subLabel: "Last, First, MI",
+                    type: "name",
                     required: true
                 },
                 {
                     id: "s6",
-                    label: "Birthday",
+                    label: "Date of Birth",
                     type: "date",
                     required: true
-                }
+                },
+                {
+                    id: "s5",
+                    label: "Contact Number",
+                    type: "phone",
+                    required: true
+                },
+                {
+                    id: "s0",
+                    label: "Marital Status",
+                    type: "multi-select",
+                    options: maritalStatuses,
+                    required: true,
+                    /*sub: personData("partner",
+                        {
+                            addDobAddr:true,
+                            addProp:{condition:["Married", "Separated"]}})*/
+                },
             ]
         },
         {
@@ -58,36 +69,42 @@ export const basic_info:FormTemp={
             fields: [
                 {
                     id: "s13",
-                    label: "Nationality",
+                    label: "Country of Citizenship",
                     type: "multi-select",
                     options: 'nationalities',
                     required: true,
                     sub: [
                         {
                             id: "s0",
-                            exCondition: ["US"],
-                            label: "Are you in US?",
+                            exCondition: ["American"],
+                            label: "Do you hold permanent or temporary resident immigration status?",
                             type: "yes/no",
                             required: true,
                             sub:[
                                 {
+                                    id: "s2",
+                                    condition:[yes],
+                                    label: "Social Security Number (SSN)",
+                                    type: "number",
+                                   // required: true
+                                },
+                                {
                                     id: "s1",
-                                    condition:["yes"],
+                                    condition:[no],
                                     label: "Status in the US",
                                     type: "multi-select",
                                     options: usStatuses,
-                                    required: true
-                                },
-                                {
-                                    id: "s2",
-                                    condition:["yes"],
-                                    label: "Last 4 digits of SSN",
-                                    type: "number",
                                     required: true
                                 }
                             ]
                         }
                     ]
+                },
+                {
+                    id: "s3",
+                    label: "Mailing Address",
+                    type: "address",
+                    required: true
                 }
             ]
         },
@@ -809,7 +826,6 @@ export const background_history:FormTemp={
 };
 
 
-
 export const personal_and_medical = {
     name: "personal & medical",
     content: [
@@ -1109,6 +1125,7 @@ export const personal_and_medical = {
     ]
 }
 
+//todo
 export const family_partner:FormTemp={
     name:"family & partner",
     content:[
@@ -1267,6 +1284,16 @@ export const family_partner:FormTemp={
     ]
 };
 
+//todo Waitlist
+export const other_clinic_questions:FormTemp={
+    name:"other clinic questions",
+    content:[]
+};
+
+
+
+
+/////////////////////////////////////////////////
 function assign_IDs(content:FormTemp) {
     const copyContent = JSON.parse(JSON.stringify(content));
     const assign = (field:FormField) => {
@@ -1294,13 +1321,7 @@ function assign_IDs(content:FormTemp) {
     return copyContent;
 }
 
-
 export const modified_content = assign_IDs(basic_info);
-
-export const other_clinic_questions:FormTemp={
-    name:"other clinic questions",
-    content:[]
-};
 
 
 const personData=(name:string,{addRelation,addDobAddr,addProp}:{addRelation:boolean,addDobAddr:boolean,addProp:any}):FormField[]=>{

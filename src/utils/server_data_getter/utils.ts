@@ -9,11 +9,12 @@ import { unstable_cache } from "next/cache";
 export const getFormTemplate=(agcid:string)=>unstable_cache(
     async():Promise<FormTemp[]>=>{
         const r = await getDocs(collection(getFirestore(app),FormTempCol(agcid)));
+        const t=1;
         return Array.from({ length: 6 },
             (v,i)=>(r.docs.find(v=>Number(v.id)===i)?.data()??formTemplates[i]) as FormTemp);
     },
     [agcid],
-    {tags:['form_template'],revalidate:6}
+    {tags:['form_template'],revalidate:3}
 )();
 
 export const getFormData=(uid:string,role:RoleNum)=>unstable_cache(
