@@ -18,7 +18,13 @@ export async function POST(request: Request) {
 
     await Promise.all([
         auth().updateUser(user.id,{email,displayName:name,phoneNumber:phone,photoURL:avatar}),
-        ...(avatar ? [UserRef(user.role,user.id).set({avatar},{merge:true})]:[]),
+        ...((avatar??name??email) ? [
+            UserRef(user.role,user.id).set({
+                ...(avatar!=null?{avatar}:{}),
+                ...(name!=null?{name}:{}),
+                ...(email!=null?{email}:{})
+            },{merge:true})
+        ]:[]),
         ...(name ? [algo_client.initIndex(`${roles[user.role].id}`).partialUpdateObject({
             objectID: user.id, name })]:[]),
     ]);

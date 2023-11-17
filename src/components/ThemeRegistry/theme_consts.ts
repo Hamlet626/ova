@@ -126,6 +126,15 @@ letterSpacing: '0em',
 textAlign: 'left',
 }
 
+export const percCaption={
+    fontFamily: roboto.style.fontFamily,
+    fontSize: '14px',
+    fontWeight: 500,
+    lineHeight: '24px',
+    letterSpacing: '0.5px',
+};
+
+
 export const outline_variant='#D8C2BB';
 export const outline='#85736D'
 export const neutral96='#FEF1ED';
@@ -135,3 +144,4 @@ export const primary90="#FFDBCE";
 
 export const search_color= "#7F7572";
 export const neutral_white= "#EEF0F4";
+export const tab_divider='#C5C5C5';

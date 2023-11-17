@@ -2,15 +2,15 @@
  
 import { useEffect, useRef, useState } from 'react'
 import { ReadonlyURLSearchParams, usePathname, useSearchParams } from 'next/navigation'
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
-import { app } from '@/utils/firebase/firebase_client';
+import { setDoc } from 'firebase/firestore';
+import { FormDataRef, app } from '@/utils/firebase/firebase_client';
 import { useSession } from 'next-auth/react';
 import { roles } from '@/utils/roles';
 import { algo_client } from '@/utils/algolia';
 import { AlgoTemplates } from '@/utils/form/template';
 import { EDRec } from '@/utils/algolia';
 import { FormStoredData, clearStoredForm, getFormKey, getStoredForm } from '@/utils/form/form_utils/storage';
-import { FormDataDoc } from '@/utils/firebase/database_consts';
+import { FormDataDoc } from '@/utils/firebase/path';
  
 const edFormPath: RegExp = /^\/ed\/[^/]+\/forms\/detail\/\d+$/;
 const rcpFormPath: RegExp = /^\/rcp\/forms\/detail\/\d+$/;
@@ -38,7 +38,7 @@ export function NavigationEvents() {
         // console.log("form saved",roles[user.role].id,user.id,JSON.parse(storedData));
         // console.log(storedData);
         setDoc(
-          doc(getFirestore(app),FormDataDoc(user.role,user.id,formid)),
+          FormDataRef(user.role,user.id,formid),
           storedData.data,{merge:true});
           
           updateAlgo(roles[user.role].id,formid,user.id,storedData);

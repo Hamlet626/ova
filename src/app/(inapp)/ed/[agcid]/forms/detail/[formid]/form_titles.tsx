@@ -1,8 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
 import FormTitlesUI from "../../../../../../../components/form_titles_ui";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
-import { app } from "@/utils/firebase/firebase_client";
 import { formTemplates } from "@/utils/form/template";
 import { formFinished } from "@/utils/form/form_utils/status";
 import { Typography } from "@mui/material";

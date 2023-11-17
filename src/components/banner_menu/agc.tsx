@@ -57,7 +57,7 @@ export const AGCAppBar=({children}: { children: ReactNode })=> {
     return(
         <Box sx={{display:'flex',width:'100%'}}>
             <AppBar position="fixed" elevation={0}
-            sx={{backgroundColor:'white', //zIndex: (theme) => theme.zIndex.drawer + 1, 
+            sx={{backgroundColor:'white', zIndex: (theme) => theme.zIndex.drawer + 1, 
             borderBottom:`1px solid ${outline_variant}`}}>
                 <Toolbar >
                 <Image src={logo} alt="Logo" style={{
@@ -96,7 +96,7 @@ export const AGCAppBar=({children}: { children: ReactNode })=> {
           <BannerAvatar/>
                 </Toolbar>
             </AppBar>
-            <Box component={'main'} minWidth={'100%'}>
+            <Box component={'main'} minWidth={'100%'} height={'calc(100vh - 64.5px)'} >
               <Toolbar />
               {children}
               </Box>

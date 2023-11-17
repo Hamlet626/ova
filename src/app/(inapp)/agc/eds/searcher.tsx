@@ -1,6 +1,6 @@
 import { EDRec, algo_client } from '@/utils/algolia';
-import { UserDoc, UsersAgcDataDoc } from '@/utils/firebase/database_consts';
-import { app } from '@/utils/firebase/firebase_client';
+import { UserDoc, UsersAgcDataDoc } from '@/utils/firebase/path';
+import { UserRef, UsersAgcDataRef, app } from '@/utils/firebase/firebase_client';
 import { RoleNum, roles } from '@/utils/roles';
 import {
   AutocompleteOptions,
@@ -12,7 +12,7 @@ import { Hit } from '@algolia/client-search';
 import { Clear, Delete, History, HistoryOutlined, NorthWest, Remove, SearchOutlined } from '@mui/icons-material';
 import { Box, Button, Chip, CircularProgress, IconButton, Input, InputBase, Stack, Typography, alpha, styled } from '@mui/material';
 import algoliasearch from 'algoliasearch/lite';
-import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
+import { getDoc } from 'firebase/firestore';
 import React, { useEffect, useMemo } from 'react';
 import '@algolia/autocomplete-theme-classic';
 import { OVA_very_soft_grey, font7 } from '@/components/ThemeRegistry/theme_consts';
@@ -349,10 +349,10 @@ const Eds=({item}:{item:AutocompleteItem})=>{
   const user=useSession({required:true}).data?.user;
   const agcId=getCliId_Client(user?.role,user?.id)!;
   const [basicInfo,infoError,infoState]=usePromise(
-    ()=>getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,item.objectID))),
+    ()=>getDoc(UserRef(RoleNum.ED,item.objectID)),
     [item.objectID]);
   const [agcData,agcError,agcState]=usePromise(
-    ()=> getDoc(doc(getFirestore(app),UsersAgcDataDoc(RoleNum.ED,item.objectID,agcId))),
+    ()=> getDoc(UsersAgcDataRef(RoleNum.ED,item.objectID,agcId)),
     [item.objectID,agcId]);
 
   return (

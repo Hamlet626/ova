@@ -6,8 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import FormFieldUI from "./form_field";
 import { Form, useForm } from "react-hook-form";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { app } from "@/utils/firebase/firebase_client";
 import { formStatus, secFinished } from "@/utils/form/form_utils/status";
 import { FormTemp } from "@/utils/form/types";
 import { addStoredForm } from "@/utils/form/form_utils/storage";

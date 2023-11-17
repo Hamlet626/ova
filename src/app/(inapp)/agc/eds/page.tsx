@@ -19,7 +19,7 @@ import Link from "next/link";
 import { EDsHits, EdTile } from "./ed_tile";
 import { SortBy } from "./sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { EDStatus, EDStatusLabel } from "@/utils/status";
+import { EDStatus, EDStatusLabel } from "@/utils/types/status";
 import { StateFilter } from "./state_filter";
 import { OtherFilters } from "./other_filters";
 
@@ -65,9 +65,7 @@ export default function EDs(){
           <Box width={8}/>
           <Typography variant="subtitle2">All Egg Donor</Typography>
           <Box flexGrow={1}/>
-          <Link passHref href={'todo'}>
-            <Typography variant="body2">See All</Typography>
-          </Link>
+          <Typography variant="body2" component={Link} href={'todo'}>See All</Typography>
         </Stack>
 
         <Box height={12}/>

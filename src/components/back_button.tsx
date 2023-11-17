@@ -5,10 +5,8 @@ import { font7 } from "@/components/ThemeRegistry/theme_consts";
 
 
 export const BackButton=({text,link}:{text:string,link:string})=>{
-    return <Link href={link} passHref>
-    <Stack direction={'row'} spacing={'10px'}>
+    return <Stack direction={'row'} spacing={'10px'} component={Link} href={link}>
         <ArrowBackIos/>
         <Typography sx={font7}>{text}</Typography>
-    </Stack>
-</Link>;
+    </Stack>;
 }

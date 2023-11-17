@@ -80,7 +80,7 @@ export default function SigninEmailPwBlock() {
             <Box height={32}/>
             <Typography variant="body1" sx={{px:"16px"}}>
                 {"Don't have an account? "}
-                <Link onClick={() => router.push('signup')}
+                <Link
                     href="/signup" component={NextLink}>
                     Sign Up
                 </Link>

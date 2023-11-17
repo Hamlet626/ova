@@ -2,12 +2,12 @@ import NextAuth, {User} from "next-auth"
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from "next-auth/providers/credentials";
 import {signInWithEmailAndPassword} from 'firebase/auth';
-import {serverInitFirebase} from "@/utils/firebase/firebase_server";
+import {UserRef, serverInitFirebase} from "@/utils/firebase/firebase_server";
 import {auth} from "firebase-admin";
 import {cliAuth} from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
 import { EDRec, RcpRec, algo_client } from "@/utils/algolia";
-import { EDStatus } from "@/utils/status";
+import { EDStatus } from "@/utils/types/status";
 import { getCliId_Server } from "@/utils/clinic_id/server";
 
 
@@ -39,6 +39,7 @@ export const authOptions : NextAuthOptions = {
         },
         async session({session, token, user}){
             if(session.user)session.user=token;
+            // UserRef(session.user?.role!,session.user?.id!).set({lastLogin:(Date.now()/1000>>0)},{merge:true});
             return session;
         }
     }

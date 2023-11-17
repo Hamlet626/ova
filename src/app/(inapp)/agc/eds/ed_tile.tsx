@@ -1,8 +1,8 @@
 'use client'
 import { OVA_very_soft_grey, font7 } from "@/components/ThemeRegistry/theme_consts";
 import { getCliId_Client } from "@/utils/clinic_id/client";
-import { UserDoc, UsersAgcDataDoc } from "@/utils/firebase/database_consts";
-import { app } from "@/utils/firebase/firebase_client";
+import { UserDoc, UsersAgcDataDoc } from "@/utils/firebase/path";
+import { UserRef, UsersAgcDataRef, app } from "@/utils/firebase/firebase_client";
 import { RoleNum } from "@/utils/roles";
 import { Stack, CircularProgress, Typography, Chip, Box, IconButton, Divider, Card, CardMedia, CardContent, CardActionArea, CardActions } from "@mui/material";
 import { getDoc, doc, getFirestore } from "firebase/firestore";
@@ -22,12 +22,12 @@ export const EdTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
     const user=useSession({required:true}).data?.user;
     const agcId=getCliId_Client(user?.role,user?.id)!;
     const [basicInfo,infoError,infoState]=usePromise(
-      ()=>getDoc(doc(getFirestore(app),UserDoc(RoleNum.ED,hit.objectID))),
+      ()=>getDoc(UserRef(RoleNum.ED,hit.objectID)),
       [hit.objectID]);
     const [agcData,agcError,agcState]=usePromise(
       ()=>{ 
         if(!agcId)return Promise.resolve(null);
-        return getDoc(doc(getFirestore(app),UsersAgcDataDoc(RoleNum.ED,hit.objectID,agcId)));
+        return getDoc(UsersAgcDataRef(RoleNum.ED,hit.objectID,agcId));
     },
       [hit.objectID,agcId]);
   

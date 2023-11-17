@@ -1,6 +1,6 @@
 import { outline, primary90 } from '@/components/ThemeRegistry/theme_consts';
 import { getCliId_Client } from '@/utils/clinic_id/client';
-import { EDStatus, EDStatusLabel } from '@/utils/status';
+import { EDStatus, EDStatusLabel } from '@/utils/types/status';
 import { Button, ButtonGroup, MenuItem, Select, TextField, styled } from '@mui/material';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';

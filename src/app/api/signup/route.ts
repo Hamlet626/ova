@@ -5,10 +5,10 @@ import {RoleNum, roles} from "@/utils/roles";
 import { auth, firestore} from "firebase-admin";
 import { serverInitFirebase } from '@/utils/firebase/firebase_server';
 import { UserRecord } from "firebase-admin/auth";
-import { AgencyRef, UserRef, UsersAgcDataRef, withTime } from "@/utils/firebase/firebase_server";
-import { EDStatus } from "@/utils/status";
+import { UserRef, UsersAgcDataRef } from "@/utils/firebase/firebase_server";
+import { EDStatus } from "@/utils/types/status";
 import { headers } from "next/headers";
-import { UserDoc } from "@/utils/firebase/database_consts";
+import { UserDoc } from "@/utils/firebase/path";
 
 serverInitFirebase();
 
@@ -36,7 +36,8 @@ export async function POST(request: Request) {
         ///set up firestore + algolia
         await Promise.all([
             UserRef(role,uRec.uid).set({
-                name,createTime:Date.now(),
+                name,email,
+                createTime:(Date.now()/1000>>0),
                 // ...(clinicId==null?{}:{agency:firestore.FieldValue.arrayUnion(AgencyRef(clinicId))})
             }),
             ...(
@@ -62,7 +63,7 @@ const EDSetUp=(uid:string,name:string,clinicId:string)=>{
         status:EDStatus.filling_Form
     }),
     algo_client.initIndex(`${roleKey}`).saveObject({
-        objectID: uid, name, createTime:Date.now(),
+        objectID: uid, name, createTime:(Date.now()/1000>>0),
         agencies:{[clinicId]:{status:EDStatus.filling_Form}}
     })];
 }
@@ -71,7 +72,7 @@ const RcpSetUp=(uid:string,name:string,clinicId:string)=>{
     const roleKey=roles[RoleNum.Rcp].id;
     return [
     algo_client.initIndex(`${roleKey}`).saveObject({
-        objectID: uid, name, createTime:Date.now(),
+        objectID: uid, name, createTime:(Date.now()/1000>>0),
         agencies:[clinicId]
     })];
 }
@@ -80,6 +81,6 @@ const AgcSetUp=(uid:string,name:string)=>{
     const roleKey=roles[RoleNum.Agc].id;
     return [
         algo_client.initIndex(`${roleKey}`).saveObject({
-        objectID: uid, name, createTime:Date.now()
+        objectID: uid, name, createTime:(Date.now()/1000>>0)
     })];
 }

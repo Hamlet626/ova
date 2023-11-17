@@ -13,9 +13,6 @@ import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 
 //import style for image part
 import { styled } from '@mui/material/styles';
-import { app, cliAuth } from "@/utils/firebase/firebase_client";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { UserDoc } from "@/utils/firebase/database_consts";
 import { useSession } from "next-auth/react";
 
 
