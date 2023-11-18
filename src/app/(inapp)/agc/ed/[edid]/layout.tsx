@@ -19,7 +19,7 @@ import FormProgTile from "./form_progress_tile";
 import { ActionsGroup } from "./actions_group";
 
 export default async function EDProfile({params,children}:{params: { edid: string },children: ReactNode}){
-    const me=await getServerSession(authOptions);
+    
     const [basicInfo,agcInfo,formData]=await Promise.all([
         getBasicFbData(params.edid,RoleNum.ED),
         getServerSession(authOptions).then((s)=>getAgcFbData(params.edid,s?.user?.id!,RoleNum.ED)),
