@@ -17,6 +17,7 @@ import { ContentTabs } from "./content_tabs";
 import { StatusSetter } from "./status_setter";
 import FormProgTile from "./form_progress_tile";
 import { ActionsGroup } from "./actions_group";
+import { EDRecommender } from "./ed_recommender";
 
 export default async function EDProfile({params,children}:{params: { edid: string },children: ReactNode}){
     
@@ -65,7 +66,7 @@ export default async function EDProfile({params,children}:{params: { edid: strin
                         <FormProgTile edid={params.edid}/>
                         </RightMenuTile>,
                         <RightMenuTile title="Recommend to recipients">
-                            <StatusSetter current={edInfo.status} edid={params.edid}/>
+                            <EDRecommender edid={params.edid}/>
                             </RightMenuTile>
 
                     ].flatMap(c=>[c,<Divider sx={{my:'24px'}}/>])}

@@ -17,10 +17,10 @@ export interface GCAgcInfoDoc{
     agcid:string,
     price:number,
     status:EDStatus,
-    recommends?:string[]
 }
 
 export interface RcpAgcInfoDoc{
     agcid:string,
     status:RcpStatus,
+    recommends?:string[]
 }
