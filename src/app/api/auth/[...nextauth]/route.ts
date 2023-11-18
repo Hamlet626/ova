@@ -7,7 +7,7 @@ import {auth} from "firebase-admin";
 import {cliAuth} from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
 import { EDRec, RcpRec, algo_client } from "@/utils/algolia";
-import { EDStatus } from "@/utils/types/status";
+import { EDStatus, RcpStatus } from "@/utils/types/status";
 import { getCliId_Server } from "@/utils/clinic_id/server";
 
 
@@ -64,16 +64,19 @@ const getUserSessionInfo=async (id:string):Promise<User>=>{
     }
     
     const clinicID=getCliId_Server();
-    if(basicInfo.role===RoleNum.ED){
+    if(basicInfo.role===RoleNum.ED||basicInfo.role===RoleNum.Rcp){
         const algoRecord=await algo_client.initIndex(`${roleKey}`).getObject<EDRec>(id);
         let agencies=Object.keys((algoRecord).agencies);
         if(clinicID!=null&&!agencies.includes(clinicID)){
             agencies=[...agencies,clinicID];
             await algo_client.initIndex(`${roleKey}`).saveObject({...algoRecord,
-                agencies:{...algoRecord.agencies,clinicID:{status:EDStatus.filling_Form}}});
+                agencies:{...algoRecord.agencies,
+                    clinicID:{status:basicInfo.role===RoleNum.ED?EDStatus.filling_Form:RcpStatus.general}}});
         }
         basicInfo.agencies=agencies;
-    } else if(basicInfo.role===RoleNum.Rcp){
+    } 
+    ///Rcp now has same algolia & fb data structure as EDs
+    else if(false && basicInfo.role===RoleNum.Rcp){
         let agencies=(await algo_client.initIndex(`${roleKey}`).getObject<RcpRec>(id)).agencies;
         if(clinicID!=null&&!agencies.includes(clinicID)){
             agencies=[...agencies,clinicID];

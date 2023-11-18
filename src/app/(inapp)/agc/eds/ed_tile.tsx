@@ -16,9 +16,10 @@ import { Face, PlaylistAdd } from "@mui/icons-material";
 import { useRef, useEffect } from "react";
 import { SendEventForHits } from "instantsearch.js/es/lib/utils";
 import aa from "search-insights";
+import { useRouter } from "next/navigation";
 
 export const EdTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
-    // console.log(hit);
+  
     const user=useSession({required:true}).data?.user;
     const agcId=getCliId_Client(user?.role,user?.id)!;
     const [basicInfo,infoError,infoState]=usePromise(
@@ -30,6 +31,7 @@ export const EdTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
         return getDoc(UsersAgcDataRef(RoleNum.ED,hit.objectID,agcId));
     },
       [hit.objectID,agcId]);
+      const router=useRouter();
   
     return (
         <Card sx={{bgcolor:OVA_very_soft_grey, aspectRatio:1}} elevation={0}>
@@ -38,6 +40,7 @@ export const EdTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
               if (user?.role!==RoleNum.Agc&&sendEvent!=null) {
                 sendEvent('click',hit,'ED Clicked');
               }
+              router.push(`/agc/ed/${hit.objectID}`);
             }}>
     {/* <Stack className="aa-ItemContent" alignItems={'stretch'}> */}
       <CardMedia sx={{aspectRatio: 1.7, borderTopLeftRadius:'12px', borderTopRightRadius:'12px'}}>

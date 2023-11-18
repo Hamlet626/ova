@@ -1,3 +1,4 @@
+'use client'
 import { EDRec, algo_client } from '@/utils/algolia';
 import { UserDoc, UsersAgcDataDoc } from '@/utils/firebase/path';
 import { UserRef, UsersAgcDataRef, app } from '@/utils/firebase/firebase_client';
@@ -65,7 +66,9 @@ export function Autocomplete(
 
   // aa('init', { appId:'4WJ9FHOG84', apiKey:'92bb7bfcde71a02e96721c077a0b491c', 
   //               useCookie:true, partial: true,anonymousUserToken:true});
-  const enableInsight=false;
+  const enableInsight=typeof window !== 'undefined';
+  const { query, refine: setQuery } = useSearchBox();
+  const { refine: setPage } = usePagination();
   const { indexUiState, setIndexUiState } = useInstantSearch();
 
   const [autocompleteState, setAutocompleteState] = React.useState<
@@ -75,7 +78,7 @@ export function Autocomplete(
     completion: null,
     context: {},
     isOpen: false,
-    query: '',//new URLSearchParams(window.location.search).get('search')??'',
+    query,//new URLSearchParams(window.location.search).get('search')??'',
     activeItemId: null,
     status: 'idle',
   });
@@ -89,7 +92,6 @@ export function Autocomplete(
         ...source,
         onSelect({ item }) {
           // Assuming the refine function updates the search page state.
-          console.log(item);
           autocomplete.setQuery(item.label);
         },
       };
@@ -108,7 +110,7 @@ export function Autocomplete(
 
         return recentSearchesPlugin.data!.getAlgoliaSearchParams({
           hitsPerPage: 3,
-          ...(enableInsight?{clickAnalytics:true}:{})
+          ...(enableInsight?{clickAnalytics:true}:{}),
           //facetFilters: params,
             // `${INSTANT_SEARCH_INDEX_NAME}.facets.analytics.${INSTANT_SEARCH_HIERARCHICAL_ATTRIBUTES[0]}.value:${currentCategory}`,
         });
@@ -141,12 +143,18 @@ export function Autocomplete(
         onStateChange({ state }) {
           setAutocompleteState(state);
         },
+        onSubmit(params) {
+          setQuery(params.state.query);
+          setPage(0);
+        },
         initialState:autocompleteState,
         plugins:[
           recentSearchesPlugin,
           ...plugins
         ],
         insights: enableInsight,
+        placeholder:"Search products",
+        openOnFocus:true,
         getSources() {
           return [
             {
@@ -178,7 +186,7 @@ export function Autocomplete(
         }, 
         ...props,
       }),
-    [props]
+    [props,]
   );
 
   const { getEnvironmentProps } = autocomplete;
@@ -221,6 +229,7 @@ export function Autocomplete(
             {autocompleteState.isOpen && (
         <div
           ref={panelRef}
+          style={{zIndex:1}}
           className={[
             'aa-Panel',
             'aa-Panel--desktop',

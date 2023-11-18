@@ -37,8 +37,6 @@ export default function EDs(){
                 <Typography sx={font3} flexGrow={2}>Egg Donor</Typography>
                 <Box flexGrow={8} flexBasis={8}>
                   <Autocomplete
-                  placeholder="Search products"
-                  openOnFocus
                   />
                 </Box>
                 <Stack flexGrow={2} direction={'row'} alignItems={'end'}>

@@ -12,7 +12,7 @@ export const ContentTabs=({children,edid}:{children:ReactNode,edid:string})=>{
     const router=useRouter();
     return <TabContext value={route}>
         <Box bgcolor={OVA_very_soft_grey} borderBottom={`solid ${tab_divider}`} 
-        position={'sticky'} top={48} zIndex={1}>
+        position={'sticky'} top={48} zIndex={0.5}>
           <TabList centered indicatorColor="primary"
           onChange={(ev,r)=>router.replace(`/agc/ed/${edid}/${r}`)}>
             <Tab label="Forms" value="forms" />

@@ -25,7 +25,8 @@ export const StatusSetter=({current,edid}:{current:EDStatus,edid:string})=>{
     </Stack>
     <PopupComp 
     compBuilder={(onClick)=>(
-        <LoadingButton variant="contained" color="primary" loading={loading} endIcon={<ArrowDropDown/>} onClick={onClick}>
+        <LoadingButton variant="contained" color="primary" fullWidth
+        loading={loading} endIcon={<ArrowDropDown/>} onClick={onClick}>
             Set Status
             </LoadingButton>
             )} 

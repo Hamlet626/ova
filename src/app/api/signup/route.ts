@@ -6,7 +6,7 @@ import { auth, firestore} from "firebase-admin";
 import { serverInitFirebase } from '@/utils/firebase/firebase_server';
 import { UserRecord } from "firebase-admin/auth";
 import { UserRef, UsersAgcDataRef } from "@/utils/firebase/firebase_server";
-import { EDStatus } from "@/utils/types/status";
+import { EDStatus, RcpStatus } from "@/utils/types/status";
 import { headers } from "next/headers";
 import { UserDoc } from "@/utils/firebase/path";
 
@@ -71,6 +71,9 @@ const EDSetUp=(uid:string,name:string,clinicId:string)=>{
 const RcpSetUp=(uid:string,name:string,clinicId:string)=>{
     const roleKey=roles[RoleNum.Rcp].id;
     return [
+        UsersAgcDataRef(RoleNum.Rcp,uid,clinicId).set({
+            status:RcpStatus.general
+        }),
     algo_client.initIndex(`${roleKey}`).saveObject({
         objectID: uid, name, createTime:(Date.now()/1000>>0),
         agencies:[clinicId]

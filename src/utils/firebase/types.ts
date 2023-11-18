@@ -1,4 +1,4 @@
-import { EDStatus } from "../types/status";
+import { EDStatus, RcpStatus } from "../types/status";
 
 export interface BasicInfoDoc{
     uid:string,
@@ -9,8 +9,18 @@ export interface BasicInfoDoc{
     createTime:number,
 }
 
+// export interface RcpBsInfoDoc extends BasicInfoDoc{
+//     agcs:string[],
+// }
+
 export interface GCAgcInfoDoc{
     agcid:string,
     price:number,
-    status:EDStatus
+    status:EDStatus,
+    recommends?:string[]
+}
+
+export interface RcpAgcInfoDoc{
+    agcid:string,
+    status:RcpStatus,
 }

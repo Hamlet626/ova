@@ -56,7 +56,7 @@ export default async function EDProfile({params,children}:{params: { edid: strin
                     {children}
                 </ContentTabs>
             </Stack>
-            <Paper sx={{width:'calc((100vw - 136px)/6 + 56px )', borderRadius:0}} elevation={24}>
+            <Paper sx={{width:'calc((100vw - 136px)/6 + 56px )', borderRadius:0, zIndex:2}} elevation={24}>
                 <List>
                     {[<RightMenuTile title="Current Status">
                         <StatusSetter current={edInfo.status} edid={params.edid}/>

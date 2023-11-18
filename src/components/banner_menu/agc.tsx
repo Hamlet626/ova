@@ -41,7 +41,6 @@ export const AGCAppBar=({children}: { children: ReactNode })=> {
   const pages = ['Home','Egg Donor','Recipients','Cases','Events'];
 
     const handleTabChange = (e, tabIndex) => {
-        console.log(tabIndex);
         setCurrentTabIndex(tabIndex);
     };
     const [anchorEl, setAnchorEl] = useState(null); // | HTMLElement>(null);

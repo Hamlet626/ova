@@ -24,8 +24,6 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const stats=formStatus(data,template);
 
     const onSubmit = async (data:any,nextSec?: number|null) => {
-         console.log("onSubmit called");
-  console.log("Data before storing:", data);
         addStoredForm(formid,{data});
         localStorage.setItem(`formData_${formid}`, JSON.stringify(data));
 

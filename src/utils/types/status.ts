@@ -28,3 +28,25 @@ export const EDStatusColors={
   [EDStatus.matched]: 'success,main',
   [EDStatus.free]: 'grey.700'
 }
+
+
+
+
+export enum RcpStatus {
+  general = 0,
+  black_list = -1,
+  matching=2,
+  matched=4, 
+  free=5
+}
+
+
+export const RcpStatusLabel={
+  [RcpStatus.general] : 'filling_Form',
+  [RcpStatus.black_list] : 'Black List',
+}
+
+export const RcpStatusColors={
+  [RcpStatus.general] : 'grey.300',
+  [RcpStatus.black_list] : 'grey.300',
+}
