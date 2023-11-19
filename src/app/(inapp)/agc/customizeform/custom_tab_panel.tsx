@@ -8,11 +8,13 @@ import { Row } from "./row";
 import TabContext from '@mui/lab/TabContext';
 import { EditFieldDialogBox } from "./edit_field_dialog_box";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { app } from "@/utils/firebase/firebase_client";
+import { setDoc } from "firebase/firestore";
+import { FormTempRef, app } from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
 import { useSession } from "next-auth/react";
 import { formTemplates } from "@/utils/form/template";
+import { Reorder } from "framer-motion";
+import { FormTempDoc } from "@/utils/firebase/path";
 
 //todo: decide remove or not
 function a11yProps(index: number) {
@@ -30,7 +32,10 @@ export function CustomTabPanel({ index, next, setFinished, ...other }:
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            setformData(JSON.parse(localStorage.getItem(`formData${index}`) ??
+            console.log("here");
+            console.log(JSON.parse(localStorage.getItem(`formTemp${index}`) ??
+            JSON.stringify(formTemplates[index].content)));
+            setformData(JSON.parse(localStorage.getItem(`formTemp${index}`) ??
             JSON.stringify(formTemplates[index].content)) as FormSection[]);
         }
     }, [index]);
@@ -69,8 +74,7 @@ export function CustomTabPanel({ index, next, setFinished, ...other }:
         await Promise.all(Array.from({length:6},(v,i)=>{
             const data=localStorage.getItem(`formTemp${i}`);
             if(data==null)return;
-            return setDoc(doc(getFirestore(app),
-            `user groups/${roles[RoleNum.Agc].id}/users/${uid}/forms/${i}`),
+            return setDoc(FormTempRef(uid,i),
             {...formTemplates[index],content:JSON.parse(data)});
         }));
         setLoading(false);
@@ -107,6 +111,7 @@ export function CustomTabPanel({ index, next, setFinished, ...other }:
                                 </Button>
                             </Box>
                             {formData.map((section, index: number) => {
+                                console.log(section);
                                 return <TabPanel value={`${index}`} key={index}>
                                     {(
                                         <Box sx={{ p: 3 }}>
@@ -122,10 +127,15 @@ export function CustomTabPanel({ index, next, setFinished, ...other }:
                                                 }}>Add a field
                                             </Button>
                                             <br />
-                                            <List>
+                                            <Reorder.Group axis="y" layoutScroll values={section.fields.map(v=>v.id)}
+                                            onReorder={(v)=>{
+                                                const newfields=Array.from(v,(id,i)=>section.fields.find(f=>f.id==id)!);
+                                                formData.splice(index,1,{title:section.title,fields:newfields});
+                                                setformData([...formData]);
+                                            }}>
                                                 {section.fields.map((row, index) => (
                                                     <Row key={JSON.stringify(row.id)} data={row} depth={0}
-                                                        editRow={(newValue) => {
+                                                        onEditRow={(newValue) => {
                                                             if (newValue == null) {
                                                                 formData[tabId].fields.splice(index, 1);
                                                             } else {
@@ -135,7 +145,7 @@ export function CustomTabPanel({ index, next, setFinished, ...other }:
                                                         }}
                                                     />
                                                 ))}
-                                            </List>
+                                            </Reorder.Group>
                                             {editDialogBox && <EditFieldDialogBox
                                                 editField={{ "id": "table_field_id1", "label": "table_field_label1", "type": "text", "required": false, "length": 'short', "options": [] }}
                                                 open_status={editDialogBox}

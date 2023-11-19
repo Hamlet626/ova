@@ -10,7 +10,7 @@ import { unstable_cache } from "next/cache";
 import FormContent from "./form_content";
 import { basic_info, formTemplates } from "@/utils/form/template";
 import { app } from "@/utils/firebase/firebase_client";
-import { getFormData, getFormTemplate } from "./utils";
+import { getFormData, getFormTemplate } from "../../../../../../../utils/server_data_getter/utils";
 
 export default async function FormDetail({params}: {params: { agcid: string, formid:string } }) {
     // const {data,status}=useSession({required:true});

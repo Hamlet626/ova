@@ -13,6 +13,7 @@ import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 
 //import style for image part
 import { styled } from '@mui/material/styles';
+import { useSession } from "next-auth/react";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -26,9 +27,10 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function Uploadprofile( { clinic,role,c1 } ) {
+  const {update,data}=useSession({required:true});
+  const user=data?.user!;
 
-
-    const [selectedFile,setSelectedFile]=useState(null);
+    const [selectedFile,setSelectedFile]=useState<File|null>(null);
 
     const handleFileChange=(event)=>{
     const file =event.target.files[0];
@@ -42,7 +44,26 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
       const i = Math.floor(Math.log(bytes) / Math.log(1024));
       return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
     };
+    
+    const saveAvatar=async(url:string)=>{
+        const r = await fetch('/api/update_profile', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            avatar: url,
+          }),
+        });
+        
+        if(r.status===200){
+          await update({image:url}).then(v=>{console.log(v);});
+          //console.log(user.image);
 
+          //todo:redirect to filling form/template page
+        }
+    }
 
     return(
           <>
@@ -120,6 +141,9 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
               typography: 'label1',
               color: 'white',
               width: '193px',
+            }}
+            onClick={()=>{
+              //todo: saveAvatar('imageLink');
             }}
           >
             Next

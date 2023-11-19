@@ -2,8 +2,7 @@ import {redirect} from "next/navigation";
 import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {RoleNum} from "@/utils/roles";
-import { getClinic } from "@/utils/clinic_check";
-import { headers } from "next/headers";
+import { getCliId_Server } from "@/utils/clinic_id/server";
 
 export default async function UnAuthLayout({children,}) {
     const session = await getServerSession(authOptions);
@@ -14,7 +13,7 @@ export default async function UnAuthLayout({children,}) {
         if(session.user?.role==RoleNum.Agc)
             redirect("agc/dashboard");
         if(session.user?.role==RoleNum.ED)
-            redirect(`ed/${getClinic(headers().get("host"))??session!.user.agencies![0]}/dashboard`);
+            redirect(`ed/${getCliId_Server()??session!.user.agencies![0]}/dashboard`);
         if(session.user?.role==RoleNum.Rcp)
             redirect("rcp/dashboard");
         else throw {message:"couldn't find user's role.", logout:true};

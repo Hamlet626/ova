@@ -6,10 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import FormFieldUI from "./form_field";
 import { Form, useForm } from "react-hook-form";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { app } from "@/utils/firebase/firebase_client";
-import { addStoredForm, formStatus, getStoredForm, secFinished } from "@/utils/form/utils";
+import { formStatus, secFinished } from "@/utils/form/form_utils/status";
 import { FormTemp } from "@/utils/form/types";
+import { addStoredForm } from "@/utils/form/form_utils/storage";
 
 export default function FormContent({formid, agcid, template, data, uid}:{ formid:number, agcid:string, template:FormTemp, data:any, uid:string} ){
     const sectionName = decodeURIComponent(useSearchParams().get("section")??"");
@@ -25,8 +24,6 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const stats=formStatus(data,template);
 
     const onSubmit = async (data:any,nextSec?: number|null) => {
-         console.log("onSubmit called");
-  console.log("Data before storing:", data);
         addStoredForm(formid,{data});
         localStorage.setItem(`formData_${formid}`, JSON.stringify(data));
 

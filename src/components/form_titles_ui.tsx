@@ -17,7 +17,11 @@ export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick?:
     return(
             <List >
                 {titles.map(({title,selected,icon,check,dot,href}, index) => {
-                    const button=<ListItemButton selected={selected} sx={{
+                    const props=href==null?{}:{LinkComponent:Link, href};
+                    
+                    return <div key={index}>
+                        <ListItemButton {...props}
+                    selected={selected} sx={{
                         borderRadius: '100px',
                         // backgroundColor: selected ? primary90: undefined,
                         '&.Mui-selected': {
@@ -33,11 +37,9 @@ export default function FormTitlesUI({titles,onClick}: {titles:title[],onClick?:
                         <ListItemText primary={<Typography variant={selected?'subtitle3':'body2'}>{title}</Typography>} sx={{
                             ml:'-20px',
                         }}/>
-                    </ListItemButton>;
-                    return <div key={index}>
-                    {href==null?button:<Link href={href} passHref>{button}</Link>}
+                    </ListItemButton>
                     {index<titles.length-1 && <Divider  sx={{my:'8px'}}/>}
-                </div>
+                    </div>
 })}
             </List>
     );

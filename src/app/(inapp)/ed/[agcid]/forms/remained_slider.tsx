@@ -46,7 +46,7 @@ export const RemainedSlider=({remainedData,agcid}:{remainedData:any[],agcid:stri
             scrollBehavior: 'smooth',
             transition: 'scroll 0.3s ease-in-out'
             }} onScroll={onscroll}>
-              <Stack direction={'row'} spacing={'16px'}>
+              <Stack direction={'row'} spacing={2}>
             {(remainedData.map((v,i)=>(
               // <Paper sx={{display: 'inline-block',flexShrink: 0}}>
                 <Card key={i} elevation={0} sx={{display: 'inline-block',flexShrink: 0, bgcolor:OVA_very_soft_grey}}> 

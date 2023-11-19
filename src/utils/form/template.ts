@@ -23,7 +23,7 @@ import {
     personalities, skills, skillTypes, medicalHistory, physicalHistory, legalHistory, countryList, inUK3m, covidVacc, travelHistory, refusedBlood, receivedBlood, alcohol, alcoholFreq, smoke, smokeFreq, socialHabits, marijuana, period, papSmearRes, yes, no, birthControl, DepoProvera, gynecologic, sexualPartner, pregType, sex, deliveryType
 } from "@/utils/form/consts";
 import { AlgoMapping, FormField, FormTemp, HeightValue } from "./types";
-import { inch2cm } from "./utils";
+import { inch2cm } from "./form_utils/internal";
 
 export const basic_info:FormTemp={
     name:"basic info",
@@ -161,7 +161,7 @@ export const physical_personal_trait:FormTemp={
                 {//todo
                     id: "s8",
                     label: "Weight (in lbs)",
-                    type: "text",
+                    type: "number",
                     length:"short",
                     required: true
                 },
@@ -1380,10 +1380,10 @@ export const formTemplates:FormTemp[]=[basic_info,physical_personal_trait,educat
 
 export const AlgoTemplates:AlgoMapping[][]=[
     [
-        {fdid:'s2',label:'Birthday'},
-        {fdid:'s13',label:'Nationality',tag:true},
-        {fdid:['s13','s0'],label:'in US'},
-        {fdid:'s15',label:'Ethnicity'},
+        {fdid:'s2',label:'Birthday',convertFilter:'age'},
+        {fdid:'s3',label:'Nationality',tag:true},
+        {fdid:['s3','s0'],label:'in US'},
+        {fdid:'s4',label:'Ethnicity'},
     ],
     [
         {fdid:'s0',label:'Height',handler:(h:HeightValue)=>inch2cm(h)},

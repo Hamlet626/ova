@@ -13,8 +13,8 @@ import { useRouter } from "next/navigation";
 import {useForm} from "react-hook-form";
 import NextLink from "next/link";
 import { RoleNum, roles } from "@/utils/roles";
-import { getClinic } from "@/utils/clinic_check";
-import { useUrl } from 'nextjs-current-url';
+import { getClinic } from "@/utils/clinic_id/clinic_check";
+import { useUrl } from "nextjs-current-url";
 
 
 
@@ -80,7 +80,7 @@ export default function SigninEmailPwBlock() {
             <Box height={32}/>
             <Typography variant="body1" sx={{px:"16px"}}>
                 {"Don't have an account? "}
-                <Link onClick={() => router.push('signup')}
+                <Link
                     href="/signup" component={NextLink}>
                     Sign Up
                 </Link>

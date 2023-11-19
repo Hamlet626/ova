@@ -7,6 +7,8 @@ import { Add, ClearOutlined, Edit } from "@mui/icons-material";
 import { FormField } from "@/utils/form/types";
 import { useState } from "react";
 import { EditFieldDialogBox } from "./edit_field_dialog_box";
+import { Reorder, useDragControls, useMotionValue } from "framer-motion";
+import { useRaisedShadow } from "./use_raised_shadow";
 
 
 export function Row({ data, depth,
@@ -22,8 +24,19 @@ export function Row({ data, depth,
     const [editDialogBox, setEditDialogBox] = useState(false);
     const [editingField, setEditingField] = useState<FormField>(data);
     const [edtiFieldType, setEditFieldType] = useState(true); // true: edit field itself, false: add a subfield
+    const y = useMotionValue(0);
+    const boxShadow = useRaisedShadow(y);
+    //uncomment if want only specific part on the field tile to be draggable
+    //const dragControls = useDragControls();
 
     return (
+        <Reorder.Item
+      value={data.id}
+      id={data.id}
+      style={{ boxShadow, y }}
+    //   dragListener={false}
+    //   dragControls={dragControls}
+    >
         <ListItem disablePadding sx={{ width: '600px' }}>
             <List>
                 <ListItem disablePadding sx={{ width: '600px' }}>
@@ -97,9 +110,14 @@ export function Row({ data, depth,
                 </ListItem>
                 {data.sub && <ListItem disablePadding sx={{ width: '600px' }}>
                     <Collapse in={openStatus} timeout="auto" unmountOnExit sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <List>
+                        <Reorder.Group axis="y" layoutScroll values={data.sub.map(v=>v.id)}
+                        onReorder={(v)=>{
+                            const newfields=Array.from(v,(id,i)=>data.sub!.find(f=>f.id==id)!);
+                            data.sub=newfields;
+                            onEditRow(data);
+                        }}>
                             {data.sub.map((subRow, index) =>
-                            (< Row key={index}
+                            (< Row key={subRow.id}
                                 data={subRow}
                                 depth={depth + 1}
                                 onEditRow={(newValue) => {
@@ -113,7 +131,7 @@ export function Row({ data, depth,
                             />)
                             )
                             }
-                        </List>
+                        </Reorder.Group>
                     </Collapse>
                 </ListItem>
                 }
@@ -140,6 +158,7 @@ export function Row({ data, depth,
                 }}
             />}
         </ListItem>
+        </Reorder.Item>
     )
 }
 

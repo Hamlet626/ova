@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@algolia/autocomplete-js": "^1.12.1",
+    "@algolia/autocomplete-plugin-query-suggestions": "1.12.1",
+    "@algolia/autocomplete-plugin-recent-searches": "1.12.1",
+    "@algolia/autocomplete-plugin-tags": "^1.12.1",
+    "@algolia/autocomplete-theme-classic": "1.12.1",
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
@@ -19,8 +24,9 @@
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "algoliasearch": "^4.19.1",
+    "algoliasearch": "latest",
     "autoprefixer": "10.4.15",
+    "cloudinary": "^1.41.0",
     "country-list": "^2.3.0",
     "dayjs": "^1.11.10",
     "encoding": "latest",
@@ -28,6 +34,7 @@
     "eslint-config-next": "13.4.19",
     "firebase": "^10.3.1",
     "firebase-admin": "^11.10.1",
+    "framer-motion": "^10.16.4",
     "lodash": "^4.17.21",
     "next": "13.4.19",
     "next-auth": "latest",
@@ -37,8 +44,13 @@
     "react-dom": "18.2.0",
     "react-draggable": "^4.4.6",
     "react-hook-form": "^7.46.2",
-    "react-instantsearch-nextjs": "^0.1.2",
+    "react-instantsearch-nextjs": "latest",
+    "react-use-promise": "^0.5.0",
+    "search-insights": "^2.9.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/react-sticky": "^6.0.6"
   }
 }
