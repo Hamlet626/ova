@@ -16,7 +16,7 @@ import {OVA_very_soft_grey,primary90} from "@/components/ThemeRegistry/theme_con
 
 export default function FormFieldUI({data,register}:{data:FormField,register:any}){
 
-// const fieldLength =fieldHeight data.length == 'long' ? '3' : '1';
+  const fieldLength = data.length === 'long' ? 3 : data.length === 'short' ? 0.5 : 1; // Set the default to 2 or adjust as needed
 
 const { control, handleSubmit } = useForm();
 
@@ -62,7 +62,7 @@ const handleChange = (index, field, value) => {
     return <Stack key={data.id} mb={4} >
         <Typography variant="body1">{data.label}</Typography>
         <Box height={8}/>
-        {data.type==='text'?[<TextField multiline minRows={3}  variant="outlined"   />
+        {data.type==='text'?[<TextField multiline minRows={fieldLength }  variant="outlined"  sx={{ flex: 1 }} />
 //         <FormHelperText error>Please fill in valid values</FormHelperText>
         ]
         :data.type==='date'?[<DateField variant="standard" />]
