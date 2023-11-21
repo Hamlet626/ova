@@ -6,6 +6,7 @@ import {typedLists} from "@/utils/form/consts";
 // import { languages,eyeColors,hairColors,ethnicities,nationalities,countryList,physicalTraits,dominantHands,} from "@/utils/form/consts";
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -15,56 +16,19 @@ import {OVA_very_soft_grey,primary90} from "@/components/ThemeRegistry/theme_con
 
 
 
-export default function FormFieldUI({data,register}:{data:FormField,register:any}){
+export default function FormFieldUI({data,register,control}:{data:FormField,register:any,control:any }){
 
   const fieldLength = data.length === 'long' ? 3 : data.length === 'short' ? 0.5 : 1; // Set the default to 2 or adjust as needed
+  const [userSelection, setUserSelection] = useState<string | null>(null);
 
-  const selectedValues = Array.isArray(register(data.id)) ? register(data.id) : [];
-  const { setValue, getValues } = useFormContext();
-
-  useEffect(() => {
-    // Set initial values on mount
-    const initialValues = getValues(data.id);
-    if (!initialValues) {
-      setValue(data.id, []);
-    }
-  }, [data.id, getValues, setValue]);
-
-   const [cardStates, setCardStates] = useState({});
-
-   const handleCardClick = (value) => {
-     setCardStates((prevStates) => ({
-       ...prevStates,
-       [value]: !prevStates[value],
-     }));
-   };
-
-
+  const handleYesNoChange = (value: string) => {
+    // Handle changes when the user selects 'yes' or 'no'
+    setUserSelection(value);
+  };
 //
 //         console.log(data.length);
 //         console.log(data.options);
-const [formData, setFormData] = useState([{ language: '', fluency: 'Fluent' }]);
-const handleChange = (index, field, value) => {
-  setFormData((prevData) => {
-    const updatedData = [...prevData];
-    updatedData[index] = {
-      ...updatedData[index],
-      [field]: value,
-    };
-    return updatedData;
-  });
-};
-  const handleAddGroup = () => {
-    setFormData([...formData, { language: '', fluency: 'Fluent' }]);
-  };
 
-    const handleRemoveGroup = (index) => {
-      setFormData((prevData) => {
-        const updatedData = [...prevData];
-        updatedData.splice(index, 1);
-        return updatedData;
-      });
-    };
 
 
 
@@ -77,41 +41,68 @@ const handleChange = (index, field, value) => {
         ]
         :data.type==='date'?[<DateField variant="standard" />]
         :data.type==='multi-select'?[<Select>
-           {Array.isArray(typedLists[data.options]) ? typedLists[data.options].map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>) : null }
-           {Array.isArray(data.options) ? data.options.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>) : null }
+{(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)}
+
 
 
                                      </Select>
 ]
-        :data.type==='yes/no'?[<ToggleButtonGroup exclusive>
-            <ToggleButton value={'yes'}>Yes</ToggleButton>
-            <ToggleButton value={'no'}>No</ToggleButton>
-        </ToggleButtonGroup>]
-        :data.type==='checkbox'?[ 
-          <Box display="flex" flexWrap="wrap">
-          {(Array.isArray(typedLists[data.options]) ? typedLists[data.options] : []).map((v) => (
-            <CardContent
-              key={v}
-              value={v}
-              sx={{
-                margin: 1,
-                backgroundColor: getValues(data.id)?.includes(v) ? primary90 : OVA_very_soft_grey,
-                cursor: 'pointer',
-                borderRadius: 1,
-                height: 'auto',
-                width: 'auto',
-              }}
-              onClick={() => {
-                const updatedValues = getValues(data.id)?.includes(v)
-                  ? getValues(data.id).filter((value) => value !== v)
-                  : [...getValues(data.id), v];
-                setValue(data.id, updatedValues);
-              }}
-            >
-              {v}
-            </CardContent>
-          ))}
+        :data.type==='yes/no'?[ 
+          <Box>
+         <ToggleButtonGroup exclusive value={userSelection} onChange={(e, value) => handleYesNoChange(value)}>
+    <ToggleButton value={'yes'}        style={{ backgroundColor: userSelection === 'yes' ? 'primary.main' : 'inherit' }}
+
+>
+      Yes
+    </ToggleButton>
+    <ToggleButton value={'no'} style={{ backgroundColor: userSelection === 'no' ? primary90 : 'inherit' }}>
+      No
+    </ToggleButton>
+  </ToggleButtonGroup>
+
+          {/* Additional fields based on user selection and condition */}
+          {userSelection &&
+            data.sub &&
+            data.sub
+              .filter((subField) => !subField.condition || subField.condition.includes(userSelection))
+              .map((subField, index) => (
+                <FormFieldUI key={index} data={subField} register={register} control={control} />
+              ))}
         </Box>
+        ]
+        :data.type==='checkbox'?[ 
+          <Controller
+          name="checkboxOptions"
+          control={control}
+          render={({ field }) => (
+            <Box display="flex" flexWrap="wrap">
+              {(typedLists[data.options] ?? data.options)?.map((v) => (
+                <CardContent
+                  key={v}
+                  sx={{
+                    margin: 1,
+                    backgroundColor: field.value?.includes(v)? primary90 : OVA_very_soft_grey,
+                    cursor: 'pointer',
+                    borderRadius: 1,
+                    height: 'auto',
+                    width: 'auto',
+                  }}
+                  onClick={() => {
+                    const updatedValues = field.value?.includes(v)
+                      ? field.value?.filter((value) => value !== v)
+                      : [...field.value??[], v];
+                    field.onChange(updatedValues);
+                  }}
+                >
+                  {v}
+                </CardContent>
+              ))}
+            </Box>
+          )}
+        />
+        
+        
+        
             
     
     
