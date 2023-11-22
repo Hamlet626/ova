@@ -13,7 +13,10 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import {OVA_very_soft_grey,primary90} from "@/components/ThemeRegistry/theme_consts.ts";
 
-
+import { useFieldArray } from 'react-hook-form';
+import {IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export default function FormFieldUI({data,register,control}:{data:FormField,register:any,control:any }){
@@ -25,16 +28,43 @@ export default function FormFieldUI({data,register,control}:{data:FormField,regi
     // Handle changes when the user selects 'yes' or 'no'
     setUserSelection(value);
   };
+
+  //populate
+  const { fields, append, remove } = useFieldArray({ control, name: 'group' });
+
 //
 //         console.log(data.length);
 //         console.log(data.options);
 
+const addField = () => {
+  if (data.group) {
+    const newFields = data.group.map((subField) => ({
+      ...subField,
+      id: `new_${subField.id}`, // You may need to adjust how the new ID is generated
+    }));
+    append(newFields);
+  }
+};
 
+const deleteSet = (setId) => {
+  const setIndex = fields.findIndex((subField) => subField.setId === setId);
+  
+  if (setIndex !== -1) {
+    remove(setIndex);
+  }
+};
 
 
 
     return <Stack key={data.id} mb={4} >
-        <Typography variant="body1">{data.label}</Typography>
+        <Typography variant="body1">
+          {data.label}
+          {data.type === 'populate' && (
+          <IconButton onClick={addField}>
+            <AddIcon />
+          </IconButton>
+        )}
+        </Typography>
         <Box height={8}/>
         {data.type==='text'?[<TextField multiline minRows={fieldLength }  variant="outlined"  sx={{ flex: 1 }} />
 //         <FormHelperText error>Please fill in valid values</FormHelperText>
@@ -42,9 +72,6 @@ export default function FormFieldUI({data,register,control}:{data:FormField,regi
         :data.type==='date'?[<DateField variant="standard" />]
         :data.type==='multi-select'?[<Select>
 {(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)}
-
-
-
                                      </Select>
 ]
         :data.type==='yes/no'?[ 
@@ -65,7 +92,9 @@ export default function FormFieldUI({data,register,control}:{data:FormField,regi
             data.sub
               .filter((subField) => subField.condition.includes(userSelection))
               .map((subField, index) => (
+                <Box sx={{marginLeft:"20px",marginTop: '10px'}}>
                 <FormFieldUI key={index} data={subField} register={register} control={control} />
+                </Box>
               ))}
         </Box>
         ]
@@ -107,13 +136,29 @@ export default function FormFieldUI({data,register,control}:{data:FormField,regi
         :data.type==='name'?[]
         :data.type==='populate'?[
           <Box>
-          {
-            data.group &&
-            data.group
-              .map((subField, index) => (
-                <FormFieldUI key={index} data={subField} register={register} control={control} />
-              ))}
-           </Box>
+         { fields
+           .map((subField, index) => (
+            <div key={subField.id}>
+    <IconButton onClick={() => deleteSet(subField.setId)}>
+          <DeleteIcon />
+        </IconButton>
+            
+              <Box sx={{ marginLeft: '20px', marginTop: '10px' }}>
+                <FormFieldUI data={subField} register={register} control={control} />
+              </Box>
+            </div>
+          ))}
+          </Box>
+          // <Box>
+          // {
+          //   data.group &&
+          //   data.group
+          //     .map((subField, index) => (
+          //       <Box sx={{marginLeft:"20px",marginTop: '10px'}}>
+          //       <FormFieldUI key={index} data={subField} register={register} control={control} />
+          //       </Box>
+          //     ))}
+          //  </Box>
         ]
         :[]
 
