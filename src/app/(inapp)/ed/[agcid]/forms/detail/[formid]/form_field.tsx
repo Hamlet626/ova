@@ -50,8 +50,7 @@ export default function FormFieldUI({data,register,control}:{data:FormField,regi
         :data.type==='yes/no'?[ 
           <Box>
          <ToggleButtonGroup exclusive value={userSelection} onChange={(e, value) => handleYesNoChange(value)}>
-    <ToggleButton value={'yes'}        style={{ backgroundColor: userSelection === 'yes' ? 'primary.main' : 'inherit' }}
-
+    <ToggleButton value={'yes'}  sx={{ color: userSelection === 'yes' ? primary90: 'inherit' }}
 >
       Yes
     </ToggleButton>
@@ -64,7 +63,7 @@ export default function FormFieldUI({data,register,control}:{data:FormField,regi
           {userSelection &&
             data.sub &&
             data.sub
-              .filter((subField) => !subField.condition || subField.condition.includes(userSelection))
+              .filter((subField) => subField.condition.includes(userSelection))
               .map((subField, index) => (
                 <FormFieldUI key={index} data={subField} register={register} control={control} />
               ))}
@@ -100,25 +99,22 @@ export default function FormFieldUI({data,register,control}:{data:FormField,regi
             </Box>
           )}
         />
-        
-        
-        
-            
-    
-    
         ]
 
-        :data.type==='number'?[<TextField type='number' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />]
+        :data.type==='number'?[<TextField type='number' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*',min:0 }} />]
         :data.type==='address'?[<Input />,
         <FormHelperText error>Please fill in valid value</FormHelperText>]
         :data.type==='name'?[]
         :data.type==='populate'?[
-
-
-
-
-
-]
+          <Box>
+          {
+            data.group &&
+            data.group
+              .map((subField, index) => (
+                <FormFieldUI key={index} data={subField} register={register} control={control} />
+              ))}
+           </Box>
+        ]
         :[]
 
 //check object is list

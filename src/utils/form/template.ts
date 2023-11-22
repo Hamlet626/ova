@@ -124,7 +124,7 @@ export const basic_info:FormTemp={
                     group: [
                         {
                             id: "s0",
-                            label: "Languages Spoken",
+                            label: "Languages",
                             type: "multi-select",
                             options: 'languages',
                             required: true
