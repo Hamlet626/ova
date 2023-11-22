@@ -22,3 +22,12 @@ export const FormTempDoc=(agcid:string,formid:number)=>
 
 export const FormDataDoc=(role:RoleNum,uid:string,formid:number)=>
 `${FormDataCol(role,uid)}/${formid}`
+
+
+
+export const FilesCol=(role:RoleNum,uid:string)=>
+`user groups/${roles[role].id}/users/${uid}/files`;
+
+export const FileDoc=(role:RoleNum,uid:string,fileColid:string)=>
+`${FilesCol(role,uid)}/${fileColid}`;
+
