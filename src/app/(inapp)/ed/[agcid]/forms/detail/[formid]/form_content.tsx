@@ -26,8 +26,9 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const onSubmit = async (data:any,nextSec?: number|null) => {
         addStoredForm(formid,{data});
         localStorage.setItem(`formData_${formid}`, JSON.stringify(data));
-        const selectedValues = getValues('checkboxOptions');
-        console.log('Selected values:', selectedValues);
+        // const selectedValues = getValues('checkboxOptions');
+        // console.log('Selected values:', selectedValues);
+        console.log(data);
 
         if(nextSec==null){
             //setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid}`),{...preData,data},{merge:true});

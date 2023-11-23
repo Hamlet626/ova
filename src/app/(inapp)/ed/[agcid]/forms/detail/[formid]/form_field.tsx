@@ -17,10 +17,17 @@ import { useFieldArray } from 'react-hook-form';
 import {IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 export default function FormFieldUI({data,register,control}:{data:FormField,register:any,control:any }){
+  const { id, type } = data;
 
+  if (!data || !id) {
+    // Handle the case where data or id is undefined
+    return null;
+  }
   const fieldLength = data.length === 'long' ? 3 : data.length === 'short' ? 0.5 : 1; // Set the default to 2 or adjust as needed
   const [userSelection, setUserSelection] = useState<string | null>(null);
 
@@ -36,25 +43,24 @@ export default function FormFieldUI({data,register,control}:{data:FormField,regi
 //         console.log(data.length);
 //         console.log(data.options);
 
+
 const addField = () => {
   if (data.group) {
     const newFields = data.group.map((subField) => ({
       ...subField,
-      id: `new_${subField.id}`, // You may need to adjust how the new ID is generated
+      id: `group.${uuidv4()}`, // Generate a unique ID for each subfield
     }));
     append(newFields);
   }
 };
 
+
 const deleteSet = (setId) => {
-  const setIndex = fields.findIndex((subField) => subField.setId === setId);
-  
+  const setIndex = fields.findIndex((subField) => subField.id === setId);
   if (setIndex !== -1) {
     remove(setIndex);
   }
 };
-
-
 
     return <Stack key={data.id} mb={4} >
         <Typography variant="body1">
@@ -63,15 +69,16 @@ const deleteSet = (setId) => {
           <IconButton onClick={addField}>
             <AddIcon />
           </IconButton>
+  
         )}
         </Typography>
         <Box height={8}/>
-        {data.type==='text'?[<TextField multiline minRows={fieldLength }  variant="outlined"  sx={{ flex: 1 }} />
+        {data.type==='text'?[<TextField multiline minRows={fieldLength }  variant="outlined"  sx={{ flex: 1 }}  {...register(data.id)} />
 //         <FormHelperText error>Please fill in valid values</FormHelperText>
         ]
-        :data.type==='date'?[<DateField variant="standard" />]
+        :data.type==='date'?[<DateField variant="standard" {...(data.id && register(data.id))} /> ] 
         :data.type==='multi-select'?[<Select>
-{(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)}
+        {(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)}
                                      </Select>
 ]
         :data.type==='yes/no'?[ 
@@ -130,20 +137,19 @@ const deleteSet = (setId) => {
         />
         ]
 
-        :data.type==='number'?[<TextField type='number' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*',min:0 }} />]
-        :data.type==='address'?[<Input />,
-        <FormHelperText error>Please fill in valid value</FormHelperText>]
+        :data.type==='number'?[<TextField type='number' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*',min:0 }} {...register(data.id)}/>]
+        :data.type==='address'?[<Input {...register(data.id)}/>,
+        <FormHelperText error>Please fill in valid value</FormHelperText> ]
         :data.type==='name'?[]
         :data.type==='populate'?[
           <Box>
-         { fields
-           .map((subField, index) => (
+        {fields.map((subField, index) => (
             <div key={subField.id}>
-    <IconButton onClick={() => deleteSet(subField.setId)}>
-          <DeleteIcon />
-        </IconButton>
-            
+              <IconButton onClick={() => remove(subField.id)}>
+                <DeleteIcon />
+              </IconButton>
               <Box sx={{ marginLeft: '20px', marginTop: '10px' }}>
+                {/* Use register to connect the field to React Hook Form */}
                 <FormFieldUI data={subField} register={register} control={control} />
               </Box>
             </div>
