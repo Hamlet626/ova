@@ -33,9 +33,9 @@ export interface FileCol{
     name:string,
     description?:string,
     by?:DocumentReference,
-    files:File[]
+    files:FileData[]
 }
-export interface File{
+export interface FileData{
     url:string,
     by?:DocumentReference,
 }
@@ -49,6 +49,6 @@ export const FileColConverter = {
       options: SnapshotOptions
     ): FileCol {
       const data = snapshot.data(options)!;
-      return data as FileCol;
+      return {...data,files:data.files??[]} as FileCol;
     }
   };

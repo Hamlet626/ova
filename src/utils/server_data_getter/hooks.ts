@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import usePromise from "react-use-promise";
 
 export const useLocalCachePromise=<T=any>(promise:Promise<T> | (() => Promise<T>),deps:any[]=[],defaultValue?:T,)=>{
@@ -12,3 +12,18 @@ export const useLocalCachePromise=<T=any>(promise:Promise<T> | (() => Promise<T>
   
     return {data,setData,error,status};
   }
+
+
+export const useLastestValue=(value:any) => {
+    const prevValue = useRef();
+  
+    useEffect(() => {
+      // Update the previous value when the current value changes
+      if(value!=null)
+      prevValue.current = value;
+    }, [value]);
+  
+    // Return the previous value
+    return value??prevValue.current;
+  }
+

@@ -1,5 +1,5 @@
 import { Roboto } from 'next/font/google';
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material';
 import { outline_variant } from './theme_consts';
 
 const roboto = Roboto({
@@ -139,6 +139,18 @@ const theme = createTheme({
         MuiLinearProgress:{
             defaultProps:{
                 variant:"determinate"
+            }
+        },
+        MuiDialog:{
+            defaultProps:{
+                maxWidth:'md'
+            },
+        },
+        MuiDialogActions:{
+            styleOverrides:{
+                spacing:{
+                    paddingBottom:24
+                }
             }
         }
         // MuiAlert: {
