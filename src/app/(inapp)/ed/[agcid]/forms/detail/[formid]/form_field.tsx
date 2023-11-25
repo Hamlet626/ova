@@ -1,6 +1,7 @@
 import { FormField } from "@/utils/form/types";
 import { Box, FormHelperText, Input, MenuItem, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { DateField } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers";
 import { useEffect } from 'react';
 import {typedLists} from "@/utils/form/consts";
 // import { languages,eyeColors,hairColors,ethnicities,nationalities,countryList,physicalTraits,dominantHands,} from "@/utils/form/consts";
@@ -76,9 +77,22 @@ const deleteSet = (setId) => {
         {data.type==='text'?[<TextField multiline minRows={fieldLength }  variant="outlined"  sx={{ flex: 1 }}  {...register(data.id)} />
 //         <FormHelperText error>Please fill in valid values</FormHelperText>
         ]
-        :data.type==='date'?[<DateField variant="standard" {...(data.id && register(data.id))} /> ] 
-        :data.type==='multi-select'?[<Select>
-        {(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)}
+        :data.type==='date'?[
+          //< DatePicker label="Basic date picker" format="DD/MM/YYYY"  {...(data.id && register(data.id)?.onChange && register(data.id).onChange)} /> 
+          <Controller
+    control={control}
+    name={data.id}
+    render={({ field }) => (
+      <DatePicker
+      placeholderText='Select date'
+      format="MM/DD/YYYY"
+      value={field.value}
+      onChange={field.onChange}
+      />
+   )}
+  />] 
+        :data.type==='multi-select'?[<Select {...register(data.id)}>
+        {(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)} 
                                      </Select>
 ]
         :data.type==='yes/no'?[ 
