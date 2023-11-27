@@ -19,25 +19,27 @@ import {IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
 
 
 
 export default function FormFieldUI({data,register,control}:{data:FormField,register:any,control:any }){
-  const { id, type } = data;
-
-  if (!data || !id) {
-    // Handle the case where data or id is undefined
-    return null;
-  }
+ 
   const fieldLength = data.length === 'long' ? 3 : data.length === 'short' ? 0.5 : 1; // Set the default to 2 or adjust as needed
+  const formatDate = (dateObject) => {
+    if (!dateObject || !dateObject.$d) return null;
+
+      const dateToFormat = dayjs(dateObject.$d);
+  
+    return dateToFormat.format('MM/DD/YYYY');
+  };
+  //populate
   const [userSelection, setUserSelection] = useState<string | null>(null);
 
   const handleYesNoChange = (value: string) => {
     // Handle changes when the user selects 'yes' or 'no'
     setUserSelection(value);
   };
-
-  //populate
   const { fields, append, remove } = useFieldArray({ control, name: 'group' });
 
 //
@@ -62,6 +64,36 @@ const deleteSet = (setId) => {
     remove(setIndex);
   }
 };
+const handleCheckboxChange = (value) => {
+  // Handle changes when the user selects a checkbox
+  // Append the selected checkbox value to userSelection
+  setUserSelection((prevSelection) => {
+    const updatedSelection = [...(prevSelection || []), value];
+    return updatedSelection;
+  });
+};
+const renderSubfields = () => {
+  console.log("Rendering subfields for", data.label);
+  console.log("User selection:", userSelection);
+  console.log("Subfields:", data.sub);
+
+  if (data.sub && data.sub[data.id] && userSelection) {
+    const subData = data.sub[data.id];
+    return fields.map((subField, index) => {
+      const shouldRenderSubField =
+        subData.condition && subData.condition.some((condition) => userSelection.includes(condition));
+      return shouldRenderSubField ? (
+        <Box key={subField.id} sx={{ marginLeft: '20px', marginTop: '10px' }}>
+          <FormFieldUI data={subField} register={register} control={control} />
+        </Box>
+      ) : null;
+    });
+  }
+  return null;
+};
+
+
+
 
     return <Stack key={data.id} mb={4} >
         <Typography variant="body1">
@@ -78,19 +110,24 @@ const deleteSet = (setId) => {
 //         <FormHelperText error>Please fill in valid values</FormHelperText>
         ]
         :data.type==='date'?[
-          //< DatePicker label="Basic date picker" format="DD/MM/YYYY"  {...(data.id && register(data.id)?.onChange && register(data.id).onChange)} /> 
+          // < DatePicker label="Basic date picker" format="DD/MM/YYYY"  {...(data.id && register(data.id)?.onChange && register(data.id).onChange)} /> 
           <Controller
-    control={control}
-    name={data.id}
-    render={({ field }) => (
-      <DatePicker
-      placeholderText='Select date'
-      format="MM/DD/YYYY"
-      value={field.value}
-      onChange={field.onChange}
-      />
-   )}
-  />] 
+          control={control}
+          name={data.id}
+          render={({ field }) => (
+            <Box>
+            <DatePicker
+                value={formatDate (field.value)}
+                onChange={(value) => {
+                  field.onChange(formatDate(value));
+                }}
+              />
+            </Box>
+          )}
+        />
+
+
+        ] 
         :data.type==='multi-select'?[<Select {...register(data.id)}>
         {(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)} 
                                      </Select>
@@ -121,7 +158,7 @@ const deleteSet = (setId) => {
         ]
         :data.type==='checkbox'?[ 
           <Controller
-          name="checkboxOptions"
+          name={data.id}
           control={control}
           render={({ field }) => (
             <Box display="flex" flexWrap="wrap">
@@ -141,6 +178,7 @@ const deleteSet = (setId) => {
                       ? field.value?.filter((value) => value !== v)
                       : [...field.value??[], v];
                     field.onChange(updatedValues);
+                    
                   }}
                 >
                   {v}
@@ -181,10 +219,23 @@ const deleteSet = (setId) => {
           //  </Box>
         ]
         :[]
+  }
+{userSelection &&
+        data.sub &&
+        data.sub
+          .filter((subField) => subField.condition.includes(userSelection))
+          .map((subField, index) => (
+            <Box key={index} sx={{ marginLeft: '20px', marginTop: '10px' }}>
+              <FormFieldUI
+                data={subField}
+                register={register}
+                control={control}
+              />
+            </Box>
+          ))}
+      {renderSubfields(data.id)}
+      {data.type === 'checkbox' && renderSubfields()}
 
-//check object is list
-//      Array.isArray(typedLists[data.options])
-              }
 
         {/* <TextField select
         // inputRef={register("password")}
