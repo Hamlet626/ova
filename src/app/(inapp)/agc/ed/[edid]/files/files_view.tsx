@@ -10,7 +10,7 @@ import { useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { CreateFileDialog } from "./create_file_dialog";
 import { EditFileDialog } from "./edit_file_dialog";
-import { FileTile } from "./page";
+import { FileTile } from "./file_tile";
 
 export const FilesView=({data,onChange,edid}:{data:FileCol,onChange:(v:FileCol)=>void,edid:string})=>{
 
