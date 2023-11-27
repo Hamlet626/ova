@@ -2,7 +2,7 @@ import { useAPILoadingError } from "@/components/api_process/use_api_loading_err
 import { FilesRef, FileRef, UserRef } from "@/utils/firebase/firebase_client";
 import { FileCol } from "@/utils/firebase/types";
 import { RoleNum } from "@/utils/roles";
-import { useLastestValue } from "@/utils/server_data_getter/hooks";
+import { useConsistForm, useLastestValue } from "@/utils/server_data_getter/hooks";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Dialog, DialogTitle, DialogContent, Stack, TextField, DialogActions, Button } from "@mui/material";
 import { addDoc, setDoc } from "firebase/firestore";
@@ -19,18 +19,14 @@ export const FileColDialog=({colID,close,initialData,updateLocalFile,edid}:
         const{loading,setError,handleCallAPI,errNotiComponent}=useAPILoadingError(async(data)=>{
             if(isCreate){
                 const r=await addDoc(FilesRef(RoleNum.ED,edid),{...data,by:UserRef(me.role,me.id)});
-                updateLocalFile({...data,id:r.id});
+                updateLocalFile({...data,id:r.id,files:{}});
             }else{
                 await setDoc(FileRef(RoleNum.ED,edid,colID!),data,{merge:true});
                 updateLocalFile({...initialData,...data});
             }
         });
 
-        const {register,handleSubmit,reset}=useForm({defaultValues:initialData, shouldUnregister:true});
-
-        useEffect(()=>{
-            reset(initialData??{name:null,description:null});
-        },[initialData])
+        const {register,handleSubmit}=useConsistForm({defaultValues:initialData, shouldUnregister:true});
 
     return <>
     <Dialog open={colID!=null} onClose={()=>close()}>
