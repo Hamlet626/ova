@@ -2,7 +2,7 @@ import { processCldUrl } from "@/utils/cloudinary/utils";
 import { FileRef } from "@/utils/firebase/firebase_client";
 import { FileCol, FileData, urlToFieldKey } from "@/utils/firebase/types";
 import { RoleNum } from "@/utils/roles";
-import { AddAPhoto } from "@mui/icons-material";
+import { Add, AddAPhoto } from "@mui/icons-material";
 import { Stack, Typography, ButtonBase, FormControlLabel, Checkbox, Box } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { updateDoc, deleteField } from "firebase/firestore";
@@ -11,6 +11,8 @@ import { FileRejection, useDropzone } from "react-dropzone";
 import { CreateFileDialog } from "./create_file_dialog";
 import { EditFileDialog } from "./edit_file_dialog";
 import { FileTile } from "./file_tile";
+import { OVA_very_soft_grey } from "@/components/ThemeRegistry/theme_consts";
+import { jsonPost } from "@/utils/server_data_getter/http";
 
 export const FilesView=({data,onChange,edid}:{data:FileCol,onChange:(v:FileCol)=>void,edid:string})=>{
 
@@ -45,11 +47,15 @@ export const FilesView=({data,onChange,edid}:{data:FileCol,onChange:(v:FileCol)=
                 <FileTile data={v} openEditDlg={()=>setEditFile(v)}/>
             </Grid2>))}
             <input {...getInputProps()}/>
-            <Grid2 xs width={134}>
-                <ButtonBase sx={{ p: 2, border: '1px dashed grey' }} onClick={open}>
-                {/* <Box sx={{ p: 2, border: '1px dashed grey' }}> */}
-                    <AddAPhoto/>
-                {/* </Box> */}
+            <Grid2 xs maxWidth={134}>
+                <ButtonBase onClick={open} sx={{borderRadius:'12px'}}>
+                    <Stack>
+                        <Box display='flex' bgcolor={OVA_very_soft_grey} sx={{borderRadius:'12px', border: '2px dashed grey', aspectRatio:1.2}}>
+                            <Add sx={{m:'auto'}}/>
+                            </Box>
+                            <Box height={12}/>
+                        <Typography variant="body2" textAlign={'center'}>Drag or Click to Upload</Typography>
+                    </Stack>
                 </ButtonBase>
             </Grid2>
         </Grid2>
@@ -66,7 +72,6 @@ export const FilesView=({data,onChange,edid}:{data:FileCol,onChange:(v:FileCol)=
         </Grid2>
         <CreateFileDialog close={()=>setFile(undefined)} data={selectedFile}
         updateData={async(newFile:FileData)=>{
-            // const i=data.files.findIndex(v=>v.)
             const newDoc=fileDataToDoc(newFile);
             await updateDoc(FileRef(RoleNum.ED,edid,data.id!),
             {[`files.${urlToFieldKey(newFile.url!)}`]:newDoc[newFile.url!]});
@@ -78,7 +83,14 @@ export const FilesView=({data,onChange,edid}:{data:FileCol,onChange:(v:FileCol)=
             {[`files.${urlToFieldKey(editingFile!.url!)}`]:deleteField()});
             const {[editingFile!.url!]:xx,...otherFiles}=data.files;
             onChange({...data,files:otherFiles});
-        }} 
+
+            const fileData=processCldUrl(editingFile!.url!);
+            const r=await jsonPost('/api/cloudinary',{
+                l1key:'uploader',
+                l2key:'destroy',
+                body:[fileData.publicId]
+            });
+        }}
         updateData={async(update)=>{
             await updateDoc(FileRef(RoleNum.ED,edid,data.id!),
             Object.fromEntries(Object.entries(update).map(

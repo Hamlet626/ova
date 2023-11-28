@@ -14,6 +14,7 @@ import LinkOutlinedIcon from '@mui/icons-material/LinkOutlined';
 //import style for image part
 import { styled } from '@mui/material/styles';
 import { useSession } from "next-auth/react";
+import { jsonPost } from "@/utils/server_data_getter/http";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -46,16 +47,9 @@ export default function Uploadprofile( { clinic,role,c1 } ) {
     };
     
     const saveAvatar=async(url:string)=>{
-        const r = await fetch('/api/update_profile', {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        const r = await jsonPost('/api/update_profile', {
             avatar: url,
-          }),
-        });
+          });
         
         if(r.status===200){
           await update({image:url}).then(v=>{console.log(v);});

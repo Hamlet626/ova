@@ -22,7 +22,7 @@ export const EditFileDialog=({close,data,removeData,updateData}:
     <FieldDialog open={open} onClose={()=>close()}>
             <Stack direction={'row'}>
             <Card elevation={0}>
-                <CardActionArea>
+                <CardActionArea href={fileData?.url??''} target="_blank">
                     <CardMedia src={fileData?.url} component={'img'} height={186} width={186} sx={{//borderRadius:'12px'
                 }}/>
                 </CardActionArea>

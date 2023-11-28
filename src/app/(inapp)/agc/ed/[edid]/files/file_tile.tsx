@@ -11,10 +11,10 @@ export const FileTile=({data,openEditDlg}:{data:FileData,openEditDlg:Function})=
 
     return <Card elevation={0}>
         <CardActionArea onClick={()=>openEditDlg()}>
-            <CardMedia src={data.url} component={'img'} sx={{borderRadius:'12px'}}/>
+            <CardMedia src={data.url} component={'img'} sx={{borderRadius:'12px', aspectRatio:1.2}}/>
         </CardActionArea>
         <Stack direction={'row'} alignItems={'center'}>
-        <Typography variant="body2" flexGrow={1} textAlign={'center'}>{data.name}</Typography>
+        <Typography variant="body2" flexGrow={1} textAlign={'center'} textOverflow={'clip'} noWrap>{data.name}</Typography>
         <CardActions>
             <IconButton href={processCldUrl(data.url!,data.name).downloadUrl}><Download/></IconButton>
         </CardActions>
