@@ -7,21 +7,22 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Dialog, DialogTitle, DialogContent, Stack, TextField, DialogActions, Button } from "@mui/material";
 import { addDoc, setDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { FilesInfoContext, userFileInfo } from "./files";
 
 export const FileColDialog=({colID,close,initialData,updateLocalFile,edid}:
     {colID?:string,close:()=>void,initialData?:FileCol, updateLocalFile:(doc:FileCol)=>void,edid:string})=>{
         
+    const owner=(useContext(FilesInfoContext) as userFileInfo).user;
         /// useLastestValue to avoid colID became undefined when closing, and renders Edit title
         const isCreate=useLastestValue(colID)==='';
         const me=useSession({required:true}).data?.user!;
         const{loading,setError,handleCallAPI,errNotiComponent}=useAPILoadingError(async(data)=>{
             if(isCreate){
-                const r=await addDoc(FilesRef(RoleNum.ED,edid),{...data,by:UserRef(me.role,me.id)});
+                const r=await addDoc(FilesRef(owner.role,edid),{...data,by:UserRef(me.role,me.id)});
                 updateLocalFile({...data,id:r.id,files:{}});
             }else{
-                await setDoc(FileRef(RoleNum.ED,edid,colID!),data,{merge:true});
+                await setDoc(FileRef(owner.role,edid,colID!),data,{merge:true});
                 updateLocalFile({...initialData,...data});
             }
         });

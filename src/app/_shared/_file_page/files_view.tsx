@@ -1,21 +1,22 @@
 import { processCldUrl } from "@/utils/cloudinary/utils";
 import { FileRef } from "@/utils/firebase/firebase_client";
 import { FileCol, FileData, urlToFieldKey } from "@/utils/firebase/types";
-import { RoleNum } from "@/utils/roles";
 import { Add, AddAPhoto } from "@mui/icons-material";
 import { Stack, Typography, ButtonBase, FormControlLabel, Checkbox, Box } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import { updateDoc, deleteField } from "firebase/firestore";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { CreateFileDialog } from "./create_file_dialog";
 import { EditFileDialog } from "./edit_file_dialog";
 import { FileTile } from "./file_tile";
 import { OVA_very_soft_grey } from "@/components/ThemeRegistry/theme_consts";
 import { jsonPost } from "@/utils/server_data_getter/http";
+import { FilesInfoContext, userFileInfo } from "./files";
 
 export const FilesView=({data,onChange,edid}:{data:FileCol,onChange:(v:FileCol)=>void,edid:string})=>{
 
+    const owner=(useContext(FilesInfoContext) as userFileInfo).user;
     const [editingFile,setEditFile]=useState<FileData>();
 
     const [selectedFile,setFile]=useState<File>();
@@ -42,7 +43,7 @@ export const FilesView=({data,onChange,edid}:{data:FileCol,onChange:(v:FileCol)=
             <Typography variant="body2">Total: {files.length} file{files.length>1?'s':''}</Typography>
         </Stack>
         <Box height={20}/>
-        <Grid2 container overflow='auto' columnSpacing={3} rowSpacing={2} {...getRootProps()} flexGrow={1}>
+        <Grid2 container overflow='auto' columnSpacing={3} rowSpacing={2} {...getRootProps()} flexGrow={1} disableEqualOverflow>
             {files.map(v=>(<Grid2 xs width={134} maxWidth={134}>
                 <FileTile data={v} openEditDlg={()=>setEditFile(v)}/>
             </Grid2>))}
@@ -66,20 +67,20 @@ export const FilesView=({data,onChange,edid}:{data:FileCol,onChange:(v:FileCol)=
         checked={data.selfEditable??false}
         onChange={(ev,v)=>{
             onChange({...data,selfEditable:v});
-            updateDoc(FileRef(RoleNum.ED,edid,data.id!),{selfEditable:v});
+            updateDoc(FileRef(owner.role,edid,data.id!),{selfEditable:v});
         }}
         />
         </Grid2>
         <CreateFileDialog close={()=>setFile(undefined)} data={selectedFile}
         updateData={async(newFile:FileData)=>{
             const newDoc=fileDataToDoc(newFile);
-            await updateDoc(FileRef(RoleNum.ED,edid,data.id!),
+            await updateDoc(FileRef(owner.role,edid,data.id!),
             {[`files.${urlToFieldKey(newFile.url!)}`]:newDoc[newFile.url!]});
             onChange({...data,files:{...data.files,...newDoc}});
         }}/>
         <EditFileDialog close={()=>setEditFile(undefined)} data={editingFile}
         removeData={async()=>{
-            await updateDoc(FileRef(RoleNum.ED,edid,data.id!),
+            await updateDoc(FileRef(owner.role,edid,data.id!),
             {[`files.${urlToFieldKey(editingFile!.url!)}`]:deleteField()});
             const {[editingFile!.url!]:xx,...otherFiles}=data.files;
             onChange({...data,files:otherFiles});
@@ -92,7 +93,7 @@ export const FilesView=({data,onChange,edid}:{data:FileCol,onChange:(v:FileCol)=
             });
         }}
         updateData={async(update)=>{
-            await updateDoc(FileRef(RoleNum.ED,edid,data.id!),
+            await updateDoc(FileRef(owner.role,edid,data.id!),
             Object.fromEntries(Object.entries(update).map(
                 et=>[`files.${urlToFieldKey(editingFile!.url!)}.${et[0]}`,et[1]])) as any
             );

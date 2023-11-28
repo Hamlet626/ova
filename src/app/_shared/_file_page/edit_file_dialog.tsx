@@ -5,7 +5,6 @@ import { useAPILoadingError } from "@/components/api_process/use_api_loading_err
 import LoadingButton from "@mui/lab/LoadingButton";
 import { FieldDialog } from "@/components/layouts/field_dialog";
 import { processCldUrl } from "@/utils/cloudinary/utils";
-import { dialogHeader } from "@/components/ThemeRegistry/theme_consts";
 import { CheckboxField } from "@/components/form_fields/check_box_field";
 
 export const EditFileDialog=({close,data,removeData,updateData}:

@@ -96,7 +96,7 @@ const CDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
       if(role===RoleNum.ED)
       return [
       {path:'/forms',text:'Forms','icon':<StickyNote2Outlined/>},
-    {path:'/file',text:'Files','icon':<FolderOutlined/>},
+    {path:'/files',text:'Files','icon':<FolderOutlined/>},
     {path:'/agencies',text:'Agencies','icon':<PeopleOutline/>},
     {path:'/cases',text:'Cases','icon':<HandshakeOutlined/>},
     {path:'/calendar',text:'Events Calendar','icon':<CalendarMonthOutlined/>},
