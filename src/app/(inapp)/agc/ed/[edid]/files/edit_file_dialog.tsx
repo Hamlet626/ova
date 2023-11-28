@@ -1,6 +1,6 @@
 import { FileData } from "@/utils/firebase/types";
 import { useConsistForm, useLastestValue } from "@/utils/server_data_getter/hooks";
-import { Button, Card, CardActionArea, CardMedia, DialogActions, DialogContent, Stack, Typography } from "@mui/material";
+import { Button, Card, CardActionArea, CardMedia, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { useAPILoadingError } from "@/components/api_process/use_api_loading_error";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { FieldDialog } from "@/components/layouts/field_dialog";
@@ -31,7 +31,7 @@ export const EditFileDialog=({close,data,removeData,updateData}:
                     <DialogContent>
                         <form>
                             <Stack>
-                            <Typography sx={dialogHeader}>{fileDetail?.fileName}</Typography>
+                            <DialogTitle>{fileDetail?.fileName}</DialogTitle>
                             <CheckboxField useFromControl={control}
                             label={'ED visible'} name='selfVisible' 
                             onChange={(ev,v)=>{

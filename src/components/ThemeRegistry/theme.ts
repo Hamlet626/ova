@@ -1,6 +1,6 @@
 import { Roboto } from 'next/font/google';
 import { createTheme } from '@mui/material';
-import { outline_variant } from './theme_consts';
+import { dialogHeader, outline_variant } from './theme_consts';
 
 const roboto = Roboto({
     weight: ['300', '400', '500', '700'],
@@ -141,10 +141,10 @@ const theme = createTheme({
                 variant:"determinate"
             }
         },
-        MuiDialog:{
-            defaultProps:{
-                maxWidth:'md'
-            },
+        MuiDialogTitle:{
+            styleOverrides:{
+                root:({ownerState})=>({sx:{ownerState,...dialogHeader}})
+            }
         },
         MuiDialogActions:{
             styleOverrides:{

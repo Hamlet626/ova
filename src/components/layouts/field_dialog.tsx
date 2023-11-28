@@ -7,11 +7,12 @@ export const FieldDialog=({...prop}:DialogProps)=>{
   const customTheme = {
     ...parentTheme,
     components: {
-      MuiButton: {
+      ...parentTheme.components,
+      MuiTextField:{
         defaultProps:{
             variant:'standard'
-        },
-      },
+        }
+      }
     },
   };
     
