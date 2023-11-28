@@ -151,7 +151,7 @@ export const alcoholFreq=[
 ];
 
 export const smoke=[
-	'Electronic Cigarette','Cigarettes','Vape Nicotine',
+	'Electronic Cigarette','Cigarettes','Vape Nicotine', 'Vape Marijuana','Cigars','Pipe','Hookah','Smokeless Tobacco','Chewing Tobacco','Snuff','Dissolvable Tobacco','Other'
 ];
 export const smokeFreq=[
 	'Used to but no longer','Rarely','Occasionally','Daily'

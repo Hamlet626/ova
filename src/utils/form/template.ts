@@ -40,6 +40,12 @@ export const basic_info: FormTemp = {
                     required: true
                 },
                 {
+                    id: "s1",
+                    label: "Preferred name",
+                    subLabel: "This name will display on your profile",
+                    type: "text",
+                },
+                {
                     id: "s6",
                     label: "Date of Birth",
                     type: "date",
@@ -50,17 +56,6 @@ export const basic_info: FormTemp = {
                     label: "Contact Number",
                     type: "phone",
                     required: true
-                },
-                {
-                    id: "s0",
-                    label: "Marital Status",
-                    type: "multi-select",
-                    options: maritalStatuses,
-                    required: true,
-                    /*sub: personData("partner",
-                        {
-                            addDobAddr:true,
-                            addProp:{condition:["Married", "Separated"]}})*/
                 },
             ]
         },
@@ -80,15 +75,23 @@ export const basic_info: FormTemp = {
                             label: "Do you hold permanent or temporary resident immigration status?",
                             type: "yes/no",
                             required: true,
+                            sub: [
+                                {
+                                    id: "s1",
+                                    condition: [yes],
+                                    label: "Social Security Number (SSN)",
+                                    subLabel: "Optional",
+                                    type: "ssn"
+                                }
+                            ]
                         },
                         {
-                            id: "s2",
+                            id: "s1",
                             condition: ["American"],
                             label: "Social Security Number (SSN)",
-                            type: "number",
-                            // required: true
-
-                        }
+                            subLabel: "Optional",
+                            type: "ssn"
+                        },
                     ]
                 },
                 {
@@ -154,10 +157,10 @@ export const basic_info: FormTemp = {
 };
 
 export const physical_personal_trait: FormTemp = {
-    name: "physical & personal trait",
+    name: "Physical & Personal Trait",
     content: [
         {
-            title: "physical characteristics",
+            title: "Physical Characteristics",
             fields: [
 
                 {//todo
@@ -169,6 +172,7 @@ export const physical_personal_trait: FormTemp = {
                 {//todo
                     id: "s8",
                     label: "Weight (in lbs)",
+                    subLabel: "Please note: you will be weighed at your initial consult",
                     type: "number",
                     length: "short",
                     required: true
@@ -321,7 +325,7 @@ export const physical_personal_trait: FormTemp = {
 };
 
 export const education_occupation: FormTemp = {
-    name: "education & occupation",
+    name: "Education & Occupation",
     content: [
         {
             title: "Education",
@@ -460,10 +464,10 @@ export const education_occupation: FormTemp = {
 
 ///todo
 export const background_history: FormTemp = {
-    name: "background history",
+    name: "Background History",
     content: [
         {
-            title: 'medical',
+            title: 'Medical',
             fields: [
                 {
                     label: 'Does any of the following apply to you?',
@@ -512,7 +516,7 @@ export const background_history: FormTemp = {
             ]
         },
         {
-            title: 'crime & history',
+            title: 'Crime & History',
             fields: [
                 {
                     label: 'Does any of the following apply to you?',
@@ -548,7 +552,7 @@ export const background_history: FormTemp = {
             ]
         },
         {
-            title: 'social habits',
+            title: 'Social Habits',
             fields: [
                 {
                     label: 'Do you drink alcohol?',
@@ -658,7 +662,7 @@ export const background_history: FormTemp = {
             ]
         },
         {
-            title: 'sexual history',
+            title: 'Sexual History',
             fields: [
                 {
                     label: 'Please list all the birth control methods currently being used or used in the past, if any.',
@@ -817,6 +821,169 @@ export const background_history: FormTemp = {
     ]
 };
 
+//todo
+export const family_partner: FormTemp = {
+    name: "Partner,Family & Emergency Contact",
+    content: [
+        {
+            title: "Partner",
+            fields: [
+                {
+                    id: "s0",
+                    label: "Marital Status",
+                    type: "multi-select",
+                    options: maritalStatuses,
+                    required: true,
+                    /*sub: personData("partner",
+                        {
+                            addDobAddr:true,
+                            addProp:{condition:["Married", "Separated"]}})*/
+                },
+                {
+                    id: "s1",
+                    label: "Emergency Contacts",
+                    type: "populate",
+                    /*group:[
+                        ...personData("Emergency Contacts",{
+                            addRelation:true
+                        })
+                    ]*/
+                },
+                {
+                    id: "s",
+                    label: "Please select the following that applied to your partner, family member, or close contact",
+                    type: "checkbox",
+                    options: familyTrait,
+                    sub: [
+                        {
+                            id: "s",
+                            condition: [fBaldness],
+                            label: "Which side of the Family?",
+                            required: true,
+                            type: "checkbox",
+                            options: familySide
+                        }
+                    ]
+                },
+            ]
+        },
+        {
+            title: "Family Members",
+            fields: [
+                {
+                    id: "s",
+                    label: "How many siblings do you have?",
+                    required: true,
+                    type: "text",
+                    length: "short"
+                },
+                {
+                    id: "s",
+                    label: "Please select your family history of multiple birth",
+                    required: true,
+                    type: "checkbox",
+                    options: [
+                        "Twins",
+                        "Triplets",
+                        "Other"
+                    ],
+                    sub: [
+                        {
+                            id: "s",
+                            required: true,
+                            label: "Please enter they number of children in multiple birth",
+                            condition: ["Other"],
+                            type: "text",
+                            length: "medium"
+                        }
+                    ]
+                },
+            ]
+        },
+        {
+            title: "Family history",
+            fields: [
+                {
+                    id: "s",
+                    label: "PLease list your family history of inheritable diseases if any",
+                    type: "text",
+                    length: "long",
+                    required: false
+                },
+                {
+                    id: "s",
+                    label: "Do you have a family history of mental illness",
+                    required: true,
+                    type: "yes/no",
+                    length: "short"
+                },
+                {
+                    id: "s",
+                    label: "Please select the following that applied to your partner, family member, or close contact",
+                    required: true,
+                    type: "checkbox",
+                    options: [
+                        "Been to Africa",
+                        "Been to Europe more than 3 months",
+                        "Been to Europe between 1980-1996",
+                        "Have sexually transmitted disease(s)",
+                        "Drug abuse or injected drugs",
+                        "Jail/Prison ore than 3 days"
+                    ]
+                },
+                {
+                    id: "s",
+                    label: "Please provide detailed medical information about your immediate family",
+                    required: true,
+                    type: "text",
+                    length: "long"
+                },
+            ]
+        },
+        {
+            title: "Supportive",
+            fields: [
+                {
+                    id: "s",
+                    label: "Does your partner support your decision to become an egg donor and understand the need for temporary abstinence??",
+                    required: true,
+                    type: "text",
+                    length: "long"
+                },
+                {
+                    id: "s",
+                    label: "Do your family and/or those important to you support your decision to become an egg donor?",
+                    required: true,
+                    type: "yes/no",
+                    length: "short",
+                    sub: [
+                        {
+                            id: "s",
+                            condition: ["no"],
+                            type: "text",
+                            label: "Please explain",
+                            length: "long",
+                            required: true
+                        }
+                    ]
+                },
+                {
+                    id: "s",
+                    label: "Do you understand that the ultimate goal of your donation is the birth of a healthy child with whom you will not have a parental relationship?",
+                    required: true,
+                    type: "yes/no",
+                    length: "short"
+                }
+            ]
+        },
+        {
+            title: "Emergency Contact",
+            fields:[
+                
+            ]
+        }
+    ]
+};
 
 export const personal_and_medical = {
     name: "personal & medical",
@@ -1117,164 +1284,6 @@ export const personal_and_medical = {
     ]
 }
 
-//todo
-export const family_partner: FormTemp = {
-    name: "family & partner",
-    content: [
-        {
-            title: "title1",
-            fields: [
-                {
-                    id: "s0",
-                    label: "Marital Status",
-                    type: "multi-select",
-                    options: maritalStatuses,
-                    required: true,
-                    /*sub: personData("partner",
-                        {
-                            addDobAddr:true,
-                            addProp:{condition:["Married", "Separated"]}})*/
-                },
-                {
-                    id: "s1",
-                    label: "Emergency Contacts",
-                    type: "populate",
-                    /*group:[
-                        ...personData("Emergency Contacts",{
-                            addRelation:true
-                        })
-                    ]*/
-                },
-                {
-                    id: "s",
-                    label: "Please select the following that applied to your partner, family member, or close contact",
-                    type: "checkbox",
-                    options: familyTrait,
-                    sub: [
-                        {
-                            id: "s",
-                            condition: [fBaldness],
-                            label: "Which side of the Family?",
-                            required: true,
-                            type: "checkbox",
-                            options: familySide
-                        }
-                    ]
-                },
-            ]
-        },
-        {
-            title: "title2",
-            fields: [
-                {
-                    id: "s",
-                    label: "PLease list your family history of inheritable diseases if any",
-                    type: "text",
-                    length: "long",
-                    required: false
-                },
-                {
-                    id: "s",
-                    label: "Do you have a family history of mental illness",
-                    required: true,
-                    type: "yes/no",
-                    length: "short"
-                },
-                {
-                    id: "s",
-                    label: "Please select the following that applied to your partner, family member, or close contact",
-                    required: true,
-                    type: "checkbox",
-                    options: [
-                        "Been to Africa",
-                        "Been to Europe more than 3 months",
-                        "Been to Europe between 1980-1996",
-                        "Have sexually transmitted disease(s)",
-                        "Drug abuse or injected drugs",
-                        "Jail/Prison ore than 3 days"
-                    ]
-                },
-                {
-                    id: "s",
-                    label: "Please provide detailed medical information about your immediate family",
-                    required: true,
-                    type: "text",
-                    length: "long"
-                },
-            ]
-        },
-        {
-            title: "title3",
-            fields: [
-                {
-                    id: "s",
-                    label: "How many siblings do you have?",
-                    required: true,
-                    type: "text",
-                    length: "short"
-                },
-                {
-                    id: "s",
-                    label: "Please select your family history of multiple birth",
-                    required: true,
-                    type: "checkbox",
-                    options: [
-                        "Twins",
-                        "Triplets",
-                        "Other"
-                    ],
-                    sub: [
-                        {
-                            id: "s",
-                            required: true,
-                            label: "Please enter they number of children in multiple birth",
-                            condition: ["Other"],
-                            type: "text",
-                            length: "medium"
-                        }
-                    ]
-                },
-            ]
-        },
-
-        {
-            title: "title4",
-            fields: [
-                {
-                    id: "s",
-                    label: "Does your partner support your decision to become an egg donor and understand the need for temporary abstinence??",
-                    required: true,
-                    type: "text",
-                    length: "long"
-                },
-                {
-                    id: "s",
-                    label: "Do your family and/or those important to you support your decision to become an egg donor?",
-                    required: true,
-                    type: "yes/no",
-                    length: "short",
-                    sub: [
-                        {
-                            id: "s",
-                            condition: ["no"],
-                            type: "text",
-                            label: "Please explain",
-                            length: "long",
-                            required: true
-                        }
-                    ]
-                },
-                {
-                    id: "s",
-                    label: "Do you understand that the ultimate goal of your donation is the birth of a healthy child with whom you will not have a parental relationship?",
-                    required: true,
-                    type: "yes/no",
-                    length: "short"
-                }
-            ]
-        }
-    ]
-};
 
 //todo Waitlist
 export const other_clinic_questions: FormTemp = {

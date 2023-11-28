@@ -13,7 +13,7 @@ export interface FormField{
     id?:string,
     label:string,
     subLabel?:string,
-    type:'text'|'multi-select'|'date'|'address'|'name'|'height'|"yes/no"|"checkbox"|"number"|'populate' | 'phone',
+    type:'text'|'multi-select'|'date'|'address'|'name'|'height'|"yes/no"|"checkbox"|"number"|'populate' | 'phone' | 'ssn',
     required?:boolean,
     default?:any,
     length?:'long'|'medium'|'short',
