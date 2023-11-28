@@ -19,7 +19,7 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const [fieldNum,setFieldNum]=useState(initialField);
     const router=useRouter();
 
-    const {handleSubmit, register, formState:{errors}, setValue,control,getValues }=useForm({defaultValues:data});
+    const {handleSubmit, register, formState:{errors}, setValue,control,getValues, watch }=useForm({defaultValues:data});
 
     const stats=formStatus(data,template);
 
@@ -84,10 +84,11 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
                 </Stack> */}
                 <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'center'} pt={10} pb={20} px={6}>
                 <form onSubmit={handleSubmit((d)=>onSubmit(d,isLastSec?null:sectionNum+1))}>
-                    {template.content[sectionNum].fields.map((v,i)=><FormFieldUI key={i} data={v} register={register} control={control}/>)}
+                    {template.content[sectionNum].fields.map((v,i)=><FormFieldUI key={i} data={v} register={register} control={control} watch={watch}/>)}
                 </form>
                 </Box>
                 </Box>
+
 
         <Stack position={'absolute'} direction={'row'} pb={'47px'} bottom={0} width={'100%'} 
         sx={{backdropFilter: 'blur(2px)', background:'linear-gradient(to top, white, transparent)'}}>
