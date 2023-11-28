@@ -23,28 +23,29 @@ import dayjs from 'dayjs';
 
 
 
-export default function FormFieldUI({data,register,control}:{data:FormField,register:any,control:any }){
+export default function FormFieldUI({data,register,control,watch}:{data:FormField,register:any,control:any,watch:any }){
  
   const fieldLength = data.length === 'long' ? 3 : data.length === 'short' ? 0.5 : 1; // Set the default to 2 or adjust as needed
+  
   const formatDate = (dateObject) => {
     if (!dateObject || !dateObject.$d) return null;
-
       const dateToFormat = dayjs(dateObject.$d);
   
     return dateToFormat.format('MM/DD/YYYY');
   };
   //populate
-  const [userSelection, setUserSelection] = useState<string | null>(null);
+ const [userSelection, setUserSelection] = useState<string | null>(null);
 
-  const handleYesNoChange = (value: string) => {
-    // Handle changes when the user selects 'yes' or 'no'
-    setUserSelection(value);
-  };
+ const handleYesNoChange = (value: string) => {
+  // Handle changes when the user selects 'yes' or 'no'
+  setUserSelection(value);
+};
   const { fields, append, remove } = useFieldArray({ control, name: 'group' });
 
 //
-//         console.log(data.length);
-//         console.log(data.options);
+        // console.log(data.length);
+const fieldValue = watch(data.id); // Replace 'data.id' with the actual ID of the field you want to watch
+console.log(fieldValue); // Log the value to the console
 
 
 const addField = () => {
@@ -64,33 +65,8 @@ const deleteSet = (setId) => {
     remove(setIndex);
   }
 };
-const handleCheckboxChange = (value) => {
-  // Handle changes when the user selects a checkbox
-  // Append the selected checkbox value to userSelection
-  setUserSelection((prevSelection) => {
-    const updatedSelection = [...(prevSelection || []), value];
-    return updatedSelection;
-  });
-};
-const renderSubfields = () => {
-  console.log("Rendering subfields for", data.label);
-  console.log("User selection:", userSelection);
-  console.log("Subfields:", data.sub);
 
-  if (data.sub && data.sub[data.id] && userSelection) {
-    const subData = data.sub[data.id];
-    return fields.map((subField, index) => {
-      const shouldRenderSubField =
-        subData.condition && subData.condition.some((condition) => userSelection.includes(condition));
-      return shouldRenderSubField ? (
-        <Box key={subField.id} sx={{ marginLeft: '20px', marginTop: '10px' }}>
-          <FormFieldUI data={subField} register={register} control={control} />
-        </Box>
-      ) : null;
-    });
-  }
-  return null;
-};
+
 
 
 
@@ -128,24 +104,61 @@ const renderSubfields = () => {
 
 
         ] 
-        :data.type==='multi-select'?[<Select {...register(data.id)}>
-        {(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)} 
-                                     </Select>
+        :data.type==='multi-select'?[
+        // <Select  {...register(data.id)}>
+        // {(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)} 
+        //                              </Select>
+        <Controller
+        name={data.id}
+        control={control}
+        render={({ field }) => (
+          <Select {...field}>
+            {(typedLists[data.options] ?? data.options)?.map((v) => (
+              <MenuItem key={v} value={v}>
+                {v}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+      />                           
 ]
         :data.type==='yes/no'?[ 
           <Box>
-         <ToggleButtonGroup exclusive value={userSelection} onChange={(e, value) => handleYesNoChange(value)}>
-    <ToggleButton value={'yes'}  sx={{ color: userSelection === 'yes' ? primary90: 'inherit' }}
+        <Controller
+        name={data.id}
+        control={control}
+        render={({ field }) => (
+          <ToggleButtonGroup
+            name={data.id}
+            exclusive
+            value={field.value}
+            onChange={(e, value) => {
+              field.onChange(value);
+              // handleYesNoChange(value);
+            }}
+          >
+        <ToggleButton
+  value={'yes'}
+  sx={{
+    backgroundColor: field.value?.includes('yes') ? primary90 : 'inherit',
+  }}
+
 >
-      Yes
-    </ToggleButton>
-    <ToggleButton value={'no'} style={{ backgroundColor: userSelection === 'no' ? primary90 : 'inherit' }}>
-      No
-    </ToggleButton>
-  </ToggleButtonGroup>
+  Yes
+</ToggleButton>
+
+            <ToggleButton
+              value={'no'}
+              sx={{bgcolor:primary90 }}
+            >
+              No
+            </ToggleButton>
+          </ToggleButtonGroup>
+        )}
+      />
 
           {/* Additional fields based on user selection and condition */}
-          {userSelection &&
+          {/* {userSelection &&
             data.sub &&
             data.sub
               .filter((subField) => subField.condition.includes(userSelection))
@@ -153,7 +166,7 @@ const renderSubfields = () => {
                 <Box sx={{marginLeft:"20px",marginTop: '10px'}}>
                 <FormFieldUI key={index} data={subField} register={register} control={control} />
                 </Box>
-              ))}
+              ))} */}
         </Box>
         ]
         :data.type==='checkbox'?[ 
@@ -201,7 +214,6 @@ const renderSubfields = () => {
                 <DeleteIcon />
               </IconButton>
               <Box sx={{ marginLeft: '20px', marginTop: '10px' }}>
-                {/* Use register to connect the field to React Hook Form */}
                 <FormFieldUI data={subField} register={register} control={control} />
               </Box>
             </div>
@@ -220,21 +232,41 @@ const renderSubfields = () => {
         ]
         :[]
   }
-{userSelection &&
-        data.sub &&
-        data.sub
-          .filter((subField) => subField.condition.includes(userSelection))
-          .map((subField, index) => (
-            <Box key={index} sx={{ marginLeft: '20px', marginTop: '10px' }}>
-              <FormFieldUI
-                data={subField}
-                register={register}
-                control={control}
-              />
-            </Box>
-          ))}
-      {renderSubfields(data.id)}
-      {data.type === 'checkbox' && renderSubfields()}
+{data.sub &&
+  data.sub
+  .filter((subField) => {
+    const watchedValue = watch(data.id);
+    console.log(watchedValue);
+
+    if (subField.condition) {
+      // Check condition
+      // console.log(subField.condition.some(condition => watchedValue?.includes(condition)));
+      return subField.condition.some(condition => watchedValue?.includes(condition));
+    } else if (subField.exCondition) {
+      // Check exCondition
+      console.log(!subField.exCondition.some(exCondition => watchedValue?.includes(exCondition)));
+
+      return subField.exCondition.some(exCondition => !watchedValue?.includes(exCondition));
+    }
+
+    return true; // If no condition or exCondition, always render the subfield
+  })
+    // .filter((subField) => subField.condition?.some(condition => condition === watch(data.id)))
+    .map((subField, index) => (
+      <Box key={index} sx={{ marginLeft: '20px', marginTop: '10px' }}>
+        <FormFieldUI
+          data={subField}
+          register={register}
+          control={control}
+          watch={watch}  
+        />
+      </Box>
+    ))}
+
+
+
+      {/* {renderSubfields(data.id)}
+      {data.type === 'checkbox' && renderSubfields()} */}
 
 
         {/* <TextField select
