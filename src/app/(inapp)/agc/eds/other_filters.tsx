@@ -51,7 +51,7 @@ const FacetSearcher=styled(InputBase)(({theme})=>({
 
 const FacetFilter=({temp,searchable}:{temp:AlgoMapping,searchable?:boolean})=>{
     if(temp.uiLabel??temp.label==null)return <text>{JSON.stringify(temp)}</text>
-    const attribute=temp.uiLabel??temp.label!;
+    const uiLabel=temp.uiLabel??temp.label!;
     const {
         items,
         refine,
@@ -61,11 +61,11 @@ const FacetFilter=({temp,searchable}:{temp:AlgoMapping,searchable?:boolean})=>{
         toggleShowMore,
         // canRefine
       } = useRefinementList({
-          attribute: attribute,
+          attribute: temp.label,
           operator:'or',
           sortBy:['isRefined','count:desc']
       });
-      const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
+      const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[temp.label]});
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
       const [searchText,setText]=useState('');
 
@@ -73,7 +73,7 @@ const FacetFilter=({temp,searchable}:{temp:AlgoMapping,searchable?:boolean})=>{
     return <div>
         <Chip clickable variant={canClear?'filled':'outlined'}
         color={'secondary'}
-        label={attribute}
+        label={uiLabel}
         onClick={(event)=>{
             event.stopPropagation();
             setAnchorEl(event.currentTarget);
@@ -83,7 +83,7 @@ const FacetFilter=({temp,searchable}:{temp:AlgoMapping,searchable?:boolean})=>{
         />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={()=>{setAnchorEl(null);}}>
             <Stack px={2} py={3}>
-            <Typography sx={dialogHeader}>{attribute}</Typography>
+            <Typography sx={dialogHeader}>{uiLabel}</Typography>
             <Box height={16}/>
             { searchable && 
             <FacetSearcher startAdornment={<Search/>} 
@@ -127,11 +127,11 @@ const FacetFilter=({temp,searchable}:{temp:AlgoMapping,searchable?:boolean})=>{
 
 const NumFilter=({temp}:{temp:AlgoMapping})=>{
     if(temp.uiLabel??temp.label==null)return <text>{JSON.stringify(temp)}</text>
-    const attribute=temp.uiLabel??temp.label!;
+    const uiLabel=temp.uiLabel??temp.label!;
 
-    const { refine,start,range } = useRange({ attribute: attribute });
+    const { refine,start,range } = useRange({ attribute: temp.label });
       
-      const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
+      const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[temp.label]});
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
       const [minText,setMinText]=useState(start[0]);
       const [maxText,setMaxText]=useState(start[1]);
@@ -153,7 +153,7 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
     return <div>
         <Chip clickable variant={canClear?'filled':'outlined'}
         color={'secondary'}
-        label={attribute}
+        label={uiLabel}
         onClick={(event)=>{
             event.stopPropagation();
             setAnchorEl(event.currentTarget);
@@ -163,7 +163,7 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
         />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={()=>{setAnchorEl(null);}}>
             <Stack px={2} py={3}>
-            <Typography sx={dialogHeader}>{attribute}</Typography>
+            <Typography sx={dialogHeader}>{uiLabel}</Typography>
             <Box height={16}/>
 
             <Stack direction={'row'}>
@@ -201,11 +201,11 @@ const NumFilter=({temp}:{temp:AlgoMapping})=>{
 }
 
 const AgeFilter=({temp}:{temp:AlgoMapping})=>{
-    const attribute=temp.uiLabel??temp.label!;
+    const uiLabel=temp.uiLabel??'Age';
 
-    const { refine,start,range } = useRange({ attribute: attribute });
+    const { refine,start,range } = useRange({ attribute: temp.label! });
       
-    const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[attribute]});
+    const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:[temp.label!]});
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [minText,setMinText]=useState(start[0]);
     const [maxText,setMaxText]=useState(start[1]);
@@ -242,7 +242,7 @@ const AgeFilter=({temp}:{temp:AlgoMapping})=>{
     return <div>
         <Chip clickable variant={canClear?'filled':'outlined'}
         color={'secondary'}
-        label={attribute}
+        label={uiLabel}
         onClick={(event)=>{
             event.stopPropagation();
             setAnchorEl(event.currentTarget);
@@ -252,7 +252,7 @@ const AgeFilter=({temp}:{temp:AlgoMapping})=>{
         />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={()=>{setAnchorEl(null);}}>
             <Stack px={2} py={3}>
-            <Typography sx={dialogHeader}>{attribute}</Typography>
+            <Typography sx={dialogHeader}>{uiLabel}</Typography>
             <Box height={16}/>
 
             <Stack direction={'row'}>
@@ -277,7 +277,6 @@ const AgeFilter=({temp}:{temp:AlgoMapping})=>{
             onClick={(event)=>{
                 event.stopPropagation();
                 
-                console.log([processMax,processMin]);
                 refine([processMax,processMin]);
             }}>
                 Apply
@@ -319,24 +318,3 @@ const BoolFilter=({temp}:{temp:AlgoMapping})=>{
     />;
 }
 
-
-
-// export const Config1=()=>{
-//     const [hpp,seth]=useState(5);
-//     const { refine } = useConfigure({ hitsPerPage:5 });
-    
-//     return <>
-//     <Button onClick={()=>seth(hpp===5?10:5)}>hpp:{hpp}</Button>
-//     </>
-// }
-
-export const Config2=()=>{
-    // const [hpp,seth]=useState(5);
-    const { refine } = useConfigure({ filters:'Weight > 10' });
-    const { canRefine:canClear, refine:clearRefine } = useClearRefinements({includedAttributes:['Weight']});
-    
-    return <Stack>
-    <Button onClick={()=>refine({ filters:'test:true' })}>hpp</Button>
-    <text>{`${canClear}`}</text>
-    </Stack>
-}

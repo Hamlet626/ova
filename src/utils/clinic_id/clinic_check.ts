@@ -5,7 +5,7 @@ export const getClinic=(host?:string|null):string|null=>{
     host??='';
     if(host==='')console.error("host key not working, check getClinic()");
     
-    if(host.endsWith("3000"))return "test";
+    if(host.endsWith("3000"))return "RhWjYhUPy0TaL1mTBe2HEwGaBBv1";
     return null;
 }
 

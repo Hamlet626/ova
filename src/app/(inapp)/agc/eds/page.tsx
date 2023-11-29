@@ -19,7 +19,7 @@ import Link from "next/link";
 import { EDsHits, EdTile } from "./ed_tile";
 import { SortBy } from "./sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { EDStatus, EDStatusLabel } from "@/utils/status";
+import { EDStatus, EDStatusLabel } from "@/utils/types/status";
 import { StateFilter } from "./state_filter";
 import { OtherFilters } from "./other_filters";
 
@@ -37,8 +37,6 @@ export default function EDs(){
                 <Typography sx={font3} flexGrow={2}>Egg Donor</Typography>
                 <Box flexGrow={8} flexBasis={8}>
                   <Autocomplete
-                  placeholder="Search products"
-                  openOnFocus
                   />
                 </Box>
                 <Stack flexGrow={2} direction={'row'} alignItems={'end'}>
@@ -65,9 +63,7 @@ export default function EDs(){
           <Box width={8}/>
           <Typography variant="subtitle2">All Egg Donor</Typography>
           <Box flexGrow={1}/>
-          <Link passHref href={'todo'}>
-            <Typography variant="body2">See All</Typography>
-          </Link>
+          <Typography variant="body2" component={Link} href={'todo'}>See All</Typography>
         </Stack>
 
         <Box height={12}/>

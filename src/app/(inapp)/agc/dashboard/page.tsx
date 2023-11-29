@@ -40,7 +40,6 @@ export default async function Home() {
     const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
     const handleTabChange = (e, tabIndex) => {
-        console.log(tabIndex);
         setCurrentTabIndex(tabIndex);
     };
     const [anchorEl, setAnchorEl] = React.useState(null); // | HTMLElement>(null);

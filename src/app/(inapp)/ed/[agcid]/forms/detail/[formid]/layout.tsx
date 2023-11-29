@@ -1,15 +1,8 @@
 import { Box, Paper, Stack, Typography } from "@mui/material";
 import EDFormTitles from "./form_titles";
-import Link from "next/link";
-import { ArrowBack, ArrowBackIos } from "@mui/icons-material";
-import { font3, font7 } from "@/components/ThemeRegistry/theme_consts";
+import { font3, } from "@/components/ThemeRegistry/theme_consts";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { roles } from "@/utils/roles";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { getServerSession } from "next-auth";
-import { unstable_cache } from "next/cache";
-import { app } from "@/utils/firebase/firebase_client";
-import { formTemplates } from "@/utils/form/template";
 import { getFormData, getFormTemplate } from "../../../../../../../utils/server_data_getter/utils";
 import { BackButton } from "@/components/back_button";
 

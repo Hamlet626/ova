@@ -8,13 +8,13 @@ import { Row } from "./row";
 import TabContext from '@mui/lab/TabContext';
 import { EditFieldDialogBox } from "./edit_field_dialog_box";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { app } from "@/utils/firebase/firebase_client";
+import { setDoc } from "firebase/firestore";
+import { FormTempRef, app } from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
 import { useSession } from "next-auth/react";
 import { formTemplates } from "@/utils/form/template";
 import { Reorder } from "framer-motion";
-import { FormTempDoc } from "@/utils/firebase/database_consts";
+import { FormTempDoc } from "@/utils/firebase/path";
 
 //todo: decide remove or not
 function a11yProps(index: number) {
@@ -74,7 +74,7 @@ export function CustomTabPanel({ index, next, setFinished, ...other }:
         await Promise.all(Array.from({length:6},(v,i)=>{
             const data=localStorage.getItem(`formTemp${i}`);
             if(data==null)return;
-            return setDoc(doc(getFirestore(app),FormTempDoc(uid,i)),
+            return setDoc(FormTempRef(uid,i),
             {...formTemplates[index],content:JSON.parse(data)});
         }));
         setLoading(false);

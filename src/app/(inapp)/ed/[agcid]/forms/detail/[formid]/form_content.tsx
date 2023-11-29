@@ -5,9 +5,7 @@ import { Box, Breadcrumbs, Button, Chip, LinearProgress, Stack, Typography } fro
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import FormFieldUI from "./form_field";
-import { Form, useForm } from "react-hook-form";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { app } from "@/utils/firebase/firebase_client";
+import { Form, useForm,Controller } from "react-hook-form";
 import { formStatus, secFinished } from "@/utils/form/form_utils/status";
 import { FormTemp } from "@/utils/form/types";
 import { addStoredForm } from "@/utils/form/form_utils/storage";
@@ -21,16 +19,16 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
     const [fieldNum,setFieldNum]=useState(initialField);
     const router=useRouter();
 
-    const {handleSubmit, register, formState:{errors} }=useForm({defaultValues:data});
+    const {handleSubmit, register, formState:{errors}, setValue,control,getValues, watch }=useForm({defaultValues:data});
 
     const stats=formStatus(data,template);
 
     const onSubmit = async (data:any,nextSec?: number|null) => {
-         console.log("onSubmit called");
-  console.log("Data before storing:", data);
         addStoredForm(formid,{data});
         localStorage.setItem(`formData_${formid}`, JSON.stringify(data));
-
+        // const selectedValues = getValues('checkboxOptions');
+        // console.log('Selected values:', selectedValues);
+        console.log(data);
 
         if(nextSec==null){
             //setDoc(doc(getFirestore(app),`user groups/ed/users/${uid}/form data/${formid}`),{...preData,data},{merge:true});
@@ -86,10 +84,11 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
                 </Stack> */}
                 <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'center'} pt={10} pb={20} px={6}>
                 <form onSubmit={handleSubmit((d)=>onSubmit(d,isLastSec?null:sectionNum+1))}>
-                    {template.content[sectionNum].fields.map((v,i)=><FormFieldUI key={i} data={v} register={register}/>)}
+                    {template.content[sectionNum].fields.map((v,i)=><FormFieldUI key={i} data={v} register={register} control={control} watch={watch}/>)}
                 </form>
                 </Box>
                 </Box>
+
 
         <Stack position={'absolute'} direction={'row'} pb={'47px'} bottom={0} width={'100%'} 
         sx={{backdropFilter: 'blur(2px)', background:'linear-gradient(to top, white, transparent)'}}>

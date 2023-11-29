@@ -135,7 +135,7 @@ export const basic_info: FormTemp = {
                     group: [
                         {
                             id: "s0",
-                            label: "Languages Spoken",
+                            label: "Languages",
                             type: "multi-select",
                             options: 'languages',
                             required: true
@@ -821,6 +821,47 @@ export const background_history: FormTemp = {
     ]
 };
 
+const personData = (name: string, { addRelation, addDobAddr, addProp }: { addRelation: boolean, addDobAddr: boolean, addProp?: any }): FormField[] => {
+    const r = [
+        { id: "s0", label: `${name}'s Name`, type: "name", required: true },
+        {
+            id: "s4",
+            label: `${name}'s Email`,
+            type: "text",
+            length: "medium",
+            required: true
+        },
+        {
+            id: "s5",
+            label: `${name}'s Phone`,
+            type: "text",
+            length: "short",
+            required: true
+        },
+        ...(addDobAddr ? [
+            {
+                id: "s3",
+                label: "Address",
+                type: "address",
+                required: true
+            },
+            {
+                id: "s6",
+                label: `${name}'s Birthday`,
+                type: "date",
+                required: true
+            },] : []),
+        ...(addRelation ? [{
+            id: "s6",
+            label: `Relationship to ${name}`,
+            type: "multi-select",
+            options: relationships,
+            required: true
+        }] : []),
+    ];
+
+    return addProp ? r.map((v) => ({ ...v, ...addProp })) : r;
+}
 //todo
 export const family_partner: FormTemp = {
     name: "Partner,Family & Emergency Contact",
@@ -830,39 +871,53 @@ export const family_partner: FormTemp = {
             fields: [
                 {
                     id: "s0",
-                    label: "Marital Status",
-                    type: "multi-select",
-                    options: maritalStatuses,
+                    label: "Do you currently have a partner?",
+                    type: "yes/no",
                     required: true,
                     /*sub: personData("partner",
                         {
                             addDobAddr:true,
                             addProp:{condition:["Married", "Separated"]}})*/
-                },
-                {
-                    id: "s1",
-                    label: "Emergency Contacts",
-                    type: "populate",
-                    /*group:[
-                        ...personData("Emergency Contacts",{
-                            addRelation:true
-                        })
-                    ]*/
-                },
-                {
-                    id: "s",
-                    label: "Please select the following that applied to your partner, family member, or close contact",
-                    type: "checkbox",
-                    options: familyTrait,
                     sub: [
                         {
-                            id: "s",
-                            condition: [fBaldness],
-                            label: "Which side of the Family?",
+                            id: "s3",
+                            condition: [yes],
+                            label: "Are you and your partner Married? ",
+                            type: "yes/no",
                             required: true,
-                            type: "checkbox",
-                            options: familySide
-                        }
+                        },
+                        {
+                            id: "s1",
+                            condition: [yes],
+                            label: "Partner's Full Name",
+                            subLabel: "Last, First, MI",
+                            type: "name",
+                            required: false,
+                        },
+                        {
+                            id: "s2",
+                            condition: [yes],
+                            label: "Partner's Birthday",
+                            type: "date",
+                            required: false,
+                        },
+                        {
+                            id: "s4",
+                            condition: [yes],
+                            label: "Partner's Phone Number",
+                            type: "phone",
+                            required: false,
+                        },
+                        {
+                            id: "s5",
+                            condition: [yes],
+                            label: "Partner's Email",
+                            type: "text",
+                            required: false,
+
+                        },
+
+
                     ]
                 },
             ]
@@ -938,6 +993,22 @@ export const family_partner: FormTemp = {
                     type: "text",
                     length: "long"
                 },
+                {
+                    id: "s",
+                    label: "Please select the following that applied to your partner, family member, or close contact",
+                    type: "checkbox",
+                    options: familyTrait,
+                    sub: [
+                        {
+                            id: "s",
+                            condition: [fBaldness],
+                            label: "Which side of the Family?",
+                            required: true,
+                            type: "checkbox",
+                            options: familySide
+                        }
+                    ]
+                },
             ]
         },
         {
@@ -978,8 +1049,19 @@ export const family_partner: FormTemp = {
         },
         {
             title: "Emergency Contact",
-            fields:[
-                
+            fields: [
+                {
+                    id: "s1",
+                    label: "Emergency Contacts",
+                    type: "populate",
+                    group: [
+                        ...personData("Emergency Contacts", {
+                            addRelation: true,
+                            addDobAddr: false,
+                        })
+                    ]
+                },
+
             ]
         }
     ]
@@ -1323,49 +1405,6 @@ function assign_IDs(content: FormTemp) {
 }
 
 export const modified_content = assign_IDs(basic_info);
-
-
-const personData = (name: string, { addRelation, addDobAddr, addProp }: { addRelation: boolean, addDobAddr: boolean, addProp: any }): FormField[] => {
-    const r = [
-        { id: "s0", label: `${name}'s Name`, type: "name", required: true },
-        {
-            id: "s4",
-            label: `${name}'s Email`,
-            type: "text",
-            length: "medium",
-            required: true
-        },
-        {
-            id: "s5",
-            label: `${name}'s Phone`,
-            type: "text",
-            length: "short",
-            required: true
-        },
-        ...(addDobAddr ? [
-            {
-                id: "s3",
-                label: "Address",
-                type: "address",
-                required: true
-            },
-            {
-                id: "s6",
-                label: `${name}'s Birthday`,
-                type: "date",
-                required: true
-            },] : []),
-        ...(addRelation ? [{
-            id: "s6",
-            label: `Relationship to ${name}`,
-            type: "multi-select",
-            options: relationships,
-            required: true
-        }] : []),
-    ];
-
-    return addProp ? r.map((v) => ({ ...v, ...addProp })) : r;
-}
 
 function tagOnlyAlgo(qs: AlgoMapping[]): AlgoMapping[] {
     return qs.map((v, i, l) => ({ ...v, tag: true, filter: false }));
