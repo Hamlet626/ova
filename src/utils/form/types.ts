@@ -12,7 +12,8 @@ export interface FormSection{
 export interface FormField{
     id?:string,
     label:string,
-    type:'text'|'multi-select'|'date'|'address'|'name'|'height'|"yes/no"|"checkbox"|"number"|'populate',
+    subLabel?:string,
+    type:'text'|'multi-select'|'date'|'address'|'name'|'height'|"yes/no"|"checkbox"|"number"|'populate' | 'phone' | 'ssn',
     required?:boolean,
     default?:any,
     length?:'long'|'medium'|'short',
