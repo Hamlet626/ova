@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 import {formatDate} from "@/utils/formatters";
-
+import GoogleMaps from "@/components/google_map";
 
 
 export default function FormFieldUI({data,register,control,watch, name}:{data:FormField,register:any,control:any,watch:any,name:any }){
@@ -204,8 +204,9 @@ const deleteGroup = (groupIndex) => {
         ]
 
         :data.type==='number'?[<TextField type='number' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*',min:0 }} {...register(data.id)}/>]
-        :data.type==='address'?[<Input {...register(data.id)}/>,
-        <FormHelperText error>Please fill in valid value</FormHelperText> ]
+        :data.type==='address'?[        <GoogleMaps register={register} data={data} control={control} />
+
+         ]
         :data.type==='name'?[]
         :data.type==='populate'?[
 //           <Box>
