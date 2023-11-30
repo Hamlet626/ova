@@ -1,31 +1,29 @@
 'use client'
 import { PageHeader } from "@/components/ThemeRegistry/theme_consts";
-import { EDRec, algo_client } from "@/utils/algolia";
-import { Box, Button, Stack, SvgIcon, Typography } from "@mui/material";
+import { algo_client } from "@/utils/algolia";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
+import { Searcher } from "../searcher";
 import {
     Configure,
   } from "react-instantsearch";
-import { Add, PeopleOutline, } from "@mui/icons-material";
+import { Add, PeopleOutline } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import { EDsHits, EdTile } from "../ed_tile";
+import { SortBy } from "../sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { EDsHits, EDsRecommends } from "./ed_tile";
-import { OtherFilters } from "./other_filters";
-import { SortBy } from "./sorter";
-import { StateFilter } from "./state_filter";
-import { TitleNSeeAll } from "./title_see_all";
-import { Searcher } from "./searcher";
-import { useSession } from "next-auth/react";
+import { StateFilter } from "../state_filter";
+import { OtherFilters } from "../other_filters";
+import { TitleNSeeAll } from "../title_see_all";
 
 export default function EDs(){
   const router=useRouter();
-  const myid=useSession({required:true}).data?.user?.id!;
 
     return <InstantSearchNext indexName="ed" searchClient={algo_client}
     insights={true}
     future={{preserveSharedStateOnUnmount: true,}}
     >
-      <Configure hitsPerPage={10} enablePersonalization/>
+      <Configure hitsPerPage={10}/>
         <Stack px={10}>
           <Box height={20}/>
           <LOStack>
@@ -52,13 +50,19 @@ export default function EDs(){
 
           <OtherFilters/>
 
-          <Box height={18}/>
-          <EDsRecommends agcid={myid}/>
-
-          <Box height={32}/>
-          <TitleNSeeAll icon={PeopleOutline} title={"All Egg Donor"} href="/agc/eds/all"/>
-          <Box height={12}/>
+          <Box height={24}/>
           <EDsHits/>
+        
         </Stack>
+ 
+        {/* <div className="container wrapper">
+          <div>
+            <RefinementList attribute="brand" />
+          </div>
+          <div>
+            <Hits hitComponent={Hit} />
+            <Pagination />
+          </div>
+        </div> */}
     </InstantSearchNext>;
 }

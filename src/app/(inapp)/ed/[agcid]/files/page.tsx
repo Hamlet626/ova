@@ -4,7 +4,9 @@ import { useSession } from "next-auth/react";
 
 export default function Files(){
     const me=useSession({required:true}).data?.user;
-    return <FilesInfoContext.Provider value={{user:{role:me?.role!,id:me?.id!}}}>
+    return <FilesInfoContext.Provider value={{
+        pageView:true,
+        user:{role:me?.role!,id:me?.id!}}}>
         <FilesPage/>
         </FilesInfoContext.Provider>;
 }

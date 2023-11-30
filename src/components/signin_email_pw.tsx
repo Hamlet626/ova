@@ -36,6 +36,7 @@ export default function SigninEmailPwBlock() {
         if(r?.ok){
             const user=(await getSession())?.user!;
 
+            console.log('test1',user)
             router.push(`/${roles[user.role!].path}${user?.role===RoleNum.ED?`/${getClinic(hostName)??user.agencies![0]}`:''}/dashboard`);
             return;
         }

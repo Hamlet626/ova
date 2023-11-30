@@ -32,7 +32,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { getCliId_Client } from '@/utils/clinic_id/client';
 
-import aa from "search-insights";
+
 // import { ClearIcon } from './ClearIcon';
 // import { Highlight } from './Highlight';
 // import { SearchIcon } from './SearchIcon';
@@ -60,7 +60,7 @@ const tagsPlugin = createTagsPlugin();
 
 type AutocompleteItem = Hit<EDRec>;
 
-export function Autocomplete(
+export function Searcher(
   props: Partial<AutocompleteOptions<AutocompleteItem>>
 ) {
 
@@ -266,7 +266,7 @@ export function Autocomplete(
                         source.sourceId==='tagsPlugin'?Eds({item}):
                   source.sourceId==='querySuggestionsPlugin'?<QSuggest item={item} setQuery={autocomplete.setQuery}/>:
                   source.sourceId==='recentSearchesPlugin'?<RecentSearch item={item} onRemove={()=>{
-                    recentSearchesPlugin.data?.removeItem(item.id);
+                    recentSearchesPlugin.data?.removeItem(item.id as string);
                     autocomplete.refresh();
                   }}/>:null
                   }

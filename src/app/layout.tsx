@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
 import { Suspense } from 'react';
-import { NavigationEvents } from '../components/navigation_events';
 import { AlgoSetup } from '@/components/algolia/algo_setup';
 
 const inter = Inter({ subsets: ['latin'] })

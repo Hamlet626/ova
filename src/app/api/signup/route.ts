@@ -64,7 +64,8 @@ const EDSetUp=(uid:string,name:string,clinicId:string)=>{
     }),
     algo_client.initIndex(`${roleKey}`).saveObject({
         objectID: uid, name, createTime:(Date.now()/1000>>0),
-        agencies:{[clinicId]:{status:EDStatus.filling_Form}}
+        agencies:{[clinicId]:{status:EDStatus.filling_Form}},
+        agency_ids:[clinicId]
     })];
 }
 
@@ -76,7 +77,8 @@ const RcpSetUp=(uid:string,name:string,clinicId:string)=>{
         }),
     algo_client.initIndex(`${roleKey}`).saveObject({
         objectID: uid, name, createTime:(Date.now()/1000>>0),
-        agencies:[clinicId]
+        agencies:{[clinicId]:{status:RcpStatus.general}},
+        agency_ids:[clinicId]
     })];
 }
 

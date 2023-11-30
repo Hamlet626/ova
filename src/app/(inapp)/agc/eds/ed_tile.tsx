@@ -1,5 +1,5 @@
 'use client'
-import { OVA_very_soft_grey, font7 } from "@/components/ThemeRegistry/theme_consts";
+import { OVA_very_soft_grey, font7, neutral96 } from "@/components/ThemeRegistry/theme_consts";
 import { getCliId_Client } from "@/utils/clinic_id/client";
 import { UserDoc, UsersAgcDataDoc } from "@/utils/firebase/path";
 import { UserRef, UsersAgcDataRef, app } from "@/utils/firebase/firebase_client";
@@ -12,11 +12,15 @@ import usePromise from "react-use-promise";
 import type { Hit } from 'instantsearch.js';
 import { useHits, useInfiniteHits } from 'react-instantsearch';
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import { Face, PlaylistAdd } from "@mui/icons-material";
+import { Face, PlaylistAdd, TrendingUp } from "@mui/icons-material";
 import { useRef, useEffect } from "react";
 import { SendEventForHits } from "instantsearch.js/es/lib/utils";
-import aa from "search-insights";
 import { useRouter } from "next/navigation";
+import { TrendingItems, useTrendingItems } from '@algolia/recommend-react';
+import { recommend_client } from "@/utils/algolia";
+import { RemainedSlider } from "../../ed/[agcid]/forms/remained_slider";
+import { TitleNSeeAll } from "./title_see_all";
+import { useCurrentRefinements } from 'react-instantsearch';
 
 export const EdTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
   
@@ -34,7 +38,7 @@ export const EdTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
       const router=useRouter();
   
     return (
-        <Card sx={{bgcolor:OVA_very_soft_grey, aspectRatio:1}} elevation={0}>
+        <Card sx={{bgcolor:OVA_very_soft_grey, aspectRatio:0.7}} elevation={0}>
             <CardActionArea onClick={(event)=>{
               event.stopPropagation();
               if (user?.role!==RoleNum.Agc&&sendEvent!=null) {
@@ -56,7 +60,7 @@ export const EdTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
       <Stack px={'12px'}>
 <Box height={8}/>
       <Stack direction={'row'} justifyContent={'space-between'}>
-        {hit.tags?.slice(0,2).map(v=>(<Chip key={v} label={v} color='secondary'/>))}
+        {hit.tags?.slice(0,2).map((v:string)=>(<Chip key={v} label={v} color='secondary'/>))}
         {hit.tags!=null&& hit.tags?.length>2 && <Chip label='...' color='secondary'/>}
       </Stack>
 <Box height={8}/>
@@ -126,4 +130,43 @@ export const EDsHits=()=>{
           aria-hidden="true"
         /> */}
     </Grid2>;
+}
+
+
+
+export const EDsRecommends=({agcid}:{agcid:string})=>{
+
+  // const { items, canRefine, refine } = useCurrentRefinements({includedAttributes:['tags']});
+  // {"attribute":"tags","type":"disjunctive","value":"test","label":"test","count":9,"exhaustive":true}
+  // const [recommendations,err,state]=usePromise(()=>{
+  //   return recommend_client.getTrendingItems([{
+  //     indexName:'ed',
+  //     facetName:`agencies.${agcid}.status`,
+  // }],{
+  //     numericFilters:`agencies.${agcid}.status>=0`,
+  //     facetFilters:items[0]?.refinements.map(v=>`tags:${v.value}`).join(' OR ')
+  //   });
+  // },[agcid]);
+
+  const { recommendations, status } = useTrendingItems({
+    recommendClient:recommend_client,
+    indexName:'ed',
+  });
+
+  return <Stack bgcolor={neutral96} py={3} mx={-10} pl={10}>
+    <Box mr={10}>
+      <TitleNSeeAll icon={TrendingUp} title={"Trending Egg Donor"} href="todo"/>
+      </Box>
+      {/* <Typography>{JSON.stringify(items)}</Typography> */}
+    <Box height={12}/>
+    <RemainedSlider spacing={3}>{
+      // state==='pending'?<Box/>:state==='rejected'?
+      // <Typography>{JSON.stringify(err)}</Typography>:
+      recommendations.map(v=>
+    <Box width={'274px'}>
+      <EdTile hit={v as any}/>
+    </Box>
+    )}</RemainedSlider>
+  </Stack>
+
 }
