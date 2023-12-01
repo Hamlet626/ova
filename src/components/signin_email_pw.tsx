@@ -35,7 +35,6 @@ export default function SigninEmailPwBlock() {
 
     const {setError,loading,handleCallAPI,errNotiComponent}=useAPILoadingError(async(data)=>{
         const r=await signIn('credentials', {email:data.email, password:data.password, redirect: false, callbackUrl: '/'});
-        console.log('test3',r);
         if(r?.error){
             if(r.error==='Firebase: Error (auth/wrong-password).') 
             return {title:'Incorrect password :(',msg:'Hint: password would be at least 6 characters, with an Upper case\n'};
@@ -45,7 +44,6 @@ export default function SigninEmailPwBlock() {
         else if(r?.ok){
             const user=(await getSession())?.user!;
 
-            console.log('test1',user)
             router.push(`/${roles[user.role!].path}${user?.role===RoleNum.ED?`/${getClinic(hostName)??user.agencies![0]}`:''}/dashboard`);
         }
     });

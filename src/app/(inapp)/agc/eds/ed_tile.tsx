@@ -42,8 +42,8 @@ export const EdAlgoTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=
       return <LoadingEDTile 
       avatar={infoState==='pending'?undefined:basicInfo?.data()?.avatar}
       name={hit.name}
-      tags={hit.tags}
-      price={agcState==='pending'?undefined:agcData?.data()?.price}
+      tags={hit.tags??[]}
+      price={agcState==='pending'?undefined:agcData?.data()?.price??null}
       onClick={(event)=>{
         event.stopPropagation();
         if (user?.role!==RoleNum.Agc&&sendEvent!=null) {

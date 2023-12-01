@@ -16,6 +16,11 @@ import { getFirstName } from "@/utils/formatters";
 import { getCliId_Server } from "@/utils/clinic_id/server";
 import { EDsTrendings } from "../../agc/eds/ed_tile";
 import { EDsRecommendsPreview } from "./ed_recommends";
+import { InstantSearchNext } from "react-instantsearch-nextjs";
+import { algo_client } from "@/utils/algolia";
+import { AllEDs } from "./all_eds";
+import { TitleNSeeAll } from "../../agc/eds/title_see_all";
+import { PeopleOutline } from "@mui/icons-material";
 
 export default async function Home() {
     // const session = useSession({
@@ -38,6 +43,9 @@ export default async function Home() {
             <Box height={32}/>
             <EDsRecommendsPreview/>
             <Box height={32}/>
+            <TitleNSeeAll icon={PeopleOutline} title={"All Egg Donor"} href="/rcp/eds"/>
+            <Box height={12}/>
+            <AllEDs/>
         </Stack>
     )
 }

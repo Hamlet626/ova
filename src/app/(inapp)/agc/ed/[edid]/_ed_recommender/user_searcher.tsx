@@ -24,11 +24,9 @@ export default function UserSearcher<T extends BaseItem&{objectID:string}>({agci
   const fetch = useMemo(
     () => debounce(
         async( { input }, callback: (results?: readonly T[]) => void, ) => {
-          console.log('fetch',input);
               const algoData=await algo_client.initIndex(roles[role].id).search(input,{
                 numericFilters:`agencies.${agcid}.status>=0`,
                 hitsPerPage:5});
-              console.log('result',algoData.hits);
                 return callback(algoData.hits as any[]);
         },
         400,
