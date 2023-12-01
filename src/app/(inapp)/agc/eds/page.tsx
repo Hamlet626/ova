@@ -1,6 +1,6 @@
 'use client'
 import { PageHeader } from "@/components/ThemeRegistry/theme_consts";
-import { EDRec, algo_client } from "@/utils/algolia";
+import { EDRec, agc_facet, algo_client } from "@/utils/algolia";
 import { Box, Button, Stack, SvgIcon, Typography } from "@mui/material";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import {
@@ -9,7 +9,7 @@ import {
 import { Add, PeopleOutline, } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { EDsHits, EDsRecommends } from "./ed_tile";
+import { EDsHits, EDsTrendings } from "./ed_tile";
 import { OtherFilters } from "./other_filters";
 import { SortBy } from "./sorter";
 import { StateFilter } from "./state_filter";
@@ -25,7 +25,7 @@ export default function EDs(){
     insights={true}
     future={{preserveSharedStateOnUnmount: true,}}
     >
-      <Configure hitsPerPage={10} enablePersonalization/>
+      <Configure hitsPerPage={10} facetFilters={`${agc_facet}:${myid}`}/>
         <Stack px={10}>
           <Box height={20}/>
           <LOStack>
@@ -53,10 +53,11 @@ export default function EDs(){
           <OtherFilters/>
 
           <Box height={18}/>
-          <EDsRecommends agcid={myid}/>
+          <EDsTrendings agcid={myid}/>
 
           <Box height={32}/>
-          <TitleNSeeAll icon={PeopleOutline} title={"All Egg Donor"} href="/agc/eds/all"/>
+          <TitleNSeeAll icon={PeopleOutline} title={"All Egg Donor"} //href="/agc/eds/all"
+          />
           <Box height={12}/>
           <EDsHits/>
         </Stack>

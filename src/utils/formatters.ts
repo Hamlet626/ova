@@ -13,3 +13,7 @@ export const formatPrice=(p:number):string=>{
 export const formatTime=(t:number):string=>{
     return `todo : ${new Date(t*1000)}`;
 }
+
+export const getFirstName=(name:string):string=>{
+    return name.split(' ')[0];
+}

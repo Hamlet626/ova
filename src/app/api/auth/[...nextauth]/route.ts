@@ -6,7 +6,7 @@ import {UserRef, serverInitFirebase} from "@/utils/firebase/firebase_server";
 import {auth} from "firebase-admin";
 import {cliAuth} from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
-import { EDRec, RcpRec, algo_client } from "@/utils/algolia";
+import { EDRec, RcpRec, agc_facet, algo_client } from "@/utils/algolia";
 import { EDStatus, RcpStatus } from "@/utils/types/status";
 import { getCliId_Server } from "@/utils/clinic_id/server";
 
@@ -25,6 +25,7 @@ export const authOptions : NextAuthOptions = {
             async authorize(credentials,req):Promise<User|null>{
                 return await signInWithEmailAndPassword(cliAuth, (credentials as any).email || '', (credentials as any).password || '')
                     .then(async userCredential => {
+                        console.log('test2',userCredential);
                         if (userCredential.user) {
                             return await getUserSessionInfo(userCredential.user.uid);
                         }
@@ -60,18 +61,20 @@ const getUserSessionInfo=async (id:string):Promise<User>=>{
     const roleKey=roles[basicInfo.role].id;
 
     if(basicInfo.role===RoleNum.Agc){
+        console.log('hreer2',basicInfo);
         return basicInfo;
     }
     
     const clinicID=getCliId_Server();
     if(basicInfo.role===RoleNum.ED||basicInfo.role===RoleNum.Rcp){
         const algoRecord=await algo_client.initIndex(`${roleKey}`).getObject<EDRec|RcpRec>(id);
-        let agency_ids=algoRecord.agency_ids??[];
-        console.log('bckend test',algoRecord);
+        let agency_ids=algoRecord[agc_facet]??[];
+        
+        console.log('hreer1',algoRecord);
         if(clinicID!=null&&!agency_ids.includes(clinicID)){
             agency_ids=[...agency_ids,clinicID];
             await algo_client.initIndex(`${roleKey}`).partialUpdateObject({
-                agency_ids: {
+                [agc_facet]: {
                     _operation: 'AddUnique',
                     value: clinicID,},
                 agencies:{...algoRecord.agencies,

@@ -9,7 +9,7 @@ import {
   } from "react-instantsearch";
 import { Add, PeopleOutline } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import { EDsHits, EdTile } from "../ed_tile";
+import { EDsHits, } from "../ed_tile";
 import { SortBy } from "../sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
 import { StateFilter } from "../state_filter";

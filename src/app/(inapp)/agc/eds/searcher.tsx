@@ -1,6 +1,5 @@
 'use client'
 import { EDRec, algo_client } from '@/utils/algolia';
-import { UserDoc, UsersAgcDataDoc } from '@/utils/firebase/path';
 import { UserRef, UsersAgcDataRef, app } from '@/utils/firebase/firebase_client';
 import { RoleNum, roles } from '@/utils/roles';
 import {
@@ -31,6 +30,7 @@ import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { getCliId_Client } from '@/utils/clinic_id/client';
+import { useRouter } from 'next/navigation';
 
 
 // import { ClearIcon } from './ClearIcon';
@@ -64,6 +64,7 @@ export function Searcher(
   props: Partial<AutocompleteOptions<AutocompleteItem>>
 ) {
 
+  const router=useRouter();
   // aa('init', { appId:'4WJ9FHOG84', apiKey:'92bb7bfcde71a02e96721c077a0b491c', 
   //               useCookie:true, partial: true,anonymousUserToken:true});
   const enableInsight=typeof window !== 'undefined';
@@ -93,6 +94,8 @@ export function Searcher(
         onSelect({ item }) {
           // Assuming the refine function updates the search page state.
           autocomplete.setQuery(item.label);
+          setQuery(item.label);
+          setPage(0);
         },
       };
     },
@@ -119,6 +122,7 @@ export function Searcher(
         return {
           ...source,
           onSelect({ item }) {
+            ///todo: test it out
             setIndexUiState((state)=>({...state,
               query:item.query,page:0}));
           },
@@ -181,6 +185,9 @@ export function Searcher(
                 //   return {...v,...fbData.data} as AutocompleteItem;
                 // }));
               },
+              onSelect: ({item})=>{
+                router.push(`/agc/ed/${item.objectID}`)
+              }
             },
           ];
         }, 
@@ -229,7 +236,7 @@ export function Searcher(
             {autocompleteState.isOpen && (
         <div
           ref={panelRef}
-          style={{zIndex:1}}
+          style={{zIndex:1,width:'100%'}}
           className={[
             'aa-Panel',
             'aa-Panel--desktop',
@@ -250,9 +257,9 @@ export function Searcher(
                 className="aa-Item"
                 {...autocomplete.getItemProps({ item, source })}
               >
-                <div className="aa-ItemWrapper">
+                {/* <div className="aa-ItemWrapper"> */}
                 <Eds item={item}/>
-                </div>
+                {/* </div> */}
               </Grid2>;
 
                   return (

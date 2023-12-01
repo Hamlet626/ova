@@ -107,13 +107,13 @@ const BasicInfoBloc=<T extends BasicInfoDoc & GCAgcInfoDoc>({info,formData}:{inf
                 <InfoTile title="Location" content={info.location??""}/>
             </Grid2>
             <Grid2 xs width={140}>
-                <InfoTile title="Phone Number" content={formData[0].phone}/>
+                <InfoTile title="Phone Number" content={formData[0]?.phone}/>
             </Grid2>
             <Grid2 xs width={140}>
                 <InfoTile title="Email" content={info.email}/>
             </Grid2>
             <Grid2 xs width={140}>
-                <InfoTile title="Price" content={formatPrice(info.price)}/>
+                <InfoTile title="Price" content={info.price==null?'Undecided':formatPrice(info.price)}/>
             </Grid2>
         </Grid2>
     </Stack>

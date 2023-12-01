@@ -6,7 +6,7 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import { OVA_very_soft_grey } from "@/components/ThemeRegistry/theme_consts";
 import { redirect, useRouter } from "next/navigation";
 
-export const RemainedSlider=({children,spacing=2}:{children:ReactNode,spacing?:number})=>{
+export const RemainedSlider=({children,spacing=3}:{children:ReactNode,spacing?:number})=>{
     const swiperRef=useRef<HTMLDivElement|null>(null);
     const [showNext,setShowNext]=useState(false);
     const [showPre,setShowPre]=useState(false);

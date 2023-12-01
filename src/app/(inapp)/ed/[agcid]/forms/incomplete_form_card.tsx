@@ -8,7 +8,7 @@ import { RemainedSlider } from "./remained_slider";
 export const IncomleteForm=({data,agcid}:{data:FormTempStatusCpx[],agcid:string})=>{
 
   const router=useRouter();
-  return <RemainedSlider>
+  return <RemainedSlider spacing={2}>
   {data.map((v,i)=>(<Card elevation={0} sx={{display: 'inline-block',flexShrink: 0, bgcolor:OVA_very_soft_grey}}> 
   <CardActionArea onClick={()=>router.push(`/ed/${agcid}/forms/detail/${v.index}?section=${encodeURIComponent(v.subs.remained[0])}`)}>
       <CardContent>
