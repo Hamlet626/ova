@@ -42,6 +42,7 @@ export const getBasicFbData=(uid:string,role:RoleNum)=>unstable_cache(
 export const getAgcFbData=(uid:string,agcid:string,role:RoleNum=RoleNum.ED)=>unstable_cache(
     async()=>{
         const r = await getDoc(doc(getFirestore(app),UsersAgcDataDoc(role,uid,agcid)));
+        // console.log(r);
         return r.data() as GCAgcInfoDoc;
     },
     [uid,agcid,`${role}`],
