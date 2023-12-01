@@ -22,19 +22,23 @@ import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 import {formatDate} from "@/utils/formatters";
 import GoogleMaps from "@/components/google_map";
+// import MuiPhoneNumber from 'material-ui-phone-number';
+import { MuiTelInput } from 'mui-tel-input'
+
 
 
 export default function FormFieldUI({data,register,control,watch, name}:{data:FormField,register:any,control:any,watch:any,name:any }){
  
   const fieldLength = data.length === 'long' ? 3 : data.length === 'short' ? 0.5 : 1; // Set the default to 2 or adjust as needed
 
-  //populate
- const [userSelection, setUserSelection] = useState<string | null>(null);
+  const [isClicked, setIsClicked] = useState(false);
+  console.log(isClicked);
 
- const handleYesNoChange = (value: string) => {
-  // Handle changes when the user selects 'yes' or 'no'
-  setUserSelection(value);
-};
+  const handleYesNOButtonClick = () => {
+    setIsClicked((prev) => !prev);
+  };
+  //populate
+
   const { fields, append, remove } = useFieldArray({ control, name: 'group' });
 
 //
@@ -50,7 +54,7 @@ const addField = () => {
         id: `${subField.id}.${uuidv4()}`, // Ensure unique IDs for each subField
       })),
     };
-    console.log('New Group:', newGroup);
+    // console.log('New Group:', newGroup);
 
     append('group', newGroup); // Use the append method with the field name 'group'
   }
@@ -93,7 +97,7 @@ const deleteGroup = (groupIndex) => {
           <Controller
           control={control}
           name={name || data.id} 
-                    render={({ field }) => (
+            render={({ field }) => (
             <DatePicker
                 value={formatDate (field.value)}
                 onChange={(value) => {
@@ -106,15 +110,30 @@ const deleteGroup = (groupIndex) => {
 
 
         ] 
+        :data.type==="phone"?
+        [
+       
+          <Controller
+          name={data.id}
+          control={control}
+          render={({ field }) => (
+            <MuiTelInput
+              {...field}
+              onChange={(value) => field.onChange(value)} 
+            />
+          )}
+        />
+        ]
         :data.type==='multi-select'?[
         // <Select  {...register(data.id)}>
         // {(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)} 
         //                              </Select>
         <Controller
-        name={name || data.id}        control={control}
+        name={name || data.id} 
+           control={control}
         render={({ field }) => (
           <Select {...field}>
-            {(typedLists[data.options] ?? data.options)?.map((v) => (
+            {(typedLists[data.options as keyof typeof typedLists] ?? data.options)?.map((v) => (
               <MenuItem key={v} value={v}>
                 {v}
               </MenuItem>
@@ -157,7 +176,6 @@ const deleteGroup = (groupIndex) => {
           </ToggleButtonGroup>
         )}
       />
-
           {/* Additional fields based on user selection and condition */}
           {/* {userSelection &&
             data.sub &&
@@ -172,7 +190,7 @@ const deleteGroup = (groupIndex) => {
         ]
         :data.type==='checkbox'?[ 
           <Controller
-          name={data.id}
+          name={data.id || ""}
           control={control}
           render={({ field }) => (
             <Box display="flex" flexWrap="wrap">
@@ -207,7 +225,15 @@ const deleteGroup = (groupIndex) => {
         :data.type==='address'?[        <GoogleMaps register={register} data={data} control={control} />
 
          ]
-        :data.type==='name'?[]
+        :data.type==='name'?[
+          <Stack direction="row" spacing={2}>
+          <TextField label="First Name" variant="outlined" {...register(`${data.id}.firstName`)} />
+          <TextField label="Middle Initial" variant="outlined" {...register(`${data.id}.middleInitial`)} />
+          <TextField label="Last Name" variant="outlined" {...register(`${data.id}.lastName`)} />
+        </Stack>
+        
+
+        ]
         :data.type==='populate'?[
 //           <Box>
             
@@ -264,12 +290,12 @@ const deleteGroup = (groupIndex) => {
         ]
         :[]
   }
-{data.sub &&
+{ 
+data.sub &&
   data.sub
   .filter((subField) => {
     const watchedValue = watch(data.id);
     console.log(watchedValue);
-
     if (subField.condition) {
       // Check condition
       // console.log(subField.condition.some(condition => watchedValue?.includes(condition)));
@@ -282,7 +308,7 @@ const deleteGroup = (groupIndex) => {
     }
 
     return true; // If no condition or exCondition, always render the subfield
-  })
+})
     // .filter((subField) => subField.condition?.some(condition => condition === watch(data.id)))
     .map((subField, index) => (
       <Box key={index} sx={{ marginLeft: '20px', marginTop: '10px' }}>
@@ -293,7 +319,9 @@ const deleteGroup = (groupIndex) => {
           watch={watch}  
         />
       </Box>
-    ))}
+    ))
+    
+}
 
 
 
