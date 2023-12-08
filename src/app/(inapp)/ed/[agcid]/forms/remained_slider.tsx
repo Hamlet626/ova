@@ -37,6 +37,7 @@ export const RemainedSlider=({children,spacing=3}:{children:ReactNode,spacing?:n
         <div ref={swiperRef}
         style={{width:'100%',//height:'72px',
             overflow: 'auto',
+            // 'scrollbar':,
             overflowX: 'auto',
             overflowY:'hidden',
             scrollBehavior: 'smooth',

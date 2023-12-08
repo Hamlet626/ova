@@ -4,7 +4,7 @@ import FormTitlesUI from "@/components/form_titles_ui";
 import { FilesRef, FileRef } from "@/utils/firebase/firebase_client";
 import { FileCol } from "@/utils/firebase/types";
 import { RoleNum } from "@/utils/roles";
-import { useLocalCachePromise, useLastestValue } from "@/utils/server_data_getter/hooks";
+import { useLastestValue } from "@/utils/hooks/use_latest_value";
 import { Edit, Delete, Add } from "@mui/icons-material";
 import { Stack, Typography, IconButton, Button, Box, Paper } from "@mui/material";
 import { getDocs, deleteDoc } from "firebase/firestore";
@@ -13,6 +13,7 @@ import { FileColDialog } from "./file_col_dialog";
 import { FilesView } from "./files_view";
 import { ListPageLayout } from "@/components/layouts/list_page_layout";
 import { PageHeader } from "@/components/ThemeRegistry/theme_consts";
+import { useCachedPromise } from "@/utils/hooks/use_cached_pomise";
 
 export type userFileInfo={user:{role:RoleNum,id:string}}&{pageView:boolean}
 export type caseFileInfo={case:string}&{pageView:boolean}
@@ -23,7 +24,7 @@ export default function FilesPage(){
     const infoData=useContext(FilesInfoContext) as userFileInfo;
     const owner=infoData.user;
     const [selectedCol,setSelectedCol]=useState('');
-    const {data,setData,error}=useLocalCachePromise(()=>{
+    const {data,setData,error}=useCachedPromise(()=>{
         return getDocs(FilesRef(owner.role,owner.id)).then(v=>{
             if(!v.empty)setSelectedCol(v.docs[0].id);
             return v.docs.map(v=>({...v.data(),id:v.id} as FileCol));

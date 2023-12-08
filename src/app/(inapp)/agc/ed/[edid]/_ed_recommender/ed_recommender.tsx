@@ -12,12 +12,12 @@ import { UserRef, UsersAgcDataRef, app } from '@/utils/firebase/firebase_client'
 import { arrayRemove, arrayUnion, collectionGroup, getDoc, getDocs, getFirestore, query, setDoc, where } from 'firebase/firestore';
 import { BasicInfoDoc } from '@/utils/firebase/types';
 import UserSearcher from './user_searcher';
-import { useLocalCachePromise } from '@/utils/server_data_getter/hooks';
+import { useCachedPromise } from '@/utils/hooks/use_cached_pomise';
 
 export const EDRecommender=({edid}:{edid:string})=>{
     const myid=useSession({required:true}).data?.user?.id!;
     const [loading,setLoading]=useState(false);
-    const {data,setData}=useLocalCachePromise<BasicInfoDoc[]>(async()=>{
+    const {data,setData}=useCachedPromise<BasicInfoDoc[]>(async()=>{
       const r=await getDocs(query(collectionGroup(getFirestore(app),'agc data'),
       where('agcid','==',myid),where('recommends','array-contains',edid)));
       

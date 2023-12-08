@@ -9,12 +9,12 @@ import {
   } from "react-instantsearch";
 import { Add, PeopleOutline } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import { EDsHits, } from "../ed_tile";
 import { SortBy } from "../sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
 import { StateFilter } from "../state_filter";
 import { OtherFilters } from "../other_filters";
 import { TitleNSeeAll } from "../title_see_all";
+import { EDsHits } from "../../../../_shared/_ed/_eds_blocks.tsx/hits";
 
 export default function EDs(){
   const router=useRouter();

@@ -6,10 +6,29 @@ import { Check, Clear, Search } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Checkbox, Chip, FormControlLabel, IconButton, Input, InputBase, Menu, Stack, TextField, Typography, styled } from "@mui/material";
 import { useState } from "react";
 import { useRefinementList, UseRefinementListProps, useConfigure, useClearRefinements, useRange, useInstantSearch } from 'react-instantsearch';
+import { RemainedSlider } from "../../ed/[agcid]/forms/remained_slider";
 
 
 export const OtherFilters=()=>{
     
+    return <RemainedSlider>
+        {AlgoTemplates.flatMap((vl,i,l)=>{
+        return vl.filter(v=>v.filter??true).map((v)=>{
+            if(v.fdid==null)return <NumFilter temp={v}/>;
+
+            try{
+            const field=getField(formTemplates[i].content.flatMap(sec=>sec.fields),...(typeof v.fdid==='string'?[v.fdid]:v.fdid!));
+            
+            if(v.convertFilter==='age')return <AgeFilter temp={v}/>;
+
+            return field.type==='checkbox'||field.type==='multi-select'||field.type==='text'?<FacetFilter temp={v} searchable/>:
+                field.type==='number'?<NumFilter temp={v}/>:
+                field.type==='date'?<DateFilter temp={v}/>:
+                field.type==='yes/no'?<BoolFilter temp={v}/>:
+                <NumFilter temp={v}/>;}catch(e){return <text>{`${e}`}</text>;}
+        })
+        })}
+    </RemainedSlider>;
     return <Breadcrumbs separator={<Box width={8}/>} maxItems={6}>
     {AlgoTemplates.flatMap((vl,i,l)=>{
         return vl.filter(v=>v.filter??true).map((v)=>{

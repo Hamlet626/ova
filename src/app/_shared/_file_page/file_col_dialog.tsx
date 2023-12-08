@@ -2,7 +2,8 @@ import { useAPILoadingError } from "@/components/api_process/use_api_loading_err
 import { FilesRef, FileRef, UserRef } from "@/utils/firebase/firebase_client";
 import { FileCol } from "@/utils/firebase/types";
 import { RoleNum } from "@/utils/roles";
-import { useConsistForm, useLastestValue } from "@/utils/server_data_getter/hooks";
+import { useResettableForm } from "@/utils/hooks/use_resettable_form";
+import { useLastestValue } from "@/utils/hooks/use_latest_value";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Dialog, DialogTitle, DialogContent, Stack, TextField, DialogActions, Button } from "@mui/material";
 import { addDoc, setDoc } from "firebase/firestore";
@@ -27,7 +28,7 @@ export const FileColDialog=({colID,close,initialData,updateLocalFile,edid}:
             }
         });
 
-        const {register,handleSubmit}=useConsistForm({defaultValues:initialData, shouldUnregister:true});
+        const {register,handleSubmit}=useResettableForm({defaultValues:initialData, shouldUnregister:true});
 
     return <>
     <Dialog open={colID!=null} onClose={()=>close()}>
