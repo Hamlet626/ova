@@ -1,4 +1,4 @@
-import { font3, font5, font6, outline_variant } from "@/components/ThemeRegistry/theme_consts";
+import { OVA_very_soft_grey, PageHeader, font5, font6, outline_variant } from "@/components/ThemeRegistry/theme_consts";
 import { roles } from "@/utils/roles";
 import { ArrowForward, QuestionAnswerOutlined, Timeline } from "@mui/icons-material";
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Chip, Divider, Fab, IconButton, LinearProgress, Stack, Typography } from "@mui/material";
@@ -12,6 +12,7 @@ import { formStatus, getFinishStatus, secFinished } from "@/utils/form/form_util
 import { getFormData, getFormTemplate } from "../../../../../utils/server_data_getter/utils";
 import { FormTemp } from "@/utils/form/types";
 import { FormStatsTiles } from "../../../../_shared/_forms/form_tiles";
+import { IncomleteForm } from "./incomplete_form_card";
 
 export default async function Forms({params}:{params: { agcid: string }}) {
     // const {user}=useSession({required:true}).data!;
@@ -26,7 +27,7 @@ export default async function Forms({params}:{params: { agcid: string }}) {
     const remained=formsStatus.filter((v)=>v.subs.remained.length>0);
 
     return <Box pt={'30px'} pl={4} pr='80px'>
-        <Typography sx={font3}>My Form</Typography>
+        <Typography sx={PageHeader}>My Form</Typography>
         <Box height={12}/>
         {remained.length>0 &&
         <>
@@ -43,7 +44,8 @@ export default async function Forms({params}:{params: { agcid: string }}) {
                 </Button>
         </Box>
         <Box height={16}/>
-        <RemainedSlider remainedData={remained} agcid={params.agcid}/>
+        <IncomleteForm data={remained} agcid={params.agcid}/>
+
         <Box height={32}/>
         <Divider sx={{ml:'-999px', mr:'-80px'}}/>
         </>}

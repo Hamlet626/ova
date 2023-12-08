@@ -1,35 +1,31 @@
 'use client'
 import { PageHeader } from "@/components/ThemeRegistry/theme_consts";
-import { EDRec, agc_facet, algo_client } from "@/utils/algolia";
-import { Box, Button, Stack, SvgIcon, Typography } from "@mui/material";
+import { algo_client } from "@/utils/algolia";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import {
     Configure,
   } from "react-instantsearch";
-import { Add, PeopleOutline, } from "@mui/icons-material";
+import { Add, PeopleOutline } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { EDsHits, EDsTrendings } from "./ed_tile";
-import { OtherFilters } from "./other_filters";
-import { SortBy } from "./sorter";
-import { StateFilter } from "./state_filter";
-import { TitleNSeeAll } from "./title_see_all";
-import { Searcher } from "./searcher";
-import { useSession } from "next-auth/react";
+import { EDsHits } from "../../agc/eds/ed_tile";
+import { OtherFilters } from "../../agc/eds/other_filters";
+import { Searcher } from "../../agc/eds/searcher";
+import { SortBy } from "../../agc/eds/sorter";
 
 export default function EDs(){
   const router=useRouter();
-  const myid=useSession({required:true}).data?.user?.id!;
 
     return <InstantSearchNext indexName="ed" searchClient={algo_client}
     insights={true}
     future={{preserveSharedStateOnUnmount: true,}}
     >
-      <Configure hitsPerPage={10} facetFilters={`${agc_facet}:${myid}`}/>
+      <Configure hitsPerPage={10}/>
         <Stack px={10}>
           <Box height={20}/>
           <LOStack>
-            <Typography sx={PageHeader} flexGrow={2}>Egg Donor</Typography>
+            <Typography sx={PageHeader} flexGrow={2}>All Egg Donors</Typography>
             <Box flexGrow={8} flexBasis={8}>
               <Searcher/>
             </Box>
@@ -46,20 +42,14 @@ export default function EDs(){
               <SortBy items={[
                 {label:'Most Relevant',value:'ed'},
                 {label:'Create Date',value:'ed_createtime_desc'}]}/>
-                <StateFilter/>
+                <Box flexGrow={8}>
+                    <OtherFilters/>
+                </Box>
             </LOStack>
-          <Box height={12}/>
+          <Box height={16}/>
 
-          <OtherFilters/>
-
-          <Box height={18}/>
-          <EDsTrendings agcid={myid}/>
-
-          <Box height={32}/>
-          <TitleNSeeAll icon={PeopleOutline} title={"All Egg Donor"} //href="/agc/eds/all"
-          />
-          <Box height={12}/>
           <EDsHits/>
+        
         </Stack>
     </InstantSearchNext>;
 }

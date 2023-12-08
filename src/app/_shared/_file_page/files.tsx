@@ -6,19 +6,22 @@ import { FileCol } from "@/utils/firebase/types";
 import { RoleNum } from "@/utils/roles";
 import { useLocalCachePromise, useLastestValue } from "@/utils/server_data_getter/hooks";
 import { Edit, Delete, Add } from "@mui/icons-material";
-import { Stack, Typography, IconButton, Button, Box } from "@mui/material";
+import { Stack, Typography, IconButton, Button, Box, Paper } from "@mui/material";
 import { getDocs, deleteDoc } from "firebase/firestore";
 import { createContext, useContext, useState } from "react";
 import { FileColDialog } from "./file_col_dialog";
 import { FilesView } from "./files_view";
+import { ListPageLayout } from "@/components/layouts/list_page_layout";
+import { PageHeader } from "@/components/ThemeRegistry/theme_consts";
 
-export type userFileInfo={user:{role:RoleNum,id:string}}
-export type caseFileInfo={case:string}
+export type userFileInfo={user:{role:RoleNum,id:string}}&{pageView:boolean}
+export type caseFileInfo={case:string}&{pageView:boolean}
 export const FilesInfoContext = createContext<userFileInfo|caseFileInfo|{}>({});
 
 export default function FilesPage(){
 
-    const owner=(useContext(FilesInfoContext) as userFileInfo).user;
+    const infoData=useContext(FilesInfoContext) as userFileInfo;
+    const owner=infoData.user;
     const [selectedCol,setSelectedCol]=useState('');
     const {data,setData,error}=useLocalCachePromise(()=>{
         return getDocs(FilesRef(owner.role,owner.id)).then(v=>{
@@ -44,28 +47,40 @@ export default function FilesPage(){
         });
     }
 
+    const titleColumn=<Stack>
+        {infoData.pageView && [
+        <Typography sx={PageHeader}>My Files</Typography>,
+        <Box height={22}/>]}
+    <Typography variant="subtitle2">Collections</Typography>
+    {error && Object.keys(error).length>0 && <Typography>{JSON.stringify(error)}</Typography>}
+    <Box height={16}/>
+    <FormTitlesUI titles={data!.map(v=>({
+        title:v.name,
+        selected:v.id===selectedCol,
+        actions:(props)=>[
+            <IconButton key={0} {...props} onClick={(ev)=>{
+                ev.stopPropagation();
+                setEditColDlgId(v.id)}}><Edit/></IconButton>,
+            <IconButton key={1} {...props} onClick={(ev)=>{
+                ev.stopPropagation();
+                setRemoveColDlgId(v.id)}}><Delete/></IconButton>,
+        ]
+    }))} onClick={(v,i)=>{setSelectedCol(data![i].id!)}}/>
+    {!infoData.pageView && <Box flexGrow={1}/>}
+    <Button color="primary" variant='contained' startIcon={<Add/>}
+    onClick={()=>setEditColDlgId('')}
+    >add collection</Button>
+</Stack>;
+
     return <>
-    <Stack direction={'row'} minHeight={'calc(100vh - 450px)'}
-    >
-        <Stack>
-            <Typography variant="subtitle2">Collections</Typography>
-            {error && <Typography>{JSON.stringify(error)}</Typography>}
-            <FormTitlesUI titles={data!.map(v=>({
-                title:v.name,
-                selected:v.id===selectedCol,
-                actions:(props)=>[
-                    <IconButton key={0} {...props} onClick={()=>{setEditColDlgId(v.id)}}><Edit/></IconButton>,
-                    <IconButton key={1} {...props} onClick={()=>{setRemoveColDlgId(v.id)}}><Delete/></IconButton>,
-                ]
-            }))} onClick={(v,i)=>{setSelectedCol(data![i].id!)}}/>
-            <Box flexGrow={1}/>
-            <Button color="primary" variant='contained' startIcon={<Add/>}
-            onClick={()=>setEditColDlgId('')}
-            >add collection</Button>
-        </Stack>
+    {infoData.pageView?<ListPageLayout listChildren={titleColumn}>
+        {selectedColData && <FilesView edid={owner.id} data={selectedColData} onChange={editFileCol}/>}
+    </ListPageLayout>:
+    <Stack direction={'row'} minHeight={'calc(100vh - 450px)'}>
+        {titleColumn}
         <Box width={84}/>
         {selectedColData && <FilesView edid={owner.id} data={selectedColData} onChange={editFileCol}/>}
-    </Stack>
+    </Stack>}
 
     <FileColDialog colID={editColDlgId} close={()=>setEditColDlgId(undefined)}
     initialData={editingData}

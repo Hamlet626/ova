@@ -1,6 +1,6 @@
 
 import {getClinic} from "@/utils/clinic_id/clinic_check";
-import {algo_client} from "@/utils/algolia";
+import {agc_facet, algo_client} from "@/utils/algolia";
 import {RoleNum, roles} from "@/utils/roles";
 import { auth, firestore} from "firebase-admin";
 import { serverInitFirebase } from '@/utils/firebase/firebase_server';
@@ -64,7 +64,8 @@ const EDSetUp=(uid:string,name:string,clinicId:string)=>{
     }),
     algo_client.initIndex(`${roleKey}`).saveObject({
         objectID: uid, name, createTime:(Date.now()/1000>>0),
-        agencies:{[clinicId]:{status:EDStatus.filling_Form}}
+        agencies:{[clinicId]:{status:EDStatus.filling_Form}},
+        [agc_facet]:[clinicId]
     })];
 }
 
@@ -76,7 +77,8 @@ const RcpSetUp=(uid:string,name:string,clinicId:string)=>{
         }),
     algo_client.initIndex(`${roleKey}`).saveObject({
         objectID: uid, name, createTime:(Date.now()/1000>>0),
-        agencies:[clinicId]
+        agencies:{[clinicId]:{status:RcpStatus.general}},
+        [agc_facet]:[clinicId]
     })];
 }
 
