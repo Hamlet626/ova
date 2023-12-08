@@ -38,7 +38,6 @@ export default function UserSearcher<T extends BaseItem&{objectID:string}>({agci
     let active = true;
 
     fetch({ input: inputValue }, (results?: readonly T[]) => {
-      console.log('active',active,inputValue,results);
       if (active) {
         setOptions(results??[]);
       }
