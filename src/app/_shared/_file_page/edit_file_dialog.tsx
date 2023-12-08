@@ -1,5 +1,6 @@
 import { FileData } from "@/utils/firebase/types";
-import { useConsistForm, useLastestValue } from "@/utils/server_data_getter/hooks";
+import { useResettableForm } from "@/utils/hooks/use_resettable_form";
+import { useLastestValue } from "@/utils/hooks/use_latest_value";
 import { Button, Card, CardActionArea, CardMedia, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { useAPILoadingError } from "@/components/api_process/use_api_loading_error";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -15,7 +16,7 @@ export const EditFileDialog=({close,data,removeData,updateData}:
         const fileDetail=fileData?.url==null?undefined:processCldUrl(fileData!.url!,fileData!.name);
     const {loading,handleCallAPI:remove,errNotiComponent}=useAPILoadingError(()=>removeData());
     
-    const {register,control}=useConsistForm({defaultValues:fileData});
+    const {register,control}=useResettableForm({defaultValues:fileData});
 
     return <>
     <FieldDialog open={open} onClose={()=>close()}>

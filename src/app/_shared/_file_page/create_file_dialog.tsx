@@ -1,4 +1,5 @@
-import { useConsistForm, useLastestValue } from "@/utils/server_data_getter/hooks";
+import { useResettableForm } from "@/utils/hooks/use_resettable_form";
+import { useLastestValue } from "@/utils/hooks/use_latest_value";
 import { Button, DialogActions, DialogContent, Stack, TextField, } from "@mui/material";
 import { useAPILoadingError } from "@/components/api_process/use_api_loading_error";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -28,7 +29,7 @@ export const CreateFileDialog=({close,data,updateData}:
     });
     
 
-    const {handleSubmit,register,control}=useConsistForm({defaultValues:{name:fileData?.name,selfVisible:true}});
+    const {handleSubmit,register,control}=useResettableForm({defaultValues:{name:fileData?.name,selfVisible:true}});
 
     return <>
     <FieldDialog open={open} onClose={()=>{

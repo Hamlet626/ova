@@ -9,10 +9,10 @@ import {
 import { Add, PeopleOutline } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { EDsHits } from "../../agc/eds/ed_tile";
 import { OtherFilters } from "../../agc/eds/other_filters";
 import { Searcher } from "../../agc/eds/searcher";
 import { SortBy } from "../../agc/eds/sorter";
+import { EDsHits } from "@/app/_shared/_ed/_eds_blocks.tsx/hits";
 
 export default function EDs(){
   const router=useRouter();
@@ -22,19 +22,13 @@ export default function EDs(){
     future={{preserveSharedStateOnUnmount: true,}}
     >
       <Configure hitsPerPage={10}/>
-        <Stack px={10}>
+        <Stack mx={10}>
           <Box height={20}/>
           <LOStack>
             <Typography sx={PageHeader} flexGrow={2}>All Egg Donors</Typography>
-            <Box flexGrow={8} flexBasis={8}>
+            <Box flexGrow={10}>
               <Searcher/>
             </Box>
-            <Stack flexGrow={2} direction={'row'} alignItems={'end'}>
-              <Box flexGrow={1}/>
-              <Button sx={{color:'white',flexGrow:1}} 
-                  variant="contained" onClick={()=>{router.push('agc/eds/create')}}
-                  startIcon={<Add/>}>add ed</Button>
-            </Stack>
           </LOStack>
           
           <Box height={12}/>
@@ -42,7 +36,7 @@ export default function EDs(){
               <SortBy items={[
                 {label:'Most Relevant',value:'ed'},
                 {label:'Create Date',value:'ed_createtime_desc'}]}/>
-                <Box flexGrow={8}>
+                <Box bgcolor={'red'} flex={'auto'} overflow={'hidden'}>
                     <OtherFilters/>
                 </Box>
             </LOStack>

@@ -9,13 +9,14 @@ import {
 import { Add, PeopleOutline, } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { EDsHits, EDsTrendings } from "./ed_tile";
 import { OtherFilters } from "./other_filters";
 import { SortBy } from "./sorter";
 import { StateFilter } from "./state_filter";
 import { TitleNSeeAll } from "./title_see_all";
 import { Searcher } from "./searcher";
 import { useSession } from "next-auth/react";
+import { EDsHits } from "../../../_shared/_ed/_eds_blocks.tsx/hits";
+import { EDsTrendings } from "../../../_shared/_ed/_eds_blocks.tsx/tredings";
 
 export default function EDs(){
   const router=useRouter();
