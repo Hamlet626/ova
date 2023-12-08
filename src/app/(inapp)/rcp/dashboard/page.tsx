@@ -7,11 +7,11 @@ import { Box, Stack } from "@mui/material";
 import { PageHeader } from "@/components/ThemeRegistry/theme_consts";
 import { getFirstName } from "@/utils/formatters";
 import { getCliId_Server } from "@/utils/clinic_id/server";
-import { EDsTrendings } from "../../../_shared/_ed/_eds_blocks.tsx/tredings";
-import { EDsRecommendsPreview } from "../../../_shared/_ed/_eds_blocks.tsx/ed_recommends";
 import { AllEDs } from "./all_eds";
 import { TitleNSeeAll } from "../../agc/eds/title_see_all";
 import { PeopleOutline } from "@mui/icons-material";
+import { EDsRecommendsPreview } from "@/app/_shared/_ed/_eds_blocks/ed_recommends";
+import { EDsTrendings } from "@/app/_shared/_ed/_eds_blocks/tredings";
 
 export default async function Home() {
     // const session = useSession({

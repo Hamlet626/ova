@@ -12,7 +12,7 @@ import { LOStack } from "@/components/layouts/layout_stack";
 import { OtherFilters } from "../../agc/eds/other_filters";
 import { Searcher } from "../../agc/eds/searcher";
 import { SortBy } from "../../agc/eds/sorter";
-import { EDsHits } from "@/app/_shared/_ed/_eds_blocks.tsx/hits";
+import { EDsHits } from "@/app/_shared/_ed/_eds_blocks/hits";
 
 export default function EDs(){
   const router=useRouter();
@@ -36,7 +36,7 @@ export default function EDs(){
               <SortBy items={[
                 {label:'Most Relevant',value:'ed'},
                 {label:'Create Date',value:'ed_createtime_desc'}]}/>
-                <Box bgcolor={'red'} flex={'auto'} overflow={'hidden'}>
+                <Box flex={'auto'}>
                     <OtherFilters/>
                 </Box>
             </LOStack>

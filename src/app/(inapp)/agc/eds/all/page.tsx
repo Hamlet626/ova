@@ -13,8 +13,7 @@ import { SortBy } from "../sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
 import { StateFilter } from "../state_filter";
 import { OtherFilters } from "../other_filters";
-import { TitleNSeeAll } from "../title_see_all";
-import { EDsHits } from "../../../../_shared/_ed/_eds_blocks.tsx/hits";
+import { EDsHits } from "@/app/_shared/_ed/_eds_blocks/hits";
 
 export default function EDs(){
   const router=useRouter();

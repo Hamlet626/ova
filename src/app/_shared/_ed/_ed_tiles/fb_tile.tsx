@@ -10,10 +10,10 @@ import usePromise from "react-use-promise";
 import aa from "search-insights";
 import { LoadingEDTile } from "./loading_tile";
 import { Box } from "@mui/material";
-import { calcEDTileWidth } from "../_eds_blocks.tsx/consts";
 import { AppLayoutContext } from "@/components/banner_menu/ed_rcp";
 import useWindowDimensions from "@/utils/hooks/use_window_dimensions";
 import { useContext } from "react";
+import { calcEDTileWidth } from "../_eds_blocks/consts";
 
 export const EdFbTile=({edid,constraint}:{edid:string,constraint?:{space?:number,padding:number}})=>{
     const user=useSession({required:true}).data?.user;
@@ -34,7 +34,7 @@ export const EdFbTile=({edid,constraint}:{edid:string,constraint?:{space?:number
         [edid,agcId]);
         const router=useRouter();
 
-        const {width}=typeof window !== 'undefined'?useWindowDimensions():{width:0};
+        const {width}=useWindowDimensions();
     const {menuWidth}=useContext(AppLayoutContext)!;
   
         const tile = <LoadingEDTile

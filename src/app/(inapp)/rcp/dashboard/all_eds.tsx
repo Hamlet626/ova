@@ -1,5 +1,5 @@
 'use client'
-import { EDsHits } from "@/app/_shared/_ed/_eds_blocks.tsx/hits";
+import { EDsHits } from "@/app/_shared/_ed/_eds_blocks/hits";
 import { algo_client } from "@/utils/algolia";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 

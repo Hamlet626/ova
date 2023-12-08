@@ -1,28 +1,13 @@
 'use client'
 import { OVA_very_soft_grey, font7, neutral96 } from "@/components/ThemeRegistry/theme_consts";
-import { getCliId_Client } from "@/utils/clinic_id/client";
-import { UserRef, UsersAgcDataRef, app } from "@/utils/firebase/firebase_client";
-import { RoleNum, roles } from "@/utils/roles";
-import { Stack, CircularProgress, Typography, Chip, Box, IconButton, Divider, Card, CardMedia, CardContent, CardActionArea, CardActions, Skeleton, Avatar } from "@mui/material";
-import { getDoc, doc, getFirestore } from "firebase/firestore";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import usePromise from "react-use-promise";
-import type { Hit } from 'instantsearch.js';
-import { useHits, useInfiniteHits } from 'react-instantsearch';
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import { Stack, Box, Skeleton, Avatar } from "@mui/material";
+
 import { Face, PlaylistAdd, TrendingUp } from "@mui/icons-material";
-import { useRef, useEffect, MouseEventHandler, useContext } from "react";
-import { SendEventForHits } from "instantsearch.js/es/lib/utils";
-import { useRouter } from "next/navigation";
+import { useContext } from "react";
 import { TrendingItems, useTrendingItems } from '@algolia/recommend-react';
-import { EDRec, agc_facet, algo_client, click_ED_event, recommend_client } from "@/utils/algolia";
+import { EDRec, agc_facet, recommend_client } from "@/utils/algolia";
 import { RemainedSlider } from "../../../(inapp)/ed/[agcid]/forms/remained_slider";
 import { TitleNSeeAll } from "../../../(inapp)/agc/eds/title_see_all";
-import { useCurrentRefinements } from 'react-instantsearch';
-import { formatPrice } from "@/utils/formatters";
-import Link from "next/link";
-import aa from "search-insights";
 import useWindowDimensions from "@/utils/hooks/use_window_dimensions";
 import { AppLayoutContext } from "@/components/banner_menu/ed_rcp";
 import { EdAlgoTile } from "../_ed_tiles/algo_tile";
@@ -38,7 +23,7 @@ export const EDsTrendings=({agcid, padding=80*2}:{agcid:string,padding?:number})
     indexName:'ed',
     facetName:agc_facet,facetValue:agcid
   });
-  const {width}=typeof window !== 'undefined'?useWindowDimensions():{width:0};
+  const {width}=useWindowDimensions();
   const {menuWidth}=useContext(AppLayoutContext)!;
 
   if(status!=='loading'&&recommendations.length===0)return null; 

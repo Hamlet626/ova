@@ -15,8 +15,8 @@ import { StateFilter } from "./state_filter";
 import { TitleNSeeAll } from "./title_see_all";
 import { Searcher } from "./searcher";
 import { useSession } from "next-auth/react";
-import { EDsHits } from "../../../_shared/_ed/_eds_blocks.tsx/hits";
-import { EDsTrendings } from "../../../_shared/_ed/_eds_blocks.tsx/tredings";
+import { EDsHits } from "@/app/_shared/_ed/_eds_blocks/hits";
+import { EDsTrendings } from "@/app/_shared/_ed/_eds_blocks/tredings";
 
 export default function EDs(){
   const router=useRouter();
