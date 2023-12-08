@@ -12,7 +12,7 @@ import { UserRef, UsersAgcDataRef, app } from '@/utils/firebase/firebase_client'
 import { arrayRemove, arrayUnion, collectionGroup, getDoc, getDocs, getFirestore, query, setDoc, where } from 'firebase/firestore';
 import { BasicInfoDoc } from '@/utils/firebase/types';
 import UserSearcher from './user_searcher';
-import { useCachedPromise } from '@/utils/hooks/use_cached_pomise';
+import { useCachedPromise } from '@/utils/hooks/use_cached_promise';
 
 export const EDRecommender=({edid}:{edid:string})=>{
     const myid=useSession({required:true}).data?.user?.id!;

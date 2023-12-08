@@ -13,7 +13,7 @@ import { FileColDialog } from "./file_col_dialog";
 import { FilesView } from "./files_view";
 import { ListPageLayout } from "@/components/layouts/list_page_layout";
 import { PageHeader } from "@/components/ThemeRegistry/theme_consts";
-import { useCachedPromise } from "@/utils/hooks/use_cached_pomise";
+import { useCachedPromise } from "@/utils/hooks/use_cached_promise";
 
 export type userFileInfo={user:{role:RoleNum,id:string}}&{pageView:boolean}
 export type caseFileInfo={case:string}&{pageView:boolean}
