@@ -7,7 +7,7 @@ export const formatPrice=(p:number):string=>{
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       });
-    
+
       return formatter.format(p);
 }
 
