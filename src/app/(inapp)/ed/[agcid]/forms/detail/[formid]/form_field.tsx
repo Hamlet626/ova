@@ -22,11 +22,8 @@ import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 import {formatDate} from "@/utils/formatters";
 import GoogleMaps from "@/components/google_map";
-// import MuiPhoneNumber from 'material-ui-phone-number';
-import { MuiTelInput } from 'mui-tel-input'
 
-
-
+import { MuiTelInput } from 'mui-tel-input';
 export default function FormFieldUI({data,register,control,watch, name}:{data:FormField,register:any,control:any,watch:any,name:any }){
  
   const fieldLength = data.length === 'long' ? 3 : data.length === 'short' ? 0.5 : 1; // Set the default to 2 or adjust as needed
@@ -38,7 +35,12 @@ export default function FormFieldUI({data,register,control,watch, name}:{data:Fo
     setIsClicked((prev) => !prev);
   };
   //populate
+ const [userSelection, setUserSelection] = useState<string | null>(null);
 
+ const handleYesNoChange = (value: string) => {
+  // Handle changes when the user selects 'yes' or 'no'
+  setUserSelection(value);
+};
   const { fields, append, remove } = useFieldArray({ control, name: 'group' });
 
 //
@@ -49,14 +51,14 @@ export default function FormFieldUI({data,register,control,watch, name}:{data:Fo
 const addField = () => {
   if (data.group) {
     const newGroup = {
-      group: data.group.map((subField) => ({
+      group: data.group.map((subField,index) => ({
         ...subField,
-        id: `${subField.id}.${uuidv4()}`, // Ensure unique IDs for each subField
+        id: `${subField.id}.${index + 1}`, // Ensure unique IDs for each subField
       })),
     };
     // console.log('New Group:', newGroup);
 
-    append('group', newGroup); // Use the append method with the field name 'group'
+    append( newGroup); // Use the append method with the field name 'group'
   }
 };
 
@@ -222,7 +224,7 @@ const deleteGroup = (groupIndex) => {
         ]
 
         :data.type==='number'?[<TextField type='number' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*',min:0 }} {...register(data.id)}/>]
-        :data.type==='address'?[        <GoogleMaps register={register} data={data} control={control} />
+        :data.type==='address'?[  <GoogleMaps register={register} data={data} control={control} />
 
          ]
         :data.type==='name'?[
@@ -259,7 +261,7 @@ const deleteGroup = (groupIndex) => {
       </IconButton>
       {data.group && data.group.map((sub) => (
         <Controller
-        name={`group.${groupIndex}.${sub.id}`}
+        name={data.id}
         control={control}
         render={({ field }) => (
           <FormFieldUI
@@ -267,7 +269,7 @@ const deleteGroup = (groupIndex) => {
             register={register}
             control={control}
             {...field} 
-            name={`group.${groupIndex}.${sub.id}`} // Spread the field props into FormFieldUI
+            name={`${data.id}-${groupIndex}.${sub.id}`} // Spread the field props into FormFieldUI
           />
         )}
       />
@@ -299,7 +301,9 @@ data.sub &&
     if (subField.condition) {
       // Check condition
       // console.log(subField.condition.some(condition => watchedValue?.includes(condition)));
+      // return false;
       return subField.condition.some(condition => watchedValue?.includes(condition));
+      // return Array.isArray(watchedValue) && watchedValue.includes(condition);
     } else if (subField.exCondition) {
       // Check exCondition
       console.log(!subField.exCondition.some(exCondition => watchedValue?.includes(exCondition)));
