@@ -22,10 +22,10 @@ import TextField from '@mui/material/TextField';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {Box, Button, Menu, MenuItem, InputBase, Paper, Typography, Divider} from "@mui/material";
 import {
+    PageHeader,
     font10,
     font11,
     font12,
-    font3,
     font4,
     font9,
     neutral_white,
@@ -113,7 +113,7 @@ export default async function Home() {
                 <Grid2 md={1.5} ml={5} display="flex">
                     <Box maxWidth="400px">
                         <Box height={21}/>
-                        <Typography sx={font3}>Hello, Jane</Typography>
+                        <Typography sx={PageHeader}>Hello, Jane</Typography>
                         <Typography sx={font9}>Helios Clinic</Typography>
                     </Box>
                 </Grid2>

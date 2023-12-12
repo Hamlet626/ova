@@ -14,6 +14,7 @@ import { RoleNum, roles } from "@/utils/roles";
 import {useForm,  useFormState} from 'react-hook-form';
 import {signIn} from "next-auth/react";
 import { getCliId_Client } from "@/utils/clinic_id/client";
+import { jsonPost } from "@/utils/server_data_getter/http";
 
 
 
@@ -112,19 +113,12 @@ const router = useRouter();
      const nameValue=clinic == null ?getValues('companyName'):getValues('lastName');
 
 
-     const r = await fetch('/api/signup', {
-       method: 'POST',
-       mode: 'cors',
-       headers: {
-         'Content-Type': 'application/json',
-       },
-       body: JSON.stringify({
+     const r = await jsonPost('/api/signup', {
          email: emailValue,
          name: nameValue,
          role: role,
          password: passwordValue,
-       }),
-     });
+       });
 
 
      if (r.status === 200) {

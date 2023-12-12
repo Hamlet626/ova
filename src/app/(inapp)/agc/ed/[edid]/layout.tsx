@@ -17,6 +17,7 @@ import { ContentTabs } from "./content_tabs";
 import { StatusSetter } from "./status_setter";
 import FormProgTile from "./form_progress_tile";
 import { ActionsGroup } from "./actions_group";
+import { EDRecommender } from "./_ed_recommender/ed_recommender";
 
 export default async function EDProfile({params,children}:{params: { edid: string },children: ReactNode}){
     
@@ -65,9 +66,8 @@ export default async function EDProfile({params,children}:{params: { edid: strin
                         <FormProgTile edid={params.edid}/>
                         </RightMenuTile>,
                         <RightMenuTile title="Recommend to recipients">
-                            <StatusSetter current={edInfo.status} edid={params.edid}/>
+                            <EDRecommender edid={params.edid}/>
                             </RightMenuTile>
-
                     ].flatMap(c=>[c,<Divider sx={{my:'24px'}}/>])}
                 </List>
             </Paper>
@@ -107,13 +107,13 @@ const BasicInfoBloc=<T extends BasicInfoDoc & GCAgcInfoDoc>({info,formData}:{inf
                 <InfoTile title="Location" content={info.location??""}/>
             </Grid2>
             <Grid2 xs width={140}>
-                <InfoTile title="Phone Number" content={formData[0].phone}/>
+                <InfoTile title="Phone Number" content={formData[0]?.phone}/>
             </Grid2>
             <Grid2 xs width={140}>
                 <InfoTile title="Email" content={info.email}/>
             </Grid2>
             <Grid2 xs width={140}>
-                <InfoTile title="Price" content={formatPrice(info.price)}/>
+                <InfoTile title="Price" content={info.price==null?'Undecided':formatPrice(info.price)}/>
             </Grid2>
         </Grid2>
     </Stack>

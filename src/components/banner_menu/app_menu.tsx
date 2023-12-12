@@ -1,11 +1,12 @@
 
-import { CalendarMonthOutlined, FavoriteBorderOutlined, FolderOutlined, HandshakeOutlined, HomeOutlined, ListOutlined, PeopleOutline, PowerSettingsNewOutlined, SettingsOutlined, StickyNote2Outlined, ThumbUpOutlined, TrendingUpOutlined } from "@mui/icons-material";
+import { CalendarMonthOutlined, Egg, EggAlt, FavoriteBorderOutlined, FolderOutlined, HandshakeOutlined, HomeOutlined, ListOutlined, PeopleOutline, PowerSettingsNewOutlined, SettingsOutlined, StickyNote2Outlined, ThumbUpOutlined, TrendingUpOutlined } from "@mui/icons-material";
 import { AppBarProps, Box, CSSObject, Divider, Drawer, Fab, List, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, Theme, Toolbar, alpha, darken, emphasize, makeStyles, styled, useMediaQuery, useTheme} from "@mui/material";
-import React, { SyntheticEvent, } from "react";
+import React, { SyntheticEvent, useContext, } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { RoleNum, roles } from "@/utils/roles";
 import { neutral96, } from "../ThemeRegistry/theme_consts";
 import { signOut, useSession } from "next-auth/react";
+import { AppLayoutContext } from "./ed_rcp";
 
 
 export const drawerWidth=360;
@@ -96,7 +97,7 @@ const CDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
       if(role===RoleNum.ED)
       return [
       {path:'/forms',text:'Forms','icon':<StickyNote2Outlined/>},
-    {path:'/file',text:'Files','icon':<FolderOutlined/>},
+    {path:'/files',text:'Files','icon':<FolderOutlined/>},
     {path:'/agencies',text:'Agencies','icon':<PeopleOutline/>},
     {path:'/cases',text:'Cases','icon':<HandshakeOutlined/>},
     {path:'/calendar',text:'Events Calendar','icon':<CalendarMonthOutlined/>},
@@ -106,19 +107,26 @@ const CDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
     .map((v)=>({...v,path:(`/${roles[role].path}${agcid==null?'':`/${agcid}`}${v.path}`)}));
 
     return [
+      {path:'/eds',text:'Egg Donors','icon':<EggAlt/>},
     {path:'/liked',text:'Liked','icon':<FavoriteBorderOutlined/>},
     {path:'/trending',text:'Trending','icon':<TrendingUpOutlined/>},
-    {path:'/recommended',text:'Recommended','icon':<ThumbUpOutlined/>},
     {path:'/cases',text:'Cases','icon':<HandshakeOutlined/>},
     {path:'/lists',text:'Custom Lists','icon':<ListOutlined/>},
     {path:'/setting',text:'Setting','icon':<SettingsOutlined/>},
     ].map((v)=>({...v,path:(`/${roles[role].path}/${v.path}`)}));
   }
 
+
+  ///xs: __ -> swipeable
+  ///sm: shrink -> swipeable
+  ///md: shrink -> swipeable
+  ///lg: shrink -> fix
+  ///xl: default expand -> fix
 export const AppMenu=({role,open,agcid,fixed}:{role:RoleNum, open?:boolean, agcid?:string, fixed?:boolean})=>{
     const path=usePathname();
     const router=useRouter();
     const theme=useTheme();
+    const {setMenuOpen}=useContext(AppLayoutContext)!;
     // const drawerFix=useMediaQuery(theme.breakpoints.up('lg'));
   
     const content=
@@ -183,8 +191,8 @@ export const AppMenu=({role,open,agcid,fixed}:{role:RoleNum, open?:boolean, agci
               </CDrawer>
     );}
     else return (
-      <SwipeableDrawer open={open} onClose={(event: SyntheticEvent<{}, Event>)=> {} } 
-      onOpen={(event: SyntheticEvent<{}, Event>)=> {} }
+      <SwipeableDrawer open={open} onClose={(event: SyntheticEvent<{}, Event>)=> {setMenuOpen(false);} } 
+      onOpen={(event: SyntheticEvent<{}, Event>)=> {setMenuOpen(true);} }
       sx={{display:{md:'block',lg:'none'}}}>
                     <Toolbar />
                     {content}

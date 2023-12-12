@@ -1,84 +1,66 @@
 'use client'
-import { font3 } from "@/components/ThemeRegistry/theme_consts";
-import { EDRec, algo_client } from "@/utils/algolia";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { PageHeader } from "@/components/ThemeRegistry/theme_consts";
+import { EDRec, agc_facet, algo_client } from "@/utils/algolia";
+import { Box, Button, Stack, SvgIcon, Typography } from "@mui/material";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
-import { Autocomplete } from "./searcher";
 import {
-    Highlight,
-    Hits,
-    InstantSearch,
-    Pagination,
-    RefinementList,
     Configure,
   } from "react-instantsearch";
-import { Add, PeopleOutline } from "@mui/icons-material";
+import { Add, PeopleOutline, } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-
-import Link from "next/link";
-import { EDsHits, EdTile } from "./ed_tile";
-import { SortBy } from "./sorter";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { EDStatus, EDStatusLabel } from "@/utils/types/status";
-import { StateFilter } from "./state_filter";
 import { OtherFilters } from "./other_filters";
+import { SortBy } from "./sorter";
+import { StateFilter } from "./state_filter";
+import { TitleNSeeAll } from "./title_see_all";
+import { Searcher } from "./searcher";
+import { useSession } from "next-auth/react";
+import { EDsHits } from "@/app/_shared/_ed/_eds_blocks/hits";
+import { EDsTrendings } from "@/app/_shared/_ed/_eds_blocks/tredings";
 
 export default function EDs(){
   const router=useRouter();
+  const myid=useSession({required:true}).data?.user?.id!;
 
     return <InstantSearchNext indexName="ed" searchClient={algo_client}
     insights={true}
     future={{preserveSharedStateOnUnmount: true,}}
     >
-      <Configure hitsPerPage={10}/>
+      <Configure hitsPerPage={10} facetFilters={`${agc_facet}:${myid}`}/>
         <Stack px={10}>
           <Box height={20}/>
           <LOStack>
-                <Typography sx={font3} flexGrow={2}>Egg Donor</Typography>
-                <Box flexGrow={8} flexBasis={8}>
-                  <Autocomplete
-                  />
-                </Box>
-                <Stack flexGrow={2} direction={'row'} alignItems={'end'}>
-                  <Box flexGrow={1}/>
-                  <Button sx={{color:'white',flexGrow:1}} 
+            <Typography sx={PageHeader} flexGrow={2}>Egg Donor</Typography>
+            <Box flexGrow={8} flexBasis={8}>
+              <Searcher/>
+            </Box>
+            <Stack flexGrow={2} direction={'row'} alignItems={'end'}>
+              <Box flexGrow={1}/>
+              <Button sx={{color:'white',flexGrow:1}} 
                   variant="contained" onClick={()=>{router.push('agc/eds/create')}}
                   startIcon={<Add/>}>add ed</Button>
-                </Stack>
-            </LOStack>
-
-            <Box height={12}/>
+            </Stack>
+          </LOStack>
+          
+          <Box height={12}/>
             <LOStack>
               <SortBy items={[
                 {label:'Most Relevant',value:'ed'},
                 {label:'Create Date',value:'ed_createtime_desc'}]}/>
                 <StateFilter/>
             </LOStack>
-            <Box height={12}/>
-            <OtherFilters/>
+          <Box height={12}/>
 
-            <Box height={32}/>
-            <Stack direction={'row'} alignItems={'center'}>
-              <PeopleOutline color="secondary"/>
-          <Box width={8}/>
-          <Typography variant="subtitle2">All Egg Donor</Typography>
-          <Box flexGrow={1}/>
-          <Typography variant="body2" component={Link} href={'todo'}>See All</Typography>
-        </Stack>
+          <OtherFilters/>
 
-        <Box height={12}/>
-        <EDsHits/>
-        
+          <Box height={18}/>
+          <EDsTrendings agcid={myid}/>
+
+          <Box height={32}/>
+          <TitleNSeeAll icon={PeopleOutline} title={"All Egg Donor"} //href="/agc/eds/all"
+          />
+          <Box height={12}/>
+          <EDsHits/>
         </Stack>
- 
-        {/* <div className="container wrapper">
-          <div>
-            <RefinementList attribute="brand" />
-          </div>
-          <div>
-            <Hits hitComponent={Hit} />
-            <Pagination />
-          </div>
-        </div> */}
     </InstantSearchNext>;
 }

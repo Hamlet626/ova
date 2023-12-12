@@ -27,9 +27,7 @@ export const font2={
 };
 
 
-
-
-export const font3={
+export const PageHeader={
     fontFamily: roboto.style.fontFamily,
     fontSize: '28px',
     fontWeight: 500,

@@ -6,7 +6,7 @@ import {UserRef, serverInitFirebase} from "@/utils/firebase/firebase_server";
 import {auth} from "firebase-admin";
 import {cliAuth} from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
-import { EDRec, RcpRec, algo_client } from "@/utils/algolia";
+import { EDRec, RcpRec, agc_facet, algo_client } from "@/utils/algolia";
 import { EDStatus, RcpStatus } from "@/utils/types/status";
 import { getCliId_Server } from "@/utils/clinic_id/server";
 
@@ -65,15 +65,22 @@ const getUserSessionInfo=async (id:string):Promise<User>=>{
     
     const clinicID=getCliId_Server();
     if(basicInfo.role===RoleNum.ED||basicInfo.role===RoleNum.Rcp){
-        const algoRecord=await algo_client.initIndex(`${roleKey}`).getObject<EDRec>(id);
-        let agencies=Object.keys((algoRecord).agencies);
-        if(clinicID!=null&&!agencies.includes(clinicID)){
-            agencies=[...agencies,clinicID];
-            await algo_client.initIndex(`${roleKey}`).saveObject({...algoRecord,
+        const algoRecord=await algo_client.initIndex(`${roleKey}`).getObject<EDRec|RcpRec>(id);
+        let agency_ids=algoRecord[agc_facet]??[];
+        
+        
+        if(clinicID!=null&&!agency_ids.includes(clinicID)){
+            agency_ids=[...agency_ids,clinicID];
+            await algo_client.initIndex(`${roleKey}`).partialUpdateObject({
+                [agc_facet]: {
+                    _operation: 'AddUnique',
+                    value: clinicID,},
                 agencies:{...algoRecord.agencies,
-                    clinicID:{status:basicInfo.role===RoleNum.ED?EDStatus.filling_Form:RcpStatus.general}}});
+                    [clinicID]:{status:basicInfo.role===RoleNum.ED?EDStatus.filling_Form:RcpStatus.general}},
+                objectID: id,
+              });
         }
-        basicInfo.agencies=agencies;
+        basicInfo.agencies=agency_ids;
     } 
     ///Rcp now has same algolia & fb data structure as EDs
     else if(false && basicInfo.role===RoleNum.Rcp){

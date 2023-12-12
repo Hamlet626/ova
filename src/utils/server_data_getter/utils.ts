@@ -6,7 +6,7 @@ import { FormTemp } from "@/utils/form/types";
 import { RoleNum, roles } from "@/utils/roles";
 import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
 import { revalidateTag, unstable_cache } from "next/cache";
-import { BasicInfoDoc, GCAgcInfoDoc } from "../firebase/types";
+import { BasicInfoDoc, GCAgcInfoDoc, RcpAgcInfoDoc } from "../firebase/types";
 
 export const getFormTemplate=(agcid:string)=>unstable_cache(
     async():Promise<FormTemp[]>=>{
@@ -43,11 +43,12 @@ export const getBasicFbData=(uid:string,role:RoleNum)=>unstable_cache(
 export const getAgcFbData=(uid:string,agcid:string,role:RoleNum=RoleNum.ED)=>unstable_cache(
     async()=>{
         const r = await getDoc(doc(getFirestore(app),UsersAgcDataDoc(role,uid,agcid)));
-        return r.data() as GCAgcInfoDoc;
+        return r.data()??{} as RcpAgcInfoDoc;
     },
     [uid,agcid,`${role}`],
     {tags:['ed_agc_data'],revalidate:10}
 )();
+
 
 export const refresh_server=(tag:string)=>{
     // 'use server'
