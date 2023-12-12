@@ -10,7 +10,7 @@ import {
 import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { Hit } from '@algolia/client-search';
 import { Clear, Delete, History, HistoryOutlined, NorthWest, Remove, SearchOutlined } from '@mui/icons-material';
-import { Box, Button, Chip, CircularProgress, IconButton, Input, InputBase, Stack, Typography, alpha, styled } from '@mui/material';
+import { Box, Button, Chip, CircularProgress, IconButton, Input, InputBase, Stack, Typography, alpha, styled, useTheme } from '@mui/material';
 import algoliasearch from 'algoliasearch/lite';
 import { getDoc } from 'firebase/firestore';
 import React, { useEffect, useMemo } from 'react';
@@ -65,6 +65,7 @@ export function Searcher(
 ) {
 
   const router=useRouter();
+  const theme=useTheme();
   // aa('init', { appId:'4WJ9FHOG84', apiKey:'92bb7bfcde71a02e96721c077a0b491c', 
   //               useCookie:true, partial: true,anonymousUserToken:true});
   const enableInsight=typeof window !== 'undefined';
@@ -236,7 +237,7 @@ export function Searcher(
             {autocompleteState.isOpen && (
         <div
           ref={panelRef}
-          style={{zIndex:1,width:'100%'}}
+          style={{zIndex:theme.zIndex.drawer,width:'100%'}}
           className={[
             'aa-Panel',
             'aa-Panel--desktop',

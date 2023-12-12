@@ -11,6 +11,8 @@ export const AlgoSetup=()=>{
     //     console.log(userToken);
     //   });
     useEffect(()=>{
+      aa('init', { appId:'4WJ9FHOG84', apiKey:'92bb7bfcde71a02e96721c077a0b491c', 
+                useCookie:true, partial: true,anonymousUserToken:true});
         aa('getUserToken', {}, (err, userToken) => {
             if (err) {
               console.error("err");

@@ -2,7 +2,7 @@
 import { click_ED_event } from "@/utils/algolia";
 import { getCliId_Client } from "@/utils/clinic_id/client";
 import { UserRef, UsersAgcDataRef } from "@/utils/firebase/firebase_client";
-import { RoleNum } from "@/utils/roles";
+import { RoleNum, roles } from "@/utils/roles";
 import { getDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ import { LoadingEDTile } from "./loading_tile";
 import type { Hit } from 'instantsearch.js';
 import { SendEventForHits } from "instantsearch.js/es/lib/utils";
 
-export const EdAlgoTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=>{
+export const EdAlgoTile=({hit,sendEvent,transparent=false}:{hit:Hit,sendEvent?:SendEventForHits,transparent?:boolean})=>{
   
     const user=useSession({required:true}).data?.user;
     const agcId=getCliId_Client(user?.role,user?.id)!;
@@ -26,7 +26,7 @@ export const EdAlgoTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=
       [hit.objectID,agcId]);
       const router=useRouter();
   
-      return <LoadingEDTile 
+      return <LoadingEDTile transparent={transparent}
       avatar={infoState==='pending'?undefined:basicInfo?.data()?.avatar}
       name={hit.name}
       tags={hit.tags??[]}
@@ -36,7 +36,7 @@ export const EdAlgoTile=({hit,sendEvent}:{hit:Hit,sendEvent?:SendEventForHits})=
         if (user?.role!==RoleNum.Agc&&sendEvent!=null) {
           sendEvent('click',hit,click_ED_event);
         }
-        router.push(`/agc/ed/${hit.objectID}`);
+        router.push(`/${roles[user!.role].path}/ed/${hit.objectID}`);
       }}
       />
       

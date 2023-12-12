@@ -6,10 +6,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { MouseEventHandler } from "react";
 
-export const LoadingEDTile=({avatar,name,tags,price,href,onClick}:
-    {avatar?:string|null,name?:string|null,tags?:string[],price?:number|null,href?:string,onClick?:MouseEventHandler})=>{
-    const avaComp=<CardMedia sx={{aspectRatio: 1.2, borderTopLeftRadius:'12px', borderTopRightRadius:'12px'}}>
-    <Avatar style={{ position: 'relative', width: '100%', height: '100%'}} variant="square">
+export const LoadingEDTile=({avatar,name,tags,price,href,onClick,transparent=false}:
+    {avatar?:string|null,name?:string|null,tags?:string[],price?:number|null,href?:string,onClick?:MouseEventHandler,transparent?:boolean})=>{
+    const avaComp=<CardMedia sx={{aspectRatio: 1.2,
+    ...(transparent?{borderRadius:'12px'}:{borderTopLeftRadius:'12px', borderTopRightRadius:'12px',})}}>
+    <Avatar style={{ position: 'relative', width: '100%', height: '100%', ...(transparent?{borderRadius:'12px'}:{})}} variant="square">
     {avatar===undefined?<Skeleton variant='rounded' height={'100%'}/>:
     avatar===null?<center><Face/></center>:
     <Image src={avatar} alt={name??''} fill objectFit="cover" />
@@ -18,7 +19,7 @@ export const LoadingEDTile=({avatar,name,tags,price,href,onClick}:
   </CardMedia>;
   
     return (
-      <Card sx={{bgcolor:OVA_very_soft_grey, aspectRatio:0.752}} elevation={0}>
+      <Card sx={{bgcolor:transparent?'transparent':OVA_very_soft_grey, aspectRatio:0.752}} elevation={0}>
         {(onClick||href) ? 
         <CardActionArea {...(href!=null?{LinkComponent:Link,href:href}:{})} onClick={onClick}>
           {avaComp}

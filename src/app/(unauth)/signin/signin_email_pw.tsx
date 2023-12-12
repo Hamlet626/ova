@@ -15,8 +15,8 @@ import NextLink from "next/link";
 import { RoleNum, roles } from "@/utils/roles";
 import { getClinic } from "@/utils/clinic_id/clinic_check";
 import { useUrl } from "nextjs-current-url";
-import { ConfirmDialog } from "./api_process/confirm_dialog";
-import { useAPILoadingError } from "./api_process/use_api_loading_error";
+import { ConfirmDialog } from "../../../components/api_process/confirm_dialog";
+import { useAPILoadingError } from "../../../components/api_process/use_api_loading_error";
 
 
 
@@ -46,7 +46,7 @@ export default function SigninEmailPwBlock() {
 
             router.push(`/${roles[user.role!].path}${user?.role===RoleNum.ED?`/${getClinic(hostName)??user.agencies![0]}`:''}/dashboard`);
         }
-    });
+    },{successKeepLoading:true});
     const login=handleSubmit(handleCallAPI);
 
     return(

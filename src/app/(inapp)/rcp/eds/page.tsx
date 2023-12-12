@@ -33,12 +33,11 @@ export default function EDs(){
           
           <Box height={12}/>
             <LOStack>
+              <OtherFilters/>
+              <Box flex={1}/>
               <SortBy items={[
                 {label:'Most Relevant',value:'ed'},
                 {label:'Create Date',value:'ed_createtime_desc'}]}/>
-                <Box flex={'auto'}>
-                    <OtherFilters/>
-                </Box>
             </LOStack>
           <Box height={16}/>
 

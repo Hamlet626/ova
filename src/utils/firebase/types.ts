@@ -14,9 +14,9 @@ export interface BasicInfoDoc{
 //     agcs:string[],
 // }
 
-export interface GCAgcInfoDoc{
+export interface EDAgcInfoDoc{
     agcid:string,
-    price:number,
+    price?:number,
     status:EDStatus,
 }
 

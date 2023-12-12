@@ -9,6 +9,7 @@ import logo from "@/assets/ova_logo.svg";
 import { font4, outline, outline_variant } from "../ThemeRegistry/theme_consts";
 import { AppMenu, drawerMinWidth, drawerWidth } from "./app_menu";
 import Image from "next/image";
+import { AppLayoutContext } from "./ed_rcp";
 
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -53,7 +54,7 @@ export const AGCAppBar=({children}: { children: ReactNode })=> {
     };
     
           {/* <Image src={'/assets/agc_test_logo.svg'} alt="Agc Logo" style={{height:'100%',width:'auto'}}/> */}
-    return(
+    return(<AppLayoutContext.Provider value={{menuOpen:false, setMenuOpen:()=>{}, menuWidth:0}}>
         <Box sx={{display:'flex',width:'100%'}}>
             <AppBar position="fixed" elevation={0}
             sx={{backgroundColor:'white', zIndex: (theme) => theme.zIndex.drawer + 1, 
@@ -100,5 +101,6 @@ export const AGCAppBar=({children}: { children: ReactNode })=> {
               {children}
               </Box>
         </Box>
+        </AppLayoutContext.Provider>
     )
 }

@@ -32,7 +32,7 @@ export const RemainedSlider=({children,spacing=3}:{children:ReactNode,spacing?:n
     }
 
     return (
-        <div style={{position:'relative', //height:'72px',
+        <div style={{position:'relative', minWidth:0
         }}>
         <div ref={swiperRef}
         style={{width:'100%',//height:'72px',

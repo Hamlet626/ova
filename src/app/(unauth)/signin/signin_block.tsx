@@ -1,7 +1,7 @@
 import {//Button, Input,
     Box, Button, Link, Typography
 } from "@mui/material";
-import SigninEmailPwBlock from "@/components/signin_email_pw";
+import SigninEmailPwBlock from "@/app/(unauth)/signin/signin_email_pw";
 import { font1 } from "@/components/ThemeRegistry/theme_consts";
 
 

@@ -1,7 +1,7 @@
 import { neutral96, outline } from "@/components/ThemeRegistry/theme_consts";
 import { BackButton } from "@/components/back_button";
 import { LOStack } from "@/components/layouts/layout_stack";
-import { BasicInfoDoc, GCAgcInfoDoc } from "@/utils/firebase/types";
+import { BasicInfoDoc, EDAgcInfoDoc } from "@/utils/firebase/types";
 import { formatPrice, formatTime } from "@/utils/formatters";
 import { RoleNum } from "@/utils/roles";
 import { getAgcFbData, getBasicFbData, getFormData } from "@/utils/server_data_getter/utils";
@@ -18,6 +18,7 @@ import { StatusSetter } from "./status_setter";
 import FormProgTile from "./form_progress_tile";
 import { ActionsGroup } from "./actions_group";
 import { EDRecommender } from "./_ed_recommender/ed_recommender";
+import { RightMenuTile } from "@/app/_shared/_ed/_detail/right_menu_tile";
 
 export default async function EDProfile({params,children}:{params: { edid: string },children: ReactNode}){
     
@@ -74,16 +75,7 @@ export default async function EDProfile({params,children}:{params: { edid: strin
         </Stack>
 }
 
-const RightMenuTile=({title,children}:{title:string,children:ReactNode})=>{
-    return <ListItem>
-        <Stack pl={3} pr={4} spacing={1} width={'100%'}>
-            <Typography variant="subtitle2">{title}</Typography>
-            {children}
-            </Stack>
-    </ListItem>
-}
-
-const BasicInfoBloc=<T extends BasicInfoDoc & GCAgcInfoDoc>({info,formData}:{info:T,formData:any[]})=>{
+const BasicInfoBloc=<T extends BasicInfoDoc & EDAgcInfoDoc>({info,formData}:{info:T,formData:any[]})=>{
     return <Stack direction={'row'}>
         <Avatar sx={{height:'193px',width:'193px'}} alt={`${info.name}'s avatar`}>
             {info.avatar==null?undefined:<Image src={info.avatar} alt={`${info.name}'s avatar`}
