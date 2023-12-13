@@ -16,12 +16,13 @@ import { PhotosCarousel } from "./photos_carousel";
 
 export default async function EDProfile({params,children}:{params: { edid: string },children: ReactNode}){
     
-    const [basicInfo,algoData,agcInfo,formData,filesData]=await Promise.all([
+    const [basicInfo,algoData,agcInfo,filesData,//formData
+    ]=await Promise.all([
         getBasicFbData(params.edid,RoleNum.ED),
         getAlgoData(params.edid,RoleNum.ED),
         getAgcFbData(params.edid,getCliId_Server()!,RoleNum.ED),
-        getFormData(params.edid,RoleNum.ED),
-        getFilesData(params.edid,RoleNum.ED)
+        getFilesData(params.edid,RoleNum.ED),
+        // getFormData(params.edid,RoleNum.ED),
     ]);
 
     const edInfo={...basicInfo,...agcInfo};
@@ -29,10 +30,9 @@ export default async function EDProfile({params,children}:{params: { edid: strin
 
     return <Stack direction='row' height='100%' width='100%' alignContent={'stretch'}>
             <Stack flexGrow={1} alignItems={'stretch'} sx={{overflowY:'auto'}}>
-                <Box position={'relative'} height={274}>
-                    <Stack position={'absolute'} left={0} right={0}>
-                        <PhotosCarousel photos={photos?Object.entries(photos).map(et=>et[0]):[]}/>
-                    </Stack>
+                <Box position={'relative'} 
+                minHeight={274}>
+                    <PhotosCarousel photos={photos?Object.entries(photos).map(et=>et[0]):[]}/>
                     <div style={{background: 'linear-gradient(to top, black, transparent)',zIndex:1,position:'absolute',bottom:0,right:0,left:0}}>
                         <Stack direction={'row'} pb={'21px'}>
                             <Box width={32}/>
@@ -49,11 +49,15 @@ export default async function EDProfile({params,children}:{params: { edid: strin
                     </div>
                     <BackButton text={"Home"} link={"/rcp/eds"} sx={{top:21,left:32,color:'white',position:'absolute',zIndex:1}}/>
                 </Box>
-                <EDViewerContentTabs edid={params.edid}>
-                    {children}
-                </EDViewerContentTabs>
+                <EDViewerContentTabs edid={params.edid}/>
+                <Box pl={4} pr={3} pt={3}>{children}</Box>
+                <Paper sx={{position:'absolute', bottom:0, left:0, right:0, pl:32,pr:27,height:80}}>
+                    <Stack>
+                        <Button variant="outlined" color="secondary">Request Match</Button>
+                    </Stack>
+                </Paper>
             </Stack>
-            <Paper sx={{width:'calc((100vw - 136px)/4 + 56px )', borderRadius:0, zIndex:2}} elevation={24}>
+            <Paper sx={{width:'calc((100vw - 136px)/4 + 56px )',minWidth:'calc((100vw - 136px)/4 + 56px )', borderRadius:0, zIndex:2}} elevation={24}>
                 <List>
                     {[<RightMenuTile title="Traits">
                         <EDTraitsSearcher tags={algoData.tags??[]as any}/>

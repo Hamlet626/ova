@@ -24,13 +24,17 @@ export interface FormField{
 }
 
 export interface AlgoMapping{
-    fdid?:string|string[],
+    fdid:string|string[],
+
+    /// key stored in algolia
     label?:string,
+
+    /// uiLabel -> convertFilter -> field label -> label
     uiLabel?:string,
     handler?:any,
     extra?:string,
-    tag?:boolean, //default:false
-    filter?:boolean, //default:true
+    tag:boolean, //default:false
+    filter:boolean, //default:true
     convertFilter?:'age'
     // type:AlgoAttrType,
 };

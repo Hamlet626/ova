@@ -1345,7 +1345,7 @@ const personData=(name:string,{addRelation,addDobAddr,addProp}:{addRelation:bool
     return addProp?r.map((v)=>({...v,...addProp})):r;
 }
 
-function tagOnlyAlgo(qs: AlgoMapping[]):AlgoMapping[] {
+function tagOnlyAlgo(qs: {fdid:string, label?:string}[]):AlgoMapping[] {
     return qs.map((v,i,l)=>({...v, tag:true, filter:false }));
 }
 
@@ -1378,7 +1378,7 @@ export const formTemplates:FormTemp[]=[basic_info,physical_personal_trait,educat
     background_history,family_partner,other_clinic_questions]
     .map(v=>assign_IDs(v));
 
-export const AlgoTemplates:AlgoMapping[][]=[
+export const AlgoTemplates:AlgoMapping[][]=([
     [
         {fdid:'s2',label:'Birthday',convertFilter:'age'},
         {fdid:'s3',label:'Nationality',tag:true},
@@ -1462,4 +1462,5 @@ export const AlgoTemplates:AlgoMapping[][]=[
     [],
     [],
     []
-]
+] as (AlgoMapping&{tag?:boolean,filter?:boolean})[][])
+.map(v=>v.map(v=>({...v,tag:v.tag??false,filter:v.filter??true})))

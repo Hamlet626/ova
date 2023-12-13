@@ -7,7 +7,7 @@ import { Box, Tab } from "@mui/material"
 import { redirect, usePathname, useRouter, useSelectedLayoutSegment } from "next/navigation"
 import { ReactNode } from "react"
 
-export const EDViewerContentTabs=({children,edid}:{children:ReactNode,edid:string})=>{
+export const EDViewerContentTabs=({edid}:{edid:string})=>{
     const route=useSelectedLayoutSegment()??'';
     const router=useRouter();
     return <TabContext value={route}>
@@ -20,6 +20,5 @@ export const EDViewerContentTabs=({children,edid}:{children:ReactNode,edid:strin
             <Tab label="Appointments" value="appointments" />
           </TabList>
         </Box>
-        {children}
     </TabContext>;
 }
