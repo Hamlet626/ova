@@ -63,7 +63,7 @@ export const font6={
     letterSpacing: '0.15px',
 };
 
-export const font7={
+export const nameLabel={
     fontFamily: roboto.style.fontFamily,
     fontSize: '16px',
     fontWeight: 500,

@@ -1,12 +1,13 @@
 
 import { CalendarMonthOutlined, Egg, EggAlt, FavoriteBorderOutlined, FolderOutlined, HandshakeOutlined, HomeOutlined, ListOutlined, PeopleOutline, PowerSettingsNewOutlined, SettingsOutlined, StickyNote2Outlined, ThumbUpOutlined, TrendingUpOutlined } from "@mui/icons-material";
 import { AppBarProps, Box, CSSObject, Divider, Drawer, Fab, List, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, Theme, Toolbar, alpha, darken, emphasize, makeStyles, styled, useMediaQuery, useTheme} from "@mui/material";
-import React, { SyntheticEvent, useContext, } from "react";
+import React, { ReactNode, SyntheticEvent, useContext, } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { RoleNum, roles } from "@/utils/roles";
 import { neutral96, } from "../ThemeRegistry/theme_consts";
 import { signOut, useSession } from "next-auth/react";
 import { AppLayoutContext } from "./ed_rcp";
+import Link from "next/link";
 
 
 export const drawerWidth=360;
@@ -50,7 +51,7 @@ interface WithOpenListButProp extends AppBarProps{
   }));
 
 
-const home={path:'/dashboard',text:'Home','icon':<HomeOutlined/>};
+// const home={path:'/dashboard',text:'Home','icon':<HomeOutlined/>};
 
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -93,36 +94,45 @@ const CDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })
       };
     });
 
-    const routes=(role:RoleNum,agcid?:string)=>{
-      if(role===RoleNum.ED)
-      return [
-      {path:'/forms',text:'Forms','icon':<StickyNote2Outlined/>},
-    {path:'/files',text:'Files','icon':<FolderOutlined/>},
-    {path:'/agencies',text:'Agencies','icon':<PeopleOutline/>},
-    {path:'/cases',text:'Cases','icon':<HandshakeOutlined/>},
-    {path:'/calendar',text:'Events Calendar','icon':<CalendarMonthOutlined/>},
-    {path:'/setting',text:'Setting','icon':<SettingsOutlined/>},
-    ]
-    ///for EDs, add ..agcid to the path, e.g. /forms -> /ed/agcid/forms
-    .map((v)=>({...v,path:(`/${roles[role].path}${agcid==null?'':`/${agcid}`}${v.path}`)}));
+  //   const routes=(role:RoleNum,agcid?:string)=>{
+  //     if(role===RoleNum.ED)
+  //     return [
+  //     {path:'/forms',text:'Forms','icon':<StickyNote2Outlined/>},
+  //   {path:'/files',text:'Files','icon':<FolderOutlined/>},
+  //   {path:'/agencies',text:'Agencies','icon':<PeopleOutline/>},
+  //   {path:'/cases',text:'Cases','icon':<HandshakeOutlined/>},
+  //   {path:'/calendar',text:'Events Calendar','icon':<CalendarMonthOutlined/>},
+  //   {path:'/setting',text:'Setting','icon':<SettingsOutlined/>},
+  //   ]
+  //   ///for EDs, add ..agcid to the path, e.g. /forms -> /ed/agcid/forms
+  //   .map((v)=>({...v,path:(`/${roles[role].path}${agcid==null?'':`/${agcid}`}${v.path}`)}));
 
-    return [
-      {path:'/eds',text:'Egg Donors','icon':<EggAlt/>},
-    {path:'/liked',text:'Liked','icon':<FavoriteBorderOutlined/>},
-    {path:'/trending',text:'Trending','icon':<TrendingUpOutlined/>},
-    {path:'/cases',text:'Cases','icon':<HandshakeOutlined/>},
-    {path:'/lists',text:'Custom Lists','icon':<ListOutlined/>},
-    {path:'/setting',text:'Setting','icon':<SettingsOutlined/>},
-    ].map((v)=>({...v,path:(`/${roles[role].path}/${v.path}`)}));
-  }
+  //   return [
+  //     {path:'/eds',text:'Egg Donors','icon':<EggAlt/>},
+  //   {path:'/liked',text:'Liked','icon':<FavoriteBorderOutlined/>},
+  //   {path:'/trending',text:'Trending','icon':<TrendingUpOutlined/>},
+  //   {path:'/cases',text:'Cases','icon':<HandshakeOutlined/>},
+  //   {path:'/lists',text:'Custom Lists','icon':<ListOutlined/>},
+  //   {path:'/setting',text:'Setting','icon':<SettingsOutlined/>},
+  //   ]
+  //   .map((v)=>({...v,path:(`/${roles[role].path}/${v.path}`)}));
+  // }
 
+
+export type MenuItemInfo={
+  path:string,
+  text:string,
+  icon:ReactNode,
+  sub?:MenuItemInfo[]
+}
 
   ///xs: __ -> swipeable
   ///sm: shrink -> swipeable
   ///md: shrink -> swipeable
   ///lg: shrink -> fix
   ///xl: default expand -> fix
-export const AppMenu=({role,open,agcid,fixed}:{role:RoleNum, open?:boolean, agcid?:string, fixed?:boolean})=>{
+export const AppMenu=({role,open,fixed,routesInfo}:
+  {role:RoleNum, open?:boolean, fixed?:boolean, routesInfo:MenuItemInfo[]})=>{
     const path=usePathname();
     const router=useRouter();
     const theme=useTheme();
@@ -134,43 +144,45 @@ export const AppMenu=({role,open,agcid,fixed}:{role:RoleNum, open?:boolean, agci
     <List sx={{flexGrow:1,}}>
       <Box height={16}/>
   
-      <NavItem key={'home'+fixed?'1':'0'} open={open} highlight
+      {/* <NavItem key={'home'+fixed?'1':'0'} open={open} highlight LinkComponent={Link} 
+      href={`/${roles[role].path}${agcid==null?'':`/${agcid}`}${home.path}`}
       selected={path.endsWith(home.path)} 
-      onClick={()=>router.push(`/${roles[role].path}${agcid==null?'':`/${agcid}`}${home.path}`)}
+      // onClick={()=>router.push(`/${roles[role].path}${agcid==null?'':`/${agcid}`}${home.path}`)}
       // sx={{backgroundColor:'primary.main',color:'white'}}
-    >
-      <ListItemIcon sx={{color:"white"}}>{home.icon}</ListItemIcon>
-      <ListItemText primary={home.text}/>
-    </NavItem>
-    <Box height={40}/>
-  {routes(role,agcid).map((v)=>{
-    const selected=path.startsWith(v.path);
+      >
+        <ListItemIcon sx={{color:"white"}}>{home.icon}</ListItemIcon>
+        <ListItemText primary={home.text}/>
+      </NavItem> */}
+
+      <Box height={40}/>
+
+      {routesInfo.map((v,i)=>{
+        const selected=path.startsWith(v.path);
     
-    const tab = (<NavItem key={v.path+(fixed?'1':'0')} 
-    selected={selected} open={open}
-      onClick={()=>router.push(`${v.path}`)}
-    /// sx={{'&.Mui-selected':{backgroundColor:'primary.main'}}}
-    >
-      <ListItemIcon >{v.icon}</ListItemIcon>
-      <ListItemText primary={v.text}/>
-    </NavItem>);
-  
-    if(v.path.includes('/calendar')){
+        const tab = (<NavItem key={v.path+(fixed?'1':'0')} LinkComponent={Link} href={v.path} highlight={i===0}
+        selected={selected} open={open}
+        /// sx={{'&.Mui-selected':{backgroundColor:'primary.main'}}}
+        >
+          <ListItemIcon sx={i===0?{color:"white"}:{}}>{v.icon}</ListItemIcon>
+          <ListItemText primary={v.text}/>
+        </NavItem>);
+    
+    if(v.sub!=null){
       return (<div key={v.path+(fixed?'1':'0')}>
       <Divider/>
       {tab}
-      {open && <NavItem selected={selected} open
-      onClick={()=>router.push(`/appointments`)}
-    sx={{pl:'32px'}}
+      {open && v.sub.map(v=><NavItem selected={path.startsWith(v.path)} open
+      LinkComponent={Link} href={v.path}
+      sx={{pl:'32px'}}
     >
-      <ListItemText primary='Appointment'/>
-    </NavItem>}
+      <ListItemText primary={v.text}/>
+    </NavItem>)}
       <Divider/>
       </div>)
     }
-    if(v.path.includes('/agencies')){
-      return <AgencyTab key={v.path+(fixed?'1':'0')}>{tab}</AgencyTab>
-    }
+    // if(v.path.includes('/agencies')){
+    //   return <AgencyTab key={v.path+(fixed?'1':'0')}>{tab}</AgencyTab>
+    // }
   
     return tab;
   })}

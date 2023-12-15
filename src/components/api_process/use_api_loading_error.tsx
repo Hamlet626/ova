@@ -1,5 +1,5 @@
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 
 
@@ -7,15 +7,22 @@ export type AlertError={
     title?:string,msg:string
 };
 
-///wrap callback with loading/error handling.
-// pass in the callback for api process
-// returns:
-//   handleCallAPI:Function wrapping callback with error/loading handling
-//   component:ReactNode showing error Alert(automatically handles error showing, if calback returns an AlertError)
-//   loading: boolean representing if the callback API is loading
-//   setError: Function setter for setting Error (for manually setting error)
+/**  wrap callback with loading/error handling.
+ * pass in the callback for api process
+ * returns:
+ * handleCallAPI:Function wrapping callback with error/loading handling
+ * errNotiComponent:ReactNode showing error Alert(automatically handles error showing, if calback returns an AlertError)
+ * loading: boolean representing if the callback API is loading
+ * setError: Function setter for setting Error (for manually setting error)
+ */
+
+
 export const useAPILoadingError=<T extends any[]>(callback:(...p: T)=>Promise<AlertError|void>,
-options:{defaultHandleError?:boolean,successKeepLoading?:boolean}={defaultHandleError:true,successKeepLoading:false})=>{
+options:{defaultHandleError?:boolean,successKeepLoading?:boolean}={defaultHandleError:true,successKeepLoading:false}):
+{setError: Dispatch<SetStateAction<AlertError | undefined>>,
+    loading: any,setLoading: Dispatch<SetStateAction<boolean>>,
+    handleCallAPI: (...p:T)=>Promise<boolean>,
+    errNotiComponent: ReactNode}=>{
   const [error,setError]=useState<AlertError>();
   const [loading,setLoading]=useState(false);
 
@@ -24,7 +31,11 @@ options:{defaultHandleError?:boolean,successKeepLoading?:boolean}={defaultHandle
     setLoading(true);
     const r=await (options.defaultHandleError? 
         (async()=>{
-            try{return await callback(...p)}catch(e){return {msg:`${e}`};}
+            try{
+                return await callback(...p)
+            }catch(e){
+                console.log(e);
+                return {msg:`${e}`};}
         })() : callback(...p));
     if(r==null){
         if(!!!options.successKeepLoading)setLoading(false);

@@ -1,5 +1,5 @@
 'use client'
-import { OVA_very_soft_grey, font7, neutral96 } from "@/components/ThemeRegistry/theme_consts";
+import { neutral96 } from "@/components/ThemeRegistry/theme_consts";
 import { Stack, Box, Skeleton, Avatar } from "@mui/material";
 
 import { Face, PlaylistAdd, TrendingUp } from "@mui/icons-material";

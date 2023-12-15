@@ -1,12 +1,12 @@
 'use server'
 import { FilesCol, FormDataCol, FormTempCol, UserDoc, UsersAgcDataDoc } from "@/utils/firebase/path";
-import { FilesRef, app } from "@/utils/firebase/firebase_client";
+import { EDListsRef, FilesRef, app } from "@/utils/firebase/firebase_client";
 import { formTemplates } from "@/utils/form/template";
 import { FormTemp } from "@/utils/form/types";
 import { RoleNum, roles } from "@/utils/roles";
 import { collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
 import { revalidateTag, unstable_cache } from "next/cache";
-import { BasicInfoDoc, EDAgcInfoDoc, FileCol, RcpAgcInfoDoc } from "../firebase/types";
+import { BasicInfoDoc, EDAgcInfoDoc, EDList, FileCol, RcpAgcInfoDoc } from "../firebase/types";
 import { EDRec, RcpRec, algo_client } from "../algolia";
 
 export const getFormTemplate=(agcid:string)=>unstable_cache(
@@ -22,7 +22,7 @@ export const getFormTemplate=(agcid:string)=>unstable_cache(
 export const getFormData=(uid:string,role:RoleNum)=>unstable_cache(
     async()=>{
         const r = await getDocs(collection(getFirestore(app),FormDataCol(role,uid)));
-        return Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i)?.data());
+        return Array.from({length:6},(v,i)=>r.docs.find(v=>Number(v.id)===i)?.data()??{});
     },
     [uid],
     {tags:['form_data'],revalidate:60}
@@ -67,6 +67,16 @@ export const getFilesData=(uid:string,role:RoleNum)=>unstable_cache(
     },
     [uid,`${role}`],
     {tags:['file_data'],revalidate:12}
+)();
+
+
+export const getEDListsData=(uid:string)=>unstable_cache(
+    async()=>{
+        const r = await getDocs(EDListsRef(uid));
+        return r.docs.map(v=>({...v.data(),id:v.id} as EDList));
+    },
+    [uid],
+    {tags:['ed_lists_data'],revalidate:12}
 )();
 
 

@@ -67,3 +67,13 @@ export const urlToFieldKey=(url:string)=>{
 export const fieldKeyToUrl=(key:string)=>{
   return decodeURIComponent(key.replace('%2E','.'));
 }
+
+
+
+
+export interface EDList{
+  id?:string,
+  name:string,
+  eds:string[],
+  public?:boolean,
+}

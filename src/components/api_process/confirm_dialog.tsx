@@ -3,7 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 import { AlertError, useAPILoadingError } from "./use_api_loading_error";
 
 export const ConfirmDialog=({open,close,onConfirm,title,content}:
-    {open:boolean,close:()=>void,onConfirm:()=>Promise<AlertError|void>,title:string,content:string})=>{
+    {open:boolean,close:()=>void,onConfirm:()=>Promise<AlertError|void>,title?:string,content:string})=>{
         // const [error,setError]=useState<AlertError>();
         // const [loading,setLoading]=useState(false);
 
@@ -11,7 +11,7 @@ export const ConfirmDialog=({open,close,onConfirm,title,content}:
 
     return <>
     <Dialog open={open} onClose={()=>close()}>
-        <DialogTitle>{title}</DialogTitle>
+        {title && <DialogTitle>{title}</DialogTitle>}
         <DialogContent>
           <DialogContentText>
             {content}

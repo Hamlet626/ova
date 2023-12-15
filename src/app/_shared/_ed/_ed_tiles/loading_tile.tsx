@@ -1,4 +1,4 @@
-import { OVA_very_soft_grey, font7 } from "@/components/ThemeRegistry/theme_consts";
+import { OVA_very_soft_grey, nameLabel } from "@/components/ThemeRegistry/theme_consts";
 import { formatPrice } from "@/utils/formatters";
 import { Face, PlaylistAdd } from "@mui/icons-material";
 import { CardMedia, Avatar, Skeleton, Card, CardActionArea, CardContent, Stack, Chip, Typography, IconButton, Box } from "@mui/material";
@@ -35,7 +35,7 @@ export const LoadingEDTile=({avatar,name,tags,price,href,onClick,transparent=fal
               {tags!=null&& tags?.length>2 && <Chip label='...' color='secondary'/>}
               </Stack>
   <Box height={8}/>
-  <Typography sx={font7}>
+  <Typography sx={nameLabel}>
         {name===undefined?<Skeleton/>:name}
       </Typography>
     <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>

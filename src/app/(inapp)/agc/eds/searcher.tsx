@@ -15,7 +15,7 @@ import algoliasearch from 'algoliasearch/lite';
 import { getDoc } from 'firebase/firestore';
 import React, { useEffect, useMemo } from 'react';
 import '@algolia/autocomplete-theme-classic';
-import { OVA_very_soft_grey, font7 } from '@/components/ThemeRegistry/theme_consts';
+import { OVA_very_soft_grey, nameLabel } from '@/components/ThemeRegistry/theme_consts';
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
 import { createTagsPlugin } from '@algolia/autocomplete-plugin-tags';
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
@@ -381,7 +381,7 @@ const Eds=({item}:{item:AutocompleteItem})=>{
         }
     </div>
     <Stack direction={'row'} justifyContent={'space-between'}>
-      <Typography sx={font7}>
+      <Typography sx={nameLabel}>
         {item.name}
       </Typography>
       <Typography variant='subtitle3' color='secondary'>

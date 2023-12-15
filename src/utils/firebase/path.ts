@@ -31,3 +31,10 @@ export const FilesCol=(role:RoleNum,uid:string)=>
 export const FileDoc=(role:RoleNum,uid:string,fileColid:string)=>
 `${FilesCol(role,uid)}/${fileColid}`;
 
+export const EDListsCol=(uid:string)=>
+`user groups/${roles[RoleNum.Rcp].id}/users/${uid}/ed lists`;
+
+export const EDListDoc=(uid:string,listId:string)=>
+`${EDListsCol(uid)}/${listId}`;
+
+export const likedEDDoc=(uid:string)=> EDListDoc(uid,'like');

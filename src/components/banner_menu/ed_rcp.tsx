@@ -2,11 +2,11 @@
 import { Searcher } from "@/components/searcher";
 import { CalendarMonthOutlined, Checklist, Menu, Notifications } from "@mui/icons-material";
 import {AppBar, Box, IconButton, Toolbar, styled, useMediaQuery, useTheme} from "@mui/material";
-import { Dispatch, SetStateAction, createContext, useEffect, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, createContext, useEffect, useState } from "react";
 import { BannerAvatar } from "./avatar";
 import { RoleNum } from "@/utils/roles";
 import { outline_variant } from "../ThemeRegistry/theme_consts";
-import { AppMenu, drawerMinWidth, drawerWidth } from "./app_menu";
+import { AppMenu, MenuItemInfo, drawerMinWidth, drawerWidth } from "./app_menu";
 
 export const AppLayoutContext = createContext<{ menuOpen: boolean; menuWidth: number; setMenuOpen: Dispatch<SetStateAction<boolean>>; }|null>(null);
 
@@ -34,7 +34,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 });
 
   
-export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:string, children: React.ReactNode })=> {
+export const EDRcpAppBarMenu=({role,children,routesInfo}: { role:RoleNum, children: ReactNode, routesInfo:MenuItemInfo[] })=> {
   const theme=useTheme();
   const drawerExpand=useMediaQuery(theme.breakpoints.up('xl'));
   const drawerFix=useMediaQuery(theme.breakpoints.up('lg'));
@@ -72,8 +72,8 @@ export const EDRcpAppBarMenu=({role,agcid,children}: { role:RoleNum, agcid?:stri
           <BannerAvatar/>
                 </Toolbar>
             </AppBar>
-            <AppMenu role={role} open={drawerFix&&menuOpen} agcid={agcid} fixed/>
-            <AppMenu role={role} open={menuOpen} agcid={agcid} />
+            <AppMenu role={role} open={drawerFix&&menuOpen} fixed routesInfo={routesInfo}/>
+            <AppMenu role={role} open={menuOpen} routesInfo={routesInfo}/>
             <Main open={drawerFix&&menuOpen}>
         <Toolbar />
         <Box maxHeight={'calc(100vh - 64.5px)'} flexGrow={1}>

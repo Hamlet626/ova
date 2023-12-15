@@ -6,8 +6,8 @@ import { Fragment, ReactNode, useState } from "react";
 import { BannerAvatar } from "./avatar";
 import { RoleNum } from "@/utils/roles";
 import logo from "@/assets/ova_logo.svg";
-import { font4, outline, outline_variant } from "../ThemeRegistry/theme_consts";
-import { AppMenu, drawerMinWidth, drawerWidth } from "./app_menu";
+import { outline, outline_variant } from "../ThemeRegistry/theme_consts";
+import { drawerMinWidth, drawerWidth } from "./app_menu";
 import Image from "next/image";
 import { AppLayoutContext } from "./ed_rcp";
 

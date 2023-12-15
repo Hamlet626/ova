@@ -1,7 +1,7 @@
 import { useState } from "react";
 import usePromise from "react-use-promise";
 
-export const useCachedPromise=<T=any>(promise:Promise<T> | (() => Promise<T>),deps:any[]=[],defaultValue?:T,)=>{
+export const usePromiseState=<T=any>(promise:Promise<T> | (() => Promise<T>),deps:any[]=[],defaultValue?:T,)=>{
     const [data,setData]=useState<T|undefined>(defaultValue);
     
     const [pm,error,status]=usePromise(async()=>{

@@ -1,5 +1,5 @@
 'use client'
-import { font7, font8 } from "@/components/ThemeRegistry/theme_consts";
+import { nameLabel, font8 } from "@/components/ThemeRegistry/theme_consts";
 import { ArrowBack, ArrowForward, Check, TimelapseOutlined, } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Chip, LinearProgress, Stack, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -53,8 +53,8 @@ export default function FormContent({formid, agcid, template, data, uid}:{ formi
                     <Box width={4}/>
                     <LinearProgress value={stats.finished/stats.all} sx={{width:'100%'}}/>    
                     <Box width={24}/>
-            <Typography sx={font7} color={'primary'}>{stats.finished} </Typography> 
-            <Typography sx={font7} whiteSpace={'nowrap'}>/ {stats.all}</Typography> 
+            <Typography sx={nameLabel} color={'primary'}>{stats.finished} </Typography> 
+            <Typography sx={nameLabel} whiteSpace={'nowrap'}>/ {stats.all}</Typography> 
             </Stack>
             <Box height={8}/>
             <Stack direction={'row'} alignItems={'end'}>

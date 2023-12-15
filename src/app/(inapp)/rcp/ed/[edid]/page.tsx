@@ -36,16 +36,17 @@ export default async function EDOverview({params}:{params: { edid: string }}){
             <CardContent>
                 <Box display={'flex'} flexWrap={'wrap'} gap={'24px 40px'}>
                     {Object.entries(basics).map((et)=>(
-                            <Stack>
+                            <Stack key={et[0]}>
                                 <Typography variant="body2" color='secondary'>{et[0]}</Typography>
                                 <Typography variant="body1">{et[1]}</Typography>
                             </Stack>
                     ))}
                 </Box>
-                <Divider/>
+                <Divider sx={{my:'12px'}}
+                />
                 <Box display={'flex'} flexWrap={'wrap'} gap={'24px 40px'}>
                     {Object.entries(tagged).map((et)=>(
-                        <Stack>
+                        <Stack key={et[0]}>
                             <Typography variant="body2" color='secondary'>{et[0]}</Typography>
                             <Typography variant="body1">{et[1]}</Typography>
                         </Stack>

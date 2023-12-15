@@ -13,6 +13,7 @@ import { EDViewerContentTabs } from "./content_tabs";
 import { EDTraitsSearcher } from "./ed_traits_searcher";
 import { RightMenuTile } from "@/app/_shared/_ed/_detail/right_menu_tile";
 import { PhotosCarousel } from "./photos_carousel";
+import { EDRcpOperations } from "./operations";
 
 export default async function EDProfile({params,children}:{params: { edid: string },children: ReactNode}){
     
@@ -29,9 +30,9 @@ export default async function EDProfile({params,children}:{params: { edid: strin
     const photos=(filesData.filter(v=>v.id==='photos')?.[0]??{}).files;
 
     return <Stack direction='row' height='100%' width='100%' alignContent={'stretch'}>
-            <Stack flexGrow={1} alignItems={'stretch'} sx={{overflowY:'auto'}}>
-                <Box position={'relative'} 
-                minHeight={274}>
+        <Stack position={'relative'} flexGrow={1}>
+            <Stack alignItems={'stretch'} sx={{overflowY:'auto'}} flexGrow={1}>
+                <Box position={'relative'} minHeight={274}>
                     <PhotosCarousel photos={photos?Object.entries(photos).map(et=>et[0]):[]}/>
                     <div style={{background: 'linear-gradient(to top, black, transparent)',zIndex:1,position:'absolute',bottom:0,right:0,left:0}}>
                         <Stack direction={'row'} pb={'21px'}>
@@ -50,20 +51,17 @@ export default async function EDProfile({params,children}:{params: { edid: strin
                     <BackButton text={"Home"} link={"/rcp/eds"} sx={{top:21,left:32,color:'white',position:'absolute',zIndex:1}}/>
                 </Box>
                 <EDViewerContentTabs edid={params.edid}/>
-                <Box pl={4} pr={3} pt={3}>{children}</Box>
-                <Paper sx={{position:'absolute', bottom:0, left:0, right:0, pl:32,pr:27,height:80}}>
-                    <Stack>
-                        <Button variant="outlined" color="secondary">Request Match</Button>
-                    </Stack>
-                </Paper>
+                <Box pl={4} pr={3} py={3}>{children}</Box>
             </Stack>
-            <Paper sx={{width:'calc((100vw - 136px)/4 + 56px )',minWidth:'calc((100vw - 136px)/4 + 56px )', borderRadius:0, zIndex:2}} elevation={24}>
-                <List>
-                    {[<RightMenuTile title="Traits">
-                        <EDTraitsSearcher tags={algoData.tags??[]as any}/>
-                        </RightMenuTile>,
-                    ].flatMap(c=>[c,<Divider sx={{my:'24px'}}/>])}
-                </List>
-            </Paper>
+            <EDRcpOperations edid={params.edid}/>
         </Stack>
+        <Paper sx={{width:'calc((100vw - 136px)/4 + 56px )',minWidth:'calc((100vw - 136px)/4 + 56px )', borderRadius:0, zIndex:1101}} elevation={24}>
+            <List>
+                {[<RightMenuTile title="Traits">
+                    <EDTraitsSearcher tags={algoData.tags??[]as any}/>
+                    </RightMenuTile>,
+                ].flatMap(c=>[c,<Divider sx={{my:'24px'}}/>])}
+            </List>
+        </Paper>
+    </Stack>
 }
