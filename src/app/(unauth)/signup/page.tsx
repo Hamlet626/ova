@@ -1,94 +1,264 @@
 'use client';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-// import { auth } from "@/utils/firebase/firebase";
+import React, { useState } from "react";
+import { useRouter } from 'next/navigation';
+import {Box,  Button,  FormHelperText, Input, InputAdornment, Link,  Typography} from "@mui/material";
+import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
+import { Bg1 } from "@/components/background/bg1";
+import {Google, Lock, Login, Mail, Visibility, VisibilityOff} from "@mui/icons-material";
+import {font2} from "@/components/ThemeRegistry/theme_consts";
+//get role
+import { useSearchParams } from 'next/navigation'
+import { RoleNum, roles } from "@/utils/roles";
 
-export default function Signup() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordAgain, setPasswordAgain] = useState('');
+import {useForm,  useFormState} from 'react-hook-form';
+import {signIn} from "next-auth/react";
+import { getCliId_Client } from "@/utils/clinic_id/client";
+import { jsonPost } from "@/utils/server_data_getter/http";
 
-    const signup = () => {
-        createUserWithEmailAndPassword(auth, email, password);
+
+
+
+const flexContainerStyle = {
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-between",
+};
+
+
+function Name_Clinic({ register, errors, trigger}){
+  return (
+  <Box>
+          <Input
+            {...register("companyName", {
+              required: "companyName is required",
+            })}
+            fullWidth
+           startAdornment={
+          <InputAdornment position="start">
+            <BusinessOutlinedIcon />
+           </InputAdornment>
+           }
+            placeholder="companyName"
+            type="text"
+            onBlur={() => trigger("companyName")}
+          />
+          {errors.companyName && (
+            <FormHelperText error>{errors.companyName.message}</FormHelperText>
+          )}
+        </Box>
+
+
+  );
+}
+
+export function Name_NotClinic({ register,errors, trigger }) {
+  return (
+    <Box sx={flexContainerStyle}>
+      <Box>
+        <Input
+          {...register("firstName", {
+            required: "First name is required",
+          })}
+          fullWidth
+          placeholder="First Name"
+          type="text"
+          onBlur={() => trigger("firstName")}
+        />
+        {errors.firstName && (
+          <FormHelperText error>{errors.firstName.message}</FormHelperText>
+        )}
+      </Box>
+
+      <Box width={23} />
+
+      <Box>
+        <Input
+          {...register("lastName", {
+            required: "Last name is required",
+          })}
+          fullWidth
+          placeholder="Last Name"
+          type="text"
+          onBlur={() => trigger("lastName")}
+        />
+        {errors.lastName && (
+          <FormHelperText error>{errors.lastName.message}</FormHelperText>
+        )}
+      </Box>
+    </Box>
+  );
+}
+
+export function SignUp1(){
+    const clinic = getCliId_Client();
+    const searchParams = useSearchParams();
+const role = clinic == null ? 2 : RoleNum[searchParams.get('role')];
+const router = useRouter();
+ const mouseDownPwIcon = (event: MouseEvent<HTMLDivElement>) => {
+        event.preventDefault();
     };
+    const [showPw, setShowPw] = useState(false);
+    const clickPwIcon = () => { setShowPw((show) => !show); };
+    const {  register, control, formState: { errors }, trigger,getValues  } = useForm();
+    const [formSubmitted, setFormSubmitted] = useState(false);
+
+ const handleNextButtonClick = async () => {
+   setFormSubmitted(true);
+   const isValid = await trigger();
+
+   if (isValid) {
+     const emailValue = getValues('email');
+     const passwordValue = getValues('password');
+     const nameValue=clinic == null ?getValues('companyName'):getValues('lastName');
+
+
+     const r = await jsonPost('/api/signup', {
+         email: emailValue,
+         name: nameValue,
+         role: role,
+         password: passwordValue,
+       });
+
+
+     if (r.status === 200) {
+       const rr = await signIn('credentials', {
+         redirect: false,
+         callbackUrl: '/',
+         email: emailValue,
+         password: passwordValue,
+       });
+
+
+      router.push('/profile');
+
+
+
+     }
+   }
+ };
+
+   const validatePassword = (password) => {
+     return /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(password);
+   };
+
     return (
-        <>
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-black">
-                        Sign up
-                    </h2>
-                </div>
+        <Box maxWidth="400px" >
 
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <div className="space-y-6">
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-black">
-                                Email address
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                    className="block w-full rounded-md border-0 bg-black/5 py-1.5 text-black shadow-sm ring-1 ring-inset ring-black/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
+        <Typography  sx={font2}>
+          {clinic == null ? 'Clinics Sign Up' : (role == 0 ? 'Egg Donor Sign Up' : 'Recipient Sign Up')}
+        </Typography>
 
-                        <div>
-                            <div className="flex items-center justify-between">
-                                <label htmlFor="password" className="block text-sm font-medium leading-6 text-black">
-                                    Password
-                                </label>
-                            </div>
-                            <div className="mt-2">
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    className="block w-full rounded-md border-0 bg-black/5 py-1.5 text-black shadow-sm ring-1 ring-inset ring-black/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <div className="flex items-center justify-between">
-                                <label htmlFor="password" className="block text-sm font-medium leading-6 text-black">
-                                    Password Again
-                                </label>
-                            </div>
-                            <div className="mt-2">
-                                <input
-                                    id="passwordAgain"
-                                    name="passwordAgain"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    onChange={(e) => setPasswordAgain(e.target.value)}
-                                    required
-                                    className="block w-full rounded-md border-0 bg-black/5 py-1.5 text-black shadow-sm ring-1 ring-inset ring-black/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
+         <Box height={50} />
 
-                        <div>
-                            <button
-                                disabled={(!email || !password || !passwordAgain) || (password !== passwordAgain)}
-                                onClick={() => signup()}
-                                className="disabled:opacity-40 flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                            >
-                                Sign Up
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+    <form >
+        {clinic == null ? <Name_Clinic register={register} errors={errors} trigger={trigger} />
+          : <Name_NotClinic register={register} errors={errors} trigger={trigger}  />}
+         <Box height={41} />
+           <Input
+             {...register('email', {
+               required: 'Email is required',
+               pattern: {
+                 value: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)*(\.[a-zA-Z]{2,})$/,
+                 message: 'Invalid email address',
+               },
+             })}
+             fullWidth
+             startAdornment={
+               <InputAdornment position="start">
+                 <Mail />
+               </InputAdornment>
+             }
+             placeholder="Email"
+             type="email"
+             onBlur={() => trigger("email")}
+
+           />
+           {errors.email && (
+             <FormHelperText error>{errors.email.message}</FormHelperText>
+           )}
+
+
+             <Box height={16}/>
+
+             <Box>
+          <Input
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+              validate: (value) =>
+                validatePassword(value) ||
+                "Password must contain one lowercase letter and one uppercase letter",
+            })}
+            fullWidth
+            startAdornment={
+              <InputAdornment position="start">
+                <Lock />
+              </InputAdornment>
+            }
+            endAdornment={
+              <InputAdornment position="end" onClick={clickPwIcon} onMouseDown={mouseDownPwIcon}>
+                {showPw ? <VisibilityOff /> : <Visibility />}
+              </InputAdornment>
+            }
+            placeholder="Password"
+            type={showPw ? "text" : "password"}
+            onBlur={() => trigger("password")}
+          />
+          {errors.password && (
+            <FormHelperText error>{errors.password.message}</FormHelperText>
+          )}
+        </Box>
+      </form>
+
+          <Box height={40}/>
+
+          <Button type="submit"
+            onClick={handleNextButtonClick}
+            fullWidth
+            variant="contained"
+            size="large"
+            sx={{color:'white'}}
+            startIcon={<ArrowCircleRightOutlinedIcon />}
+          >
+            Next
+          </Button>
+
+         <Box height={33}/>
+          <Typography variant="h6" sx={{textAlign: 'center'}}>Log In</Typography>
+            <Box height={37}/>
+            <Button fullWidth variant="outlined" size="large" startIcon={<Google/>}>Google Log in</Button>
+          <Box height={30}/>
+
+    </Box>
     )
 }
+export default function SignUp() {
+  return (
+            <Bg1>
+             <Box sx={{
+               display: 'flex',
+               justifyContent: 'center',
+               alignItems: 'center',
+               height: '100vh',
+               overflowY: 'auto',
+              }}>
+
+             <Box sx={{ maxHeight: '100%',  }} >
+            < SignUp1/>
+             </Box>
+
+            </Box>
+            </Bg1>
+);
+}
+
+
+
+
+
+
+

@@ -2,14 +2,13 @@ import NextAuth, {User} from "next-auth"
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from "next-auth/providers/credentials";
 import {signInWithEmailAndPassword} from 'firebase/auth';
-import {serverInitFirebase} from "@/utils/firebase/firebase_server";
+import {UserRef, serverInitFirebase} from "@/utils/firebase/firebase_server";
 import {auth} from "firebase-admin";
 import {cliAuth} from "@/utils/firebase/firebase_client";
 import { RoleNum, roles } from "@/utils/roles";
-import { EDRec, RcpRec, algo_client } from "@/utils/algolia";
-import { getClinic } from "@/utils/clinic_check";
-import { EDStatus } from "@/utils/status";
-import { headers } from "next/headers";
+import { EDRec, RcpRec, agc_facet, algo_client } from "@/utils/algolia";
+import { EDStatus, RcpStatus } from "@/utils/types/status";
+import { getCliId_Server } from "@/utils/clinic_id/server";
 
 
 serverInitFirebase();
@@ -40,6 +39,7 @@ export const authOptions : NextAuthOptions = {
         },
         async session({session, token, user}){
             if(session.user)session.user=token;
+            // UserRef(session.user?.role!,session.user?.id!).set({lastLogin:(Date.now()/1000>>0)},{merge:true});
             return session;
         }
     }
@@ -63,17 +63,27 @@ const getUserSessionInfo=async (id:string):Promise<User>=>{
         return basicInfo;
     }
     
-    const clinicID=getClinic(headers().get("host"));
-    if(basicInfo.role===RoleNum.ED){
-        const algoRecord=await algo_client.initIndex(`${roleKey}`).getObject<EDRec>(id);
-        let agencies=Object.keys((algoRecord).agencies);
-        if(clinicID!=null&&!agencies.includes(clinicID)){
-            agencies=[...agencies,clinicID];
-            await algo_client.initIndex(`${roleKey}`).saveObject({...algoRecord,
-                agencies:{...algoRecord.agencies,clinicID:{status:EDStatus.filling_Form}}});
+    const clinicID=getCliId_Server();
+    if(basicInfo.role===RoleNum.ED||basicInfo.role===RoleNum.Rcp){
+        const algoRecord=await algo_client.initIndex(`${roleKey}`).getObject<EDRec|RcpRec>(id);
+        let agency_ids=algoRecord[agc_facet]??[];
+        
+        
+        if(clinicID!=null&&!agency_ids.includes(clinicID)){
+            agency_ids=[...agency_ids,clinicID];
+            await algo_client.initIndex(`${roleKey}`).partialUpdateObject({
+                [agc_facet]: {
+                    _operation: 'AddUnique',
+                    value: clinicID,},
+                agencies:{...algoRecord.agencies,
+                    [clinicID]:{status:basicInfo.role===RoleNum.ED?EDStatus.filling_Form:RcpStatus.general}},
+                objectID: id,
+              });
         }
-        basicInfo.agencies=agencies;
-    } else if(basicInfo.role===RoleNum.Rcp){
+        basicInfo.agencies=agency_ids;
+    } 
+    ///Rcp now has same algolia & fb data structure as EDs
+    else if(false && basicInfo.role===RoleNum.Rcp){
         let agencies=(await algo_client.initIndex(`${roleKey}`).getObject<RcpRec>(id)).agencies;
         if(clinicID!=null&&!agencies.includes(clinicID)){
             agencies=[...agencies,clinicID];

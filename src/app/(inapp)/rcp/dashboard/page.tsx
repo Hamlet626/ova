@@ -1,15 +1,17 @@
 // 'use client'
 import {signOut, useSession} from "next-auth/react";
 import {getServerSession} from "next-auth/next";
-import Grid2 from "@mui/material/Unstable_Grid2";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
-import logo from "@/assets/ova_logo.svg";
-import AppBar from "@mui/material/AppBar";
-import Container from "@mui/material/Container";
-import ToolBar from "@mui/material/Toolbar";
-import AdbIcon from "@mui/icons-material/Adb";
-import Typography from "@mui/material/Typography";
-import Image from "next/image";
+import {Typography} from "@mui/material";
+import { Box, Stack } from "@mui/material";
+import { PageHeader } from "@/components/ThemeRegistry/theme_consts";
+import { getFirstName } from "@/utils/formatters";
+import { getCliId_Server } from "@/utils/clinic_id/server";
+import { AllEDs } from "./all_eds";
+import { TitleNSeeAll } from "../../agc/eds/title_see_all";
+import { PeopleOutline } from "@mui/icons-material";
+import { EDsRecommendsPreview } from "@/app/_shared/_ed/_eds_blocks/ed_recommends";
+import { EDsTrendings } from "@/app/_shared/_ed/_eds_blocks/tredings";
 
 export default async function Home() {
     // const session = useSession({
@@ -20,33 +22,21 @@ export default async function Home() {
     // });
 
     const session=await getServerSession(authOptions);
+    const agcid=getCliId_Server()!;
 
     return (
-        <AppBar position = "static">
-            {/*        style={{*/}
-            {/*    width: '1474px',*/}
-            {/*    height: '78px',*/}
-            {/*}}>*/}
-            <Container maxWidth= "xl">
-                <ToolBar disableGutters>
-                    <Image src={logo} alt="Logo" style={{
-                        width: '85px',
-                        height: '27.71px',
-                        position: 'static',
-                        // top: '27px',
-                        // left: '80px',
-                    }}/>
-                </ToolBar>
-            </Container>
-        </AppBar>
-
-        // <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        //   <Signin/>
-        // </main>
-        //   <div className="p-8">
-        //     {/*<div>{session?.data?.user?.email }</div>*/}
-        //       <div>{JSON.stringify(session) }</div>
-        //     {/*<button onClick={() => {signOut()}}>Logout</button>*/}
-        //   </div>
+        <Stack px={10}>
+            <Box height={30}/>
+            <Typography sx={PageHeader}>Welcome{session?.user?.name==null?'!':
+            ', '+getFirstName(session?.user?.name!)}</Typography>
+            <Box height={16}/>
+            <EDsTrendings agcid={agcid}/>
+            <Box height={32}/>
+            <EDsRecommendsPreview/>
+            <Box height={32}/>
+            <TitleNSeeAll icon={PeopleOutline} title={"All Egg Donor"} href="/rcp/eds"/>
+            <Box height={12}/>
+            <AllEDs/>
+        </Stack>
     )
 }

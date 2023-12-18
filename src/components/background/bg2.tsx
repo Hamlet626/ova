@@ -1,6 +1,6 @@
 
 const circle='#004ADA';
-export const Bg2=()=>{
+export const Bg2=({children})=>{
 
     return(
         <div style={{position:'relative',width:'100%',height:'100vh', overflow:'hidden'}}>
@@ -12,6 +12,8 @@ export const Bg2=()=>{
                 opacity: '12%',
                 transform: 'translate(30%, 52%)'
             }}/>
+            {children}
+
         </div>
     );
 }

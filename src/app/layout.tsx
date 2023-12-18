@@ -2,6 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import ThemeRegistry from "@/components/ThemeRegistry/ThemeRegistry";
+import { Suspense } from 'react';
+import { AlgoSetup } from '@/components/algolia/algo_setup';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +22,9 @@ export default function RootLayout({
       <body className={inter.className}>
       <ThemeRegistry>
       {children}
+      <Suspense fallback={null}>
+        <AlgoSetup/>
+      </Suspense>
       </ThemeRegistry>
       </body>
     </html>

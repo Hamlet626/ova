@@ -13,13 +13,17 @@ import { useRouter } from "next/navigation";
 import {useForm} from "react-hook-form";
 import NextLink from "next/link";
 import { RoleNum, roles } from "@/utils/roles";
-import { getClinic } from "@/utils/clinic_check";
-import { useUrl } from 'nextjs-current-url';
+import { getClinic } from "@/utils/clinic_id/clinic_check";
+import { useUrl } from "nextjs-current-url";
+import { ConfirmDialog } from "./api_process/confirm_dialog";
+import { useAPILoadingError } from "./api_process/use_api_loading_error";
+
 
 
 export default function SigninEmailPwBlock() {
     const [showPw,setShowPw]=useState(false);
-    const [signingIn,setSigningIn]=useState(false);
+    // const [signingIn,setSigningIn]=useState(false);
+    const [errDlg,setErrDlg]=useState<string|null>(null);
     const {register, handleSubmit, formState: { errors }}=useForm();
     const router = useRouter();
     const clickPwIcon = () => setShowPw((show) => !show);
@@ -29,17 +33,21 @@ export default function SigninEmailPwBlock() {
         event.preventDefault();
     };
 
-    const login=handleSubmit(async(data)=>{
-        setSigningIn(true);
+    const {setError,loading,handleCallAPI,errNotiComponent}=useAPILoadingError(async(data)=>{
         const r=await signIn('credentials', {email:data.email, password:data.password, redirect: false, callbackUrl: '/'});
-        if(r?.ok){
+        if(r?.error){
+            if(r.error==='Firebase: Error (auth/wrong-password).') 
+            return {title:'Incorrect password :(',msg:'Hint: password would be at least 6 characters, with an Upper case\n'};
+            else if(r.error.startsWith('Firebase: '))return {title:'Sign In Error',msg:r.error.replace('Firebase: ','')}
+            else return {title:'Sign In Error',msg:r.error}
+        }
+        else if(r?.ok){
             const user=(await getSession())?.user!;
 
             router.push(`/${roles[user.role!].path}${user?.role===RoleNum.ED?`/${getClinic(hostName)??user.agencies![0]}`:''}/dashboard`);
-            return;
         }
-        setSigningIn(false);
     });
+    const login=handleSubmit(handleCallAPI);
 
     return(
         <>
@@ -65,25 +73,26 @@ export default function SigninEmailPwBlock() {
                 />
             </form>
             <Box height={40}/>
-            <LoadingButton loading={signingIn}
+            <LoadingButton loading={loading}
                 onClick={login}
                 // disabled={!email || !password}
                 fullWidth variant="contained" size="large" startIcon={<Login/>}>
                 Log in
             </LoadingButton>
             <Box height={96}/>
-            <Button disabled={signingIn} color="secondary"
+            <Button disabled={loading} color="secondary"
                 fullWidth variant="outlined" size="large" startIcon={<Google/>}>
                 Google Log in
             </Button>
             <Box height={32}/>
             <Typography variant="body1" sx={{px:"16px"}}>
                 {"Don't have an account? "}
-                <Link onClick={() => router.push('signup')}
+                <Link
                     href="/signup" component={NextLink}>
                     Sign Up
                 </Link>
             </Typography>
+            {errNotiComponent}
         </>
     )
 }

@@ -2,7 +2,7 @@ import logo from "@/assets/ova_logo.svg";
 import Image from "next/image";
 
 const circle='#004ADA';
-export const Bg1=()=>{
+export const Bg1=({children})=>{
 
     return(
         <div style={{position:'relative',width:'100%',height:'100vh', overflow: 'hidden'}}>
@@ -27,6 +27,7 @@ export const Bg1=()=>{
                 top: '54px',
                 left: '90px',
             }}/>
+            {children}
         </div>
     );
 }

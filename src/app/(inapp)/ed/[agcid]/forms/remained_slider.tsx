@@ -1,15 +1,12 @@
 'use client'
-
-import { Swiper, SwiperRef, SwiperSlide } from "swiper/react";
-
-import { Navigation, Pagination, Mousewheel, Keyboard, FreeMode, Scrollbar } from 'swiper/modules';
 import { Button, Card, CardActionArea, CardContent, Fab, Paper, Stack, Typography } from "@mui/material";
 import { ArrowForward, NavigateBefore, NavigateNext } from "@mui/icons-material";
-import 'swiper/css';
-import { useEffect, useRef, useState } from "react";
+// import 'swiper/css';
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { OVA_very_soft_grey } from "@/components/ThemeRegistry/theme_consts";
+import { redirect, useRouter } from "next/navigation";
 
-export const RemainedSlider=({remainedData})=>{
+export const RemainedSlider=({children,spacing=3}:{children:ReactNode,spacing?:number})=>{
     const swiperRef=useRef<HTMLDivElement|null>(null);
     const [showNext,setShowNext]=useState(false);
     const [showPre,setShowPre]=useState(false);
@@ -25,7 +22,7 @@ export const RemainedSlider=({remainedData})=>{
         setShowNext(swiperRef.current.scrollLeft+swiperRef.current.offsetWidth<swiperRef.current.scrollWidth);
         setShowPre(swiperRef.current.scrollLeft>0);
       }
-    },[remainedData]);
+    },[]);
 
     const onScroll=(forward:boolean)=>{
       swiperRef.current?.scrollTo({
@@ -35,28 +32,19 @@ export const RemainedSlider=({remainedData})=>{
     }
 
     return (
-        <div style={{position:'relative', height:'72px',}}>
-        <div ref={swiperRef} //direction={'row'} spacing={'16px'} 
+        <div style={{position:'relative', //height:'72px',
+        }}>
+        <div ref={swiperRef}
         style={{width:'100%',//height:'72px',
             overflow: 'auto',
-            overflowX: 'scroll',
+            // 'scrollbar':,
+            overflowX: 'auto',
             overflowY:'hidden',
             scrollBehavior: 'smooth',
             transition: 'scroll 0.3s ease-in-out'
             }} onScroll={onscroll}>
-              <Stack direction={'row'} spacing={'16px'}>
-            {([...remainedData,...remainedData,...remainedData].map((v,i)=>(
-              // <Paper sx={{display: 'inline-block',flexShrink: 0}}>
-                <Card key={i} elevation={0} sx={{display: 'inline-block',flexShrink: 0, bgcolor:OVA_very_soft_grey}}> 
-                <CardActionArea>
-                    <CardContent>
-                        <Typography variant="subtitle2" color={'secondary'}>{v.title}</Typography>
-                        <Typography variant="subtitle2" noWrap>{v.subs.remained.join(', ')}</Typography>
-                    </CardContent>
-                </CardActionArea>
-             </Card> 
-            // </Paper>
-            )))}
+              <Stack direction={'row'} spacing={spacing}>
+            {children}
             </Stack>
         </div>
         {showPre && <>

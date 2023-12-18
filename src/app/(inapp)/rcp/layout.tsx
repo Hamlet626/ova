@@ -1,4 +1,4 @@
-import { EDRcpAppBarMenu } from "@/components/layouts/ed_rcp";
+import { EDRcpAppBarMenu } from "@/components/banner_menu/ed_rcp";
 import { RoleNum } from "@/utils/roles";
 
 

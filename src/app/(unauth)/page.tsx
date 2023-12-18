@@ -1,10 +1,4 @@
 
-import {signOut, useSession} from "next-auth/react";
-import {getServerSession} from "next-auth/next";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
-import {redirect} from "next/navigation";
-import {headers} from "next/headers";
-import {Button} from "@mui/material";
 import Link from "next/link";
 
 export default async function LandingPage() {
