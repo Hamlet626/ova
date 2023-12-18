@@ -1,5 +1,5 @@
 'use client'
-import { Button, Card, CardActionArea, CardContent, Fab, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, Card, CardActionArea, CardContent, Fab, Paper, Stack, Typography } from "@mui/material";
 import { ArrowForward, NavigateBefore, NavigateNext } from "@mui/icons-material";
 // import 'swiper/css';
 import { ReactNode, useEffect, useRef, useState } from "react";
@@ -32,13 +32,12 @@ export const RemainedSlider=({children,spacing=3}:{children:ReactNode,spacing?:n
     }
 
     return (
-        <div style={{position:'relative', minWidth:0
-        }}>
-        <div ref={swiperRef}
-        style={{width:'100%',//height:'72px',
+        <Box sx={{position:'relative', minWidth:0,}}>
+        <Box ref={swiperRef}
+        sx={{width:'100%',//height:'72px',
             overflow: 'auto',
             // 'scrollbar':,
-            overflowX: 'auto',
+            overflowX: 'auto', my:-1,py:1,
             overflowY:'hidden',
             scrollBehavior: 'smooth',
             transition: 'scroll 0.3s ease-in-out'
@@ -46,7 +45,7 @@ export const RemainedSlider=({children,spacing=3}:{children:ReactNode,spacing?:n
               <Stack direction={'row'} spacing={spacing}>
             {children}
             </Stack>
-        </div>
+        </Box>
         {showPre && <>
         <div style={{position: 'absolute',
         top: 0,
@@ -72,7 +71,7 @@ export const RemainedSlider=({children,spacing=3}:{children:ReactNode,spacing?:n
         >
           <NavigateNext/>
         </Fab></>}
-        </div>
+        </Box>
     );
 }
 

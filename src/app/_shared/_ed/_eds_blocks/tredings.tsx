@@ -36,9 +36,9 @@ export const EDsTrendings=({agcid, padding=80*2}:{agcid:string,padding?:number})
     <Box height={12}/>
     <RemainedSlider>{
       status==='loading'?
-      [1,2,3].map(v=><Box width={calcEDTileWidth(width-menuWidth-padding)}><LoadingEDTile transparent/></Box>):
+      [1,2,3].map(v=><Box key={v} width={calcEDTileWidth(width-menuWidth-padding)}><LoadingEDTile transparent/></Box>):
       recommendations.map(v=>
-        <Box width={calcEDTileWidth(width-menuWidth-padding)}>
+        <Box key={v.objectID} width={calcEDTileWidth(width-menuWidth-padding)}>
           <EdAlgoTile hit={v as any} transparent/>
           </Box>
           )}</RemainedSlider>

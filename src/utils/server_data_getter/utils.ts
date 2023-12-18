@@ -73,7 +73,8 @@ export const getFilesData=(uid:string,role:RoleNum)=>unstable_cache(
 export const getEDListsData=(uid:string)=>unstable_cache(
     async()=>{
         const r = await getDocs(EDListsRef(uid));
-        return r.docs.map(v=>({...v.data(),id:v.id} as EDList));
+        const lists = r.docs.map(v=>({...v.data(),id:v.id} as EDList));
+        return [lists.filter(v=>v.id==='like')?.[0]??{id:'like',name:'Like',eds:[]}, ...lists.filter(v=>v.id!=='like')]
     },
     [uid],
     {tags:['ed_lists_data'],revalidate:12}

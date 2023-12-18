@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { EdAlgoTile } from "../_ed_tiles/algo_tile";
 import { useInfiniteHits } from 'react-instantsearch';
 import { edTileMaxWidth, edTileMinWidth } from "./consts";
+import { Box } from "@mui/material";
 
 export const EDsHits=()=>{
     // const { hits, results, sendEvent } = useHits();
@@ -37,10 +38,12 @@ export const EDsHits=()=>{
             </Grid2>)}
             {Array.from({length:9}).map((v,i)=>
             <Grid2 key={i} xs maxWidth={edTileMaxWidth} minWidth={edTileMinWidth}>
+              <Box/>
             </Grid2>)}
 
             <Grid2 key={'last'} ref={sentinelRef} 
             xs maxWidth={edTileMaxWidth} minWidth={edTileMinWidth}>
+              <Box/>
             </Grid2>
     </Grid2>;
 }

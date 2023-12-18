@@ -20,7 +20,7 @@ export const EDsRecommendsPreview=async ({padding=80*2}:{padding?:number})=>{
         <Box height={12}/>
         <RemainedSlider>
             {agcInfo.recommends!.map(v=>(
-                <EdFbTile edid={v} constraint={{padding:padding}}/>))}
+                <EdFbTile key={v} edid={v} constraint={{padding:padding}}/>))}
         </RemainedSlider>
     </Stack>
 }

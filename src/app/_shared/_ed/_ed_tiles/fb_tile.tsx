@@ -14,23 +14,24 @@ import { AppLayoutContext } from "@/components/banner_menu/ed_rcp";
 import useWindowDimensions from "@/utils/hooks/use_window_dimensions";
 import { useContext } from "react";
 import { calcEDTileWidth } from "../_eds_blocks/consts";
+import { getUserAgcFbData_client, getUserAlgoData_client, getUserBasicFbData_client } from "@/utils/server_data_getter/client_getter";
 
 export const EdFbTile=({edid,constraint,transparent=false}:{edid:string,transparent?:boolean,
-  constraint?:{space?:number,padding:number,transparent?:boolean}})=>{
+  constraint?:{space?:number,padding:number}})=>{
     const user=useSession({required:true}).data?.user;
     const agcId=getCliId_Client(user?.role,user?.id)!;
   
     const [algoInfo,algoError,algoState]=usePromise(
-      ()=>algo_client.initIndex(roles[RoleNum.ED].id).getObject<EDRec>(edid),
+      ()=>getUserAlgoData_client(RoleNum.ED,edid),
       [edid]);
     const [basicInfo,infoError,infoState]=usePromise(
-        ()=>getDoc(UserRef(RoleNum.ED,edid)),
+        ()=>getUserBasicFbData_client(RoleNum.ED,edid),
         [edid]);
     
       const [agcData,agcError,agcState]=usePromise(
         ()=>{ 
           if(!agcId)return Promise.resolve(null);
-          return getDoc(UsersAgcDataRef(RoleNum.ED,edid,agcId));
+          return getUserAgcFbData_client(RoleNum.ED,edid,agcId);
       },
         [edid,agcId]);
         const router=useRouter();
@@ -39,12 +40,13 @@ export const EdFbTile=({edid,constraint,transparent=false}:{edid:string,transpar
     const {menuWidth}=useContext(AppLayoutContext)!;
   
         const tile = <LoadingEDTile transparent={transparent}
-        avatar={infoState==='pending'?undefined:basicInfo?.data()?.avatar}
-        name={infoState==='pending'?undefined:basicInfo?.data()?.name}
-        tags={algoState==='pending'?undefined:algoInfo?.tags}
-        price={agcState==='pending'?undefined:agcData?.data()?.price}
+        avatar={infoState==='pending'?undefined:basicInfo?.avatar}
+        name={infoState==='pending'?undefined:basicInfo?.name}
+        tags={algoState==='pending'?undefined:algoInfo?.tags as any}
+        price={agcState==='pending'?undefined:agcData?.price}
         onClick={(event)=>{
           event.stopPropagation();
+          if (user?.role!==RoleNum.Agc)
           aa('clickedObjectIDs', {index:roles[RoleNum.ED].id,
             eventName:click_ED_event,objectIDs:[edid]});
           router.push(`/${roles[user!.role].path}/ed/${edid}`);

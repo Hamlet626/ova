@@ -12,13 +12,13 @@ export default async function EDLayout({children, params}: { children: React.Rea
 }
 
 const edRoutes=(agcid:string)=>[
-    {path:'/dashboard',text:'Home','icon':<HomeOutlined/>},
-    {path:'/forms',text:'Forms','icon':<StickyNote2Outlined/>},
-  {path:'/files',text:'Files','icon':<FolderOutlined/>},
+    {path:'dashboard',text:'Home','icon':<HomeOutlined/>},
+    {path:'forms',text:'Forms','icon':<StickyNote2Outlined/>},
+  {path:'files',text:'Files','icon':<FolderOutlined/>},
 //   {path:'/agencies',text:'Agencies','icon':<PeopleOutline/>},
-  {path:'/cases',text:'Cases','icon':<HandshakeOutlined/>},
-  {path:'/calendar',text:'Events Calendar','icon':<CalendarMonthOutlined/>},
-  {path:'/setting',text:'Setting','icon':<SettingsOutlined/>},
+  {path:'cases',text:'Cases','icon':<HandshakeOutlined/>},
+  {path:'calendar',text:'Events Calendar','icon':<CalendarMonthOutlined/>},
+  {path:'setting',text:'Setting','icon':<SettingsOutlined/>},
   ]
   ///for EDs, add ..agcid to the path, e.g. /forms -> /ed/agcid/forms
-  .map((v)=>({...v,path:(`/${roles[RoleNum.ED].path}${agcid==null?'':`/${agcid}`}${v.path}`)}));
+  .map((v)=>({...v,path:(`/${roles[RoleNum.ED].path}${agcid==null?'':`/${agcid}`}/${v.path}`)}));

@@ -30,7 +30,7 @@ export const LoadingEDTile=({avatar,name,tags,price,href,onClick,transparent=fal
             <Box height={8}/>
             
             <Stack direction={'row'} justifyContent={'space-between'} ml={'-4px'}>
-              {tags===undefined ? [1,2].map(v=><Skeleton sx={{alignSelf:'start'}} width={36}/>):
+              {tags===undefined ? [1,2].map(v=><Skeleton key={v} sx={{alignSelf:'start'}} width={36}/>):
               tags.slice(0,2).map((v:string)=>(<Chip key={v} label={v} color='secondary'/>))}
               {tags!=null&& tags?.length>2 && <Chip label='...' color='secondary'/>}
               </Stack>

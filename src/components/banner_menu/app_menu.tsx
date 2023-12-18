@@ -1,6 +1,6 @@
 
 import { CalendarMonthOutlined, Egg, EggAlt, FavoriteBorderOutlined, FolderOutlined, HandshakeOutlined, HomeOutlined, ListOutlined, PeopleOutline, PowerSettingsNewOutlined, SettingsOutlined, StickyNote2Outlined, ThumbUpOutlined, TrendingUpOutlined } from "@mui/icons-material";
-import { AppBarProps, Box, CSSObject, Divider, Drawer, Fab, List, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, Theme, Toolbar, alpha, darken, emphasize, makeStyles, styled, useMediaQuery, useTheme} from "@mui/material";
+import { AppBarProps, Box, Button, CSSObject, Divider, Drawer, Fab, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Stack, SwipeableDrawer, Theme, Toolbar, alpha, darken, emphasize, makeStyles, styled, useMediaQuery, useTheme} from "@mui/material";
 import React, { ReactNode, SyntheticEvent, useContext, } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { RoleNum, roles } from "@/utils/roles";
@@ -18,7 +18,7 @@ interface WithOpenListButProp extends AppBarProps{
     open?:boolean
   }
   
-  const NavItem = styled(ListItemButton,{shouldForwardProp: (prop)=>prop!=='open'&&prop!=='highlight'})<WithOpenListButProp>(({ theme , selected, open, highlight}) => ({
+  const NavItem = styled(ListItemButton,{shouldForwardProp: (prop)=>prop!=='open'&&prop!=='highlight'})<WithOpenListButProp>(({ theme , open, highlight}) => ({
     marginBottom:8,
     ...(highlight? 
       {///the default white/primary color
@@ -140,23 +140,12 @@ export const AppMenu=({role,open,fixed,routesInfo}:
     // const drawerFix=useMediaQuery(theme.breakpoints.up('lg'));
   
     const content=
-    <Box sx={{px:'12px',backgroundColor:neutral96, flexGrow:1, display:"flex",flexDirection: 'column'}}>
-    <List sx={{flexGrow:1,}}>
+    <Stack sx={{px:'12px',backgroundColor:neutral96, flexGrow:1}}>
+    <List sx={{flexGrow:1,overflowY:'auto',overflowX:'hidden',height:0}}>
+
       <Box height={16}/>
-  
-      {/* <NavItem key={'home'+fixed?'1':'0'} open={open} highlight LinkComponent={Link} 
-      href={`/${roles[role].path}${agcid==null?'':`/${agcid}`}${home.path}`}
-      selected={path.endsWith(home.path)} 
-      // onClick={()=>router.push(`/${roles[role].path}${agcid==null?'':`/${agcid}`}${home.path}`)}
-      // sx={{backgroundColor:'primary.main',color:'white'}}
-      >
-        <ListItemIcon sx={{color:"white"}}>{home.icon}</ListItemIcon>
-        <ListItemText primary={home.text}/>
-      </NavItem> */}
 
-      <Box height={40}/>
-
-      {routesInfo.map((v,i)=>{
+      {routesInfo.flatMap((v,i)=>{
         const selected=path.startsWith(v.path);
     
         const tab = (<NavItem key={v.path+(fixed?'1':'0')} LinkComponent={Link} href={v.path} highlight={i===0}
@@ -168,32 +157,38 @@ export const AppMenu=({role,open,fixed,routesInfo}:
         </NavItem>);
     
     if(v.sub!=null){
-      return (<div key={v.path+(fixed?'1':'0')}>
-      <Divider/>
-      {tab}
-      {open && v.sub.map(v=><NavItem selected={path.startsWith(v.path)} open
+      return ([
+      <Divider key={v.path+(fixed?'10':'00')}/>,
+      tab,
+      ...open ?[ v.sub.map(v=><NavItem key={v.path+(fixed?'1':'0')} selected={path.startsWith(v.path)} open
       LinkComponent={Link} href={v.path}
       sx={{pl:'32px'}}
     >
       <ListItemText primary={v.text}/>
-    </NavItem>)}
-      <Divider/>
-      </div>)
+    </NavItem>)]:[],
+      <Divider key={v.path+(fixed?'11':'01')}/>
+      ])
     }
     // if(v.path.includes('/agencies')){
     //   return <AgencyTab key={v.path+(fixed?'1':'0')}>{tab}</AgencyTab>
     // }
   
-    return tab;
+    return [tab];
   })}
     </List>
-    <Fab variant={open?"extended":"circular"} color='secondary'
+    {open?<Button variant="outlined"
+    color='primary'
+    size='large'
     onClick={(ev)=>signOut({callbackUrl:'/'})}
-    sx={{width:'100%',bottom:46,px:'12px'}}>
-    <PowerSettingsNewOutlined/>
-    {open&&'log out'}
-    </Fab>
-    </Box>;
+    startIcon={<PowerSettingsNewOutlined/>}
+    sx={{width:'100%',mb:5,px:'12px'}}>
+    {/* <PowerSettingsNewOutlined/> */}
+    {'log out'}
+    </Button>:<IconButton color='primary' 
+    onClick={(ev)=>signOut({callbackUrl:'/'})}
+    sx={{border:'solid 1px',mb:5,px:'12px'}} size='large'>
+      <PowerSettingsNewOutlined/></IconButton>}
+    </Stack>;
   
   
   if(!!fixed){
@@ -205,7 +200,7 @@ export const AppMenu=({role,open,fixed,routesInfo}:
     else return (
       <SwipeableDrawer open={open} onClose={(event: SyntheticEvent<{}, Event>)=> {setMenuOpen(false);} } 
       onOpen={(event: SyntheticEvent<{}, Event>)=> {setMenuOpen(true);} }
-      sx={{display:{md:'block',lg:'none'}}}>
+      sx={{display:{md:'flex',lg:'none'}}}>
                     <Toolbar />
                     {content}
                   </SwipeableDrawer>

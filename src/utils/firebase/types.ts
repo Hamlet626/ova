@@ -23,7 +23,8 @@ export interface EDAgcInfoDoc{
 export interface RcpAgcInfoDoc{
     agcid:string,
     status:RcpStatus,
-    recommends?:string[]
+    recommends?:string[],
+    
 }
 
 
