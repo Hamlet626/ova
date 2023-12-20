@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { Box, Avatar, Stack, Typography, Button, Dialog, DialogTitle, DialogContent, TextField, Grid, DialogActions } from "@mui/material";
 import { Edit, Link } from "@mui/icons-material";
-import { outline_variant, font3, font5 } from "@/components/ThemeRegistry/theme_consts";
+import { outline_variant, PageHeader, font5 } from "@/components/ThemeRegistry/theme_consts";
 
 export default function UserDashboard({ user }:{ user:any }) {
   const [openModal, setOpenModal] = useState(false);
@@ -47,7 +47,8 @@ export default function UserDashboard({ user }:{ user:any }) {
               marginRight: 3,
               bgcolor: 'primary.main'
             }}
-          >{user.image}</Avatar>
+            src={user.image}
+          ></Avatar>
           <Stack
             direction='column'
             justifyContent={'center'}
@@ -97,7 +98,7 @@ export default function UserDashboard({ user }:{ user:any }) {
               Price
             </Typography>
             <Stack direction={'row'}>
-              <Typography sx={font3}>
+              <Typography sx={PageHeader}>
                 $1,234
               </Typography>
             </Stack>
@@ -137,7 +138,7 @@ export default function UserDashboard({ user }:{ user:any }) {
                 }}
               />
               <DialogActions>
-                <Button>Cancel</Button>
+                <Button onClick={handleClose}>Cancel</Button>
                 <Button type="submit">Submit</Button>
               </DialogActions>
             </Grid>
