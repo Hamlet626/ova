@@ -54,7 +54,7 @@ export const getAlgoData=(uid:string,role:RoleNum)=>unstable_cache(
 export const getAgcFbData=(uid:string,agcid:string,role:RoleNum=RoleNum.ED)=>unstable_cache(
     async()=>{
         const r = await getDoc(doc(getFirestore(app),UsersAgcDataDoc(role,uid,agcid)));
-        return (r.data()??{}) as Omit<RcpAgcInfoDoc,'status'>&Omit<EDAgcInfoDoc,'status'>&{status:number};
+        return {...r.data()??{},agcid:r.id} as Omit<RcpAgcInfoDoc,'status'>&Omit<EDAgcInfoDoc,'status'>&{status:number};
     },
     [uid,agcid,`${role}`],
     {tags:['ed_agc_data'],revalidate:10}

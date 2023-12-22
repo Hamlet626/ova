@@ -4,11 +4,13 @@ import { useAPILoadingError } from "@/components/api_process/use_api_loading_err
 import { CheckboxField } from "@/components/form_fields/check_box_field"
 import { FieldDialog } from "@/components/layouts/field_dialog"
 import { PopupComp } from "@/components/popup_comp"
-import { EDListRef, EDListsRef } from "@/utils/firebase/firebase_client"
-import { EDList } from "@/utils/firebase/types"
+import { EDListRef, EDListsRef, UsersAgcDataRef } from "@/utils/firebase/firebase_client"
+import { EDAgcInfoDoc, EDList } from "@/utils/firebase/types"
 import { usePromiseState } from "@/utils/hooks/use_promise_state"
 import { useResettableForm } from "@/utils/hooks/use_resettable_form"
+import { RoleNum } from "@/utils/roles"
 import { getEDListsData_client } from "@/utils/server_data_getter/client_getter"
+import { refresh_server } from "@/utils/server_data_getter/utils"
 import { Add, ArrowDropUp, Create, Favorite, FavoriteBorder, PlaylistAdd } from "@mui/icons-material"
 import LoadingButton from "@mui/lab/LoadingButton"
 import { Paper, Stack, Button, Box, MenuItem, ListItemButton, Checkbox, ListItemIcon, ListItemText, Typography, TextField, IconButton, Dialog, DialogTitle, DialogContent, List } from "@mui/material"
@@ -17,13 +19,19 @@ import { useSession } from "next-auth/react"
 import { MouseEventHandler, ReactNode, useEffect, useState } from "react"
 import usePromise from "react-use-promise"
 
-export const EDRcpOperations=({edid}:{edid:string})=>{
+export const EDRcpOperations=({edid,agcInfo}:{edid:string,agcInfo:EDAgcInfoDoc})=>{
+    console.log('reservedBy',agcInfo.reservedBy);
+    const myid=useSession({required:true}).data?.user?.id!;
     return <Paper sx={(theme)=>({borderRadius:0, zIndex:theme.zIndex.appBar,
         pl:4,pr:3,height:80, display:'flex',alignItems:'center', gap:'10px'})} elevation={12}>
         <EDListMenu edid={edid}/>
 
         <Box flexGrow={1}/>
-        <Button variant="outlined" color="secondary">Reserve</Button>
+        {agcInfo.reservedBy!=null?<Button variant="outlined" color="secondary" onClick={async(ev)=>{
+            // await updateDoc(UsersAgcDataRef(RoleNum.ED,edid,agcInfo.agcid),{reservedBy:UsersAgcDataRef(RoleNum.Rcp,myid,agcInfo.agcid)});
+            refresh_server('ed_agc_data');
+        }}>Reserve</Button>:
+        <Typography>Reserved</Typography>}
         <Button variant="contained" color="primary">Request Match</Button>
 </Paper>
 }
@@ -49,7 +57,6 @@ export const EDListMenu=({edid,}:{edid:string,})=>{
         setData([...data!,{id:r.id,name:newList.name,contain:true}]);
     });
 
-    console.log(data,error);
     useEffect(()=>{
         if(listDlgOpen)setCreating(false);
     },[listDlgOpen]);
@@ -72,7 +79,8 @@ export const EDListMenu=({edid,}:{edid:string,})=>{
         <DialogContent>
             <List dense disablePadding>
         {error && <Typography>{`${error}`}</Typography>}
-    {data?.filter(v=>v.id!=='like')?.map(v=>(<ListItemButton onClick={(ev)=>{
+    {data?.filter(v=>v.id!=='like')?.map(v=>(<ListItemButton key={v.id}
+    onClick={(ev)=>{
         setData(Array.from(data).map(edl=>({...edl,contain:v.id===edl.id?!edl.contain:edl.contain})));
         updateDoc(EDListRef(myid,v.id),{eds:v.contain?arrayRemove(edid):arrayUnion(edid)});
     }}>

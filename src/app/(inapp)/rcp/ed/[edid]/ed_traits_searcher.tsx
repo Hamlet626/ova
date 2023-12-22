@@ -11,7 +11,7 @@ export const EDTraitsSearcher=({tags}:{tags:string[]})=>{
         <Grid2 container>
             {tags.map(v=>{
                 const select=selected.includes(v);
-                return <Chip label={v} clickable color={select?primary90:'default'}
+                return <Chip key={v} label={v} clickable color={select?primary90:'default'}
                 onClick={(ev)=>{
                     if(select)setSelected(selected.filter(s=>s!=v))
                     else setSelected([...selected,v]);

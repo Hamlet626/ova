@@ -18,6 +18,8 @@ export interface EDAgcInfoDoc{
     agcid:string,
     price?:number,
     status:EDStatus,
+
+    reservedBy?:DocumentReference,
 }
 
 export interface RcpAgcInfoDoc{
@@ -25,6 +27,7 @@ export interface RcpAgcInfoDoc{
     status:RcpStatus,
     recommends?:string[],
     
+    lastReserveTime?:number,
 }
 
 

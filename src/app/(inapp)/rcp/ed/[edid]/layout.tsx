@@ -53,7 +53,7 @@ export default async function EDProfile({params,children}:{params: { edid: strin
                 <EDViewerContentTabs edid={params.edid}/>
                 <Box pl={4} pr={3} py={3}>{children}</Box>
             </Stack>
-            <EDRcpOperations edid={params.edid}/>
+            <EDRcpOperations edid={params.edid} agcInfo={agcInfo}/>
         </Stack>
         <Paper sx={{width:'calc((100vw - 136px)/4 + 56px )',minWidth:'calc((100vw - 136px)/4 + 56px )', borderRadius:0, zIndex:1101}} elevation={24}>
             <List>

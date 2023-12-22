@@ -18,7 +18,7 @@ export default async function EDLists({params}: { params: { listid: string } }) 
             </Stack>
             <Box height={27}/>
             {data.flatMap(v=>[
-            <EDListPreview data={v} uid={myid}/>,
+            <EDListPreview key={v.id} data={v} uid={myid}/>,
             <Box height={32}/>
             ])}
         </Stack>
