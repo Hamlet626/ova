@@ -53,8 +53,6 @@ export const usStatuses = ["US Citizen", "Permanent Resident", "Temporary Reside
 
 export const relationships = ["Family", "Friend", "Colleague", "Romantic Partner", "Acquaintance", "Mentor", "Mentee", "Neighbor", "Classmate", "Teammate"];
 
-export const race = ["Asian", "White/Caucasian", "Black/African American", "Native American/Alaska Native", "Native Hawaiian/Other Pacific Islander", "Hispanic"];
-
 export const languageFluency = ["Native", "Fluent", "Proficient", "Intermediate", "Elementary", "Pre-Intermediate", "Upper-Intermediate", "Advanced", "Limited", "No Proficiency"];
 
 export const fBaldness="Significant baldness under age 40(Female)/50(Male)";
@@ -153,7 +151,7 @@ export const alcoholFreq=[
 ];
 
 export const smoke=[
-	'Electronic Cigarette','Cigarettes','Vape Nicotine',
+	'Electronic Cigarette','Cigarettes','Vape Nicotine', 'Vape Marijuana','Cigars','Pipe','Hookah','Smokeless Tobacco','Chewing Tobacco','Snuff','Dissolvable Tobacco','Other'
 ];
 export const smokeFreq=[
 	'Used to but no longer','Rarely','Occasionally','Daily'
@@ -190,6 +188,7 @@ export const papSmearRes = [
 ];
 
 export const DepoProvera='Depo-Provera';
+
 export const birthControl=[
 	'IUD',
 	'Implanon',
