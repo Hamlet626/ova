@@ -20,18 +20,19 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
+import {formatDate} from "@/utils/formatters";
+import GoogleMaps from "@/components/google_map";
 
-
-
-export default function FormFieldUI({data,register,control,watch}:{data:FormField,register:any,control:any,watch:any }){
+import { MuiTelInput } from 'mui-tel-input';
+export default function FormFieldUI({data,register,control,watch, name}:{data:FormField,register:any,control:any,watch:any,name:any }){
  
   const fieldLength = data.length === 'long' ? 3 : data.length === 'short' ? 0.5 : 1; // Set the default to 2 or adjust as needed
-  
-  const formatDate = (dateObject) => {
-    if (!dateObject || !dateObject.$d) return null;
-      const dateToFormat = dayjs(dateObject.$d);
-  
-    return dateToFormat.format('MM/DD/YYYY');
+
+  const [isClicked, setIsClicked] = useState(false);
+  console.log(isClicked);
+
+  const handleYesNOButtonClick = () => {
+    setIsClicked((prev) => !prev);
   };
   //populate
  const [userSelection, setUserSelection] = useState<string | null>(null);
@@ -44,26 +45,32 @@ export default function FormFieldUI({data,register,control,watch}:{data:FormFiel
 
 //
         // console.log(data.length);
-const fieldValue = watch(data.id); // Replace 'data.id' with the actual ID of the field you want to watch
-console.log(fieldValue); // Log the value to the console
-
+// const fieldValue = watch(data.id); // Replace 'data.id' with the actual ID of the field you want to watch
+// console.log(fieldValue); // Log the value to the console
 
 const addField = () => {
   if (data.group) {
-    const newFields = data.group.map((subField) => ({
-      ...subField,
-      id: `group.${uuidv4()}`, // Generate a unique ID for each subfield
-    }));
-    append(newFields);
+    const newGroup = {
+      group: data.group.map((subField,index) => ({
+        ...subField,
+        id: `${subField.id}.${index + 1}`, // Ensure unique IDs for each subField
+      })),
+    };
+    // console.log('New Group:', newGroup);
+
+    append( newGroup); // Use the append method with the field name 'group'
   }
 };
 
 
-const deleteSet = (setId) => {
-  const setIndex = fields.findIndex((subField) => subField.id === setId);
-  if (setIndex !== -1) {
-    remove(setIndex);
-  }
+
+// const addField = () => {
+//  append();
+// };
+
+const deleteGroup = (groupIndex) => {
+  // Remove the group at the specified index
+  remove(groupIndex);
 };
 
 
@@ -75,10 +82,12 @@ const deleteSet = (setId) => {
         <Typography variant="body1">
           {data.label}
           {data.type === 'populate' && (
-          <IconButton onClick={addField}>
-            <AddIcon />
-          </IconButton>
-  
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton onClick={addField}>
+              <AddIcon />
+            </IconButton>
+       
+          </Box>
         )}
         </Typography>
         <Box height={8}/>
@@ -89,31 +98,44 @@ const deleteSet = (setId) => {
           // < DatePicker label="Basic date picker" format="DD/MM/YYYY"  {...(data.id && register(data.id)?.onChange && register(data.id).onChange)} /> 
           <Controller
           control={control}
-          name={data.id}
-          render={({ field }) => (
-            <Box>
+          name={name || data.id} 
+            render={({ field }) => (
             <DatePicker
                 value={formatDate (field.value)}
                 onChange={(value) => {
                   field.onChange(formatDate(value));
                 }}
               />
-            </Box>
+   
           )}
         />
 
 
         ] 
+        :data.type==="phone"?
+        [
+       
+          <Controller
+          name={data.id}
+          control={control}
+          render={({ field }) => (
+            <MuiTelInput
+              {...field}
+              onChange={(value) => field.onChange(value)} 
+            />
+          )}
+        />
+        ]
         :data.type==='multi-select'?[
         // <Select  {...register(data.id)}>
         // {(typedLists[data.options] ?? data.options)?.map((v) => <MenuItem key={v} value={v}>{v}</MenuItem>)} 
         //                              </Select>
         <Controller
-        name={data.id}
-        control={control}
+        name={name || data.id} 
+           control={control}
         render={({ field }) => (
           <Select {...field}>
-            {(typedLists[data.options] ?? data.options)?.map((v) => (
+            {(typedLists[data.options as keyof typeof typedLists] ?? data.options)?.map((v) => (
               <MenuItem key={v} value={v}>
                 {v}
               </MenuItem>
@@ -156,7 +178,6 @@ const deleteSet = (setId) => {
           </ToggleButtonGroup>
         )}
       />
-
           {/* Additional fields based on user selection and condition */}
           {/* {userSelection &&
             data.sub &&
@@ -171,7 +192,7 @@ const deleteSet = (setId) => {
         ]
         :data.type==='checkbox'?[ 
           <Controller
-          name={data.id}
+          name={data.id || ""}
           control={control}
           render={({ field }) => (
             <Box display="flex" flexWrap="wrap">
@@ -203,22 +224,61 @@ const deleteSet = (setId) => {
         ]
 
         :data.type==='number'?[<TextField type='number' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*',min:0 }} {...register(data.id)}/>]
-        :data.type==='address'?[<Input {...register(data.id)}/>,
-        <FormHelperText error>Please fill in valid value</FormHelperText> ]
-        :data.type==='name'?[]
+        :data.type==='address'?[  <GoogleMaps register={register} data={data} control={control} />
+
+         ]
+        :data.type==='name'?[
+          <Stack direction="row" spacing={2}>
+          <TextField label="First Name" variant="outlined" {...register(`${data.id}.firstName`)} />
+          <TextField label="Middle Initial" variant="outlined" {...register(`${data.id}.middleInitial`)} />
+          <TextField label="Last Name" variant="outlined" {...register(`${data.id}.lastName`)} />
+        </Stack>
+        
+
+        ]
         :data.type==='populate'?[
-          <Box>
-        {fields.map((subField, index) => (
-            <div key={subField.id}>
-              <IconButton onClick={() => remove(subField.id)}>
-                <DeleteIcon />
-              </IconButton>
-              <Box sx={{ marginLeft: '20px', marginTop: '10px' }}>
-                <FormFieldUI data={subField} register={register} control={control} />
-              </Box>
-            </div>
-          ))}
-          </Box>
+//           <Box>
+            
+//             {fields.map((group, groupIndex) => {
+//   return (
+//     <Box key={group.id} sx={{ marginLeft: '20px', marginTop: '10px' }}>
+//       <IconButton onClick={() => deleteGroup(groupIndex)}>
+//         <DeleteIcon />
+//       </IconButton>
+//       {/* Display fields within the group if data.group is defined */}
+//       {data.group && data.group.map((sub, subIndex) => (
+//         <FormFieldUI data={sub} register={register} control={control} />
+//       ))}
+//       {/* Delete button for the entire group */}
+//     </Box>
+//   );
+// })}
+<Box>
+  {fields.map((group, groupIndex) => (
+    <Box key={group.id} sx={{ marginLeft: '20px', marginTop: '10px' }}>
+      <IconButton onClick={() => deleteGroup(groupIndex)}>
+        <DeleteIcon />
+      </IconButton>
+      {data.group && data.group.map((sub) => (
+        <Controller
+        name={data.id}
+        control={control}
+        render={({ field }) => (
+          <FormFieldUI
+            data={sub}
+            register={register}
+            control={control}
+            {...field} 
+            name={`${data.id}-${groupIndex}.${sub.id}`} // Spread the field props into FormFieldUI
+          />
+        )}
+      />
+      ))}
+    </Box>
+  ))}
+</Box>
+
+//         </Box>
           // <Box>
           // {
           //   data.group &&
@@ -232,16 +292,18 @@ const deleteSet = (setId) => {
         ]
         :[]
   }
-{data.sub &&
+{ 
+data.sub &&
   data.sub
   .filter((subField) => {
     const watchedValue = watch(data.id);
     console.log(watchedValue);
-
     if (subField.condition) {
       // Check condition
       // console.log(subField.condition.some(condition => watchedValue?.includes(condition)));
+      // return false;
       return subField.condition.some(condition => watchedValue?.includes(condition));
+      // return Array.isArray(watchedValue) && watchedValue.includes(condition);
     } else if (subField.exCondition) {
       // Check exCondition
       console.log(!subField.exCondition.some(exCondition => watchedValue?.includes(exCondition)));
@@ -250,7 +312,7 @@ const deleteSet = (setId) => {
     }
 
     return true; // If no condition or exCondition, always render the subfield
-  })
+})
     // .filter((subField) => subField.condition?.some(condition => condition === watch(data.id)))
     .map((subField, index) => (
       <Box key={index} sx={{ marginLeft: '20px', marginTop: '10px' }}>
@@ -261,7 +323,9 @@ const deleteSet = (setId) => {
           watch={watch}  
         />
       </Box>
-    ))}
+    ))
+    
+}
 
 
 
