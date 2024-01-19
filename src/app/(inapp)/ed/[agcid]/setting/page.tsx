@@ -1,5 +1,5 @@
 import { Typography, Stack, Avatar, Grid, Box, Button, Dialog } from '@mui/material'
-import { outline_variant, neutral96, font5, PageHeader, font7 } from '@/components/ThemeRegistry/theme_consts'
+import { outline_variant, neutral96, font5, PageHeader } from '@/components/ThemeRegistry/theme_consts'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import bag_icon from '@/assets/setting_logos/bag-front-color.png'

@@ -1,6 +1,6 @@
 'use client'
 import { Box, Avatar, Typography } from "@mui/material"
-import { neutral96, font7 } from "@/components/ThemeRegistry/theme_consts"
+import { neutral96, nameLabel } from "@/components/ThemeRegistry/theme_consts"
 
 export default function Feature({ icon, feature }: { icon:any, feature:string }) {
   return (
@@ -16,7 +16,7 @@ export default function Feature({ icon, feature }: { icon:any, feature:string })
           marginRight: 1.5
         }}
       />
-      <Typography sx={font7} alignSelf={'center'}>{feature}</Typography>
+      <Typography sx={nameLabel} alignSelf={'center'}>{feature}</Typography>
     </Box>
   )
 }
