@@ -1,8 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+### OVA
+Project OVA is a comprehensive full-stack web application designed to facilitate and manage the egg donation process. Developed using Next.js and Firebase, this platform streamlines the journey for both egg donors and recipients, providing a secure and organized system for a sensitive and complex process.
+
+## Features ✨
+Donor & Recipient Management: 
+Guides egg donors through the entire process, from the initial application to legal case finalization. It also allows egg recipients to browse donor profiles and securely select a match.
+
+Case Management: 
+Includes a robust internal system for tracking all aspects of the donation journey, including legal agreements, medical screenings, and court proceedings.
+
+Secure & Private: 
+Ensures the privacy and security of all users with a robust authentication and data management backend.
+
+
+## Set Up Environments
+1. Fill credentials in
+
+
+   `src/utils/firebase/firebase_client.ts`,
+   `src/utils/firebase/firebase_server.ts`,
+   `src/utils/cloudinary/cloudinary.ts`,
+   `src/utils/algolia.ts`
+   
+   Or use other methods to handle the env variables.
+   
+3. (Optional) If using Firebase admin file as credential, download e.g. 'ova-firebase-admin.json' on firebase/setting, then put it into root directory.
 
 ## Getting Started
 
-First, run the development server:
+Run the development server:
 
 ```bash
 npm run dev
@@ -11,21 +37,6 @@ yarn dev
 # or
 pnpm dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
