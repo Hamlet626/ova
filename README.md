@@ -20,7 +20,8 @@ Ensures the privacy and security of all users with a robust authentication and d
    `src/utils/firebase/firebase_client.ts`,
    `src/utils/firebase/firebase_server.ts`,
    `src/utils/cloudinary/cloudinary.ts`,
-   `src/utils/algolia.ts`
+   `src/utils/algolia.ts`,
+   `src/components/google_map.tsx`
    
    Or use other methods to handle the env variables.
    
